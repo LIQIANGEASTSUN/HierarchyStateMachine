@@ -204,34 +204,57 @@ public class HSMManager
         File.Delete(path);
     }
 
-    private void NodeAddChild(int parentId, int childId)
+    private void NodeAddChild(int fromId, int toId)
     {
-        NodeValue parentNode = GetNode(parentId);
-        NodeValue childNode = GetNode(childId);
+        NodeValue fromNode = GetNode(fromId);
+        NodeValue toNode = GetNode(toId);
 
-        if (null == parentNode || null == childNode)
+        if (null == fromNode || null == toNode)
         {
             Debug.LogError("node is null");
             return;
         }
 
-        string msg = string.Empty;
-        bool result = true;
-        for (int i = 0; i < parentNode.childNodeList.Count; ++i)
+        for (int i = 0; i < fromNode.transitionList.Count; ++i)
         {
-            if (parentNode.childNodeList[i] == childId)
+            Transition temp = fromNode.transitionList[i];
+            if (temp.toNodeId == toId)
             {
-                result = false;
-                break;
+                return;
             }
         }
 
-        if (!result)
+        int transitionId = -1;
+        for (int i = 0; i < fromNode.transitionList.Count; ++i)
         {
-            return;
+            bool result = true;
+            for (int j = 0; j < fromNode.transitionList.Count; ++j)
+            {
+                Transition temp = fromNode.transitionList[j];
+                if (i == temp.transitionId)
+                {
+                    result = false;
+                    break;
+                }
+            }
+            
+            if (result)
+            {
+                transitionId = i;
+                break;
+            }
+        }
+        
+        if (transitionId == -1)
+        {
+            transitionId = fromNode.transitionList.Count;
         }
 
-        parentNode.childNodeList.Add(childNode.id);
+        Transition transition = new Transition();
+        transition.transitionId = transitionId;
+        transition.toNodeId = toId;
+        transition.parameterList = new List<HSMParameter>();
+        fromNode.transitionList.Add(transition);
     }
 
     private void NodeParameterChange(int nodeId, HSMParameter parameter, bool isAdd)
@@ -418,11 +441,6 @@ public class HSMManager
                 continue;
             }
 
-            for (int j = 0; j < nodeValue.childNodeList.Count; ++j)
-            {
-                int childId = nodeValue.childNodeList[j];
-                NodeValue childNode = GetNode(childId);
-            }
             NodeList.RemoveAt(i);
             break;
         }

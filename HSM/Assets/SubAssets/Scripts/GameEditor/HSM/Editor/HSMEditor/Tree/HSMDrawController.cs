@@ -181,10 +181,7 @@ public class HSMDrawView
         scrollPos = GUI.BeginScrollView(scrollRect, scrollPos, contentRect);
         {
             NodeMakeTransition(currentNode, nodeList);
-
             DrawNodeWindows(nodeList);
-            SortChild(nodeList);
-
             ResetScrollPos(nodeList);
         }
         GUI.EndScrollView();  //结束 ScrollView 窗口  
@@ -366,11 +363,11 @@ public class HSMDrawView
     /// 每帧绘制从 节点到所有子节点的连线
     private void DrawToChildCurve(NodeValue nodeValue)
     {
-        for (int i = nodeValue.childNodeList.Count - 1; i >= 0; --i)
+        for (int i = nodeValue.transitionList.Count - 1; i >= 0; --i)
         {
-            int childId = nodeValue.childNodeList[i];
-            NodeValue childNode = HSMManager.Instance.GetNode(childId);
-            DrawNodeCurve(nodeValue.position, childNode.position);
+            int toId = nodeValue.transitionList[i].toNodeId;
+            NodeValue toNode = HSMManager.Instance.GetNode(toId);
+            DrawNodeCurve(nodeValue.position, toNode.position);
         }
     }
 
@@ -398,21 +395,6 @@ public class HSMDrawView
         Vector2 middle = (from + to) * 0.5f;
         Handles.DrawAAPolyLine(3, middle + v1, middle, middle + v2);
         Handles.EndGUI();
-    }
-
-    private void SortChild(List<NodeValue> nodeList)
-    {
-        for (int i = 0; i < nodeList.Count; ++i)
-        {
-            NodeValue nodeValue = nodeList[i];
-
-            nodeValue.childNodeList.Sort((a, b) =>
-            {
-                NodeValue nodeA = HSMManager.Instance.GetNode(a);
-                NodeValue nodeB = HSMManager.Instance.GetNode(b);
-                return (int)(nodeA.position.x - nodeB.position.x);
-            });
-        }
     }
 
     private void ResetScrollPos(List<NodeValue> nodeList)

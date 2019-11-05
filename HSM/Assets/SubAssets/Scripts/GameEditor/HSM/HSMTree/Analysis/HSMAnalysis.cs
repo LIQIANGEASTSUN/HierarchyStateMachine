@@ -45,7 +45,6 @@ namespace HSMTree
 
             iConditionCheck.AddParameter(data.parameterList);
 
-            Dictionary<int, StateBase> compositeDic = new Dictionary<int, StateBase>();
             Dictionary<int, StateBase> allNodeDic = new Dictionary<int, StateBase>();
             Dictionary<int, List<int>> childDic = new Dictionary<int, List<int>>();
             for (int i = 0; i < data.nodeList.Count; ++i)
@@ -53,18 +52,6 @@ namespace HSMTree
                 NodeValue nodeValue = data.nodeList[i];
                 StateBase nodeBase = AnalysisNode(nodeValue, iAction, iConditionCheck);
                 //nodeBase.NodeId = nodeValue.id;
-
-                if (!IsLeafNode(nodeValue.NodeType))
-                {
-                    compositeDic[nodeValue.id] = nodeBase;
-                    childDic[nodeValue.id] = nodeValue.childNodeList;
-
-                    if (data.rootNodeId == nodeValue.id)
-                    {
-                        rootNode = nodeBase;
-                    }
-                }
-
                 //if (nodeValue.NodeType == (int)NODE_TYPE.CONDITION     // 条件节点
                 //    || (nodeValue.NodeType == (int)NODE_TYPE.ACTION))  // 行为节点
                 //{
@@ -76,25 +63,6 @@ namespace HSMTree
                     Debug.LogError("AllNODE:" + nodeValue.id + "     " + (null != nodeBase));
                 }
                 allNodeDic[nodeValue.id] = nodeBase;
-            }
-
-            foreach (var kv in compositeDic)
-            {
-                int id = kv.Key;
-                //NodeComposite composite = (NodeComposite)(kv.Value);
-
-                //List<int> childList = childDic[id];
-                //for (int i = 0; i < childList.Count; ++i)
-                //{
-                //    int nodeId = childList[i];
-                //    StateBase childNode = allNodeDic[nodeId];
-                //    if (null == childNode)
-                //    {
-                //        Debug.LogError("null node :" + nodeId);
-                //        continue;
-                //    }
-                //    composite.AddNode(childNode);
-                //}
             }
 
             return rootNode;

@@ -67,15 +67,14 @@ namespace HSMTree
                 NodeValue nodeValue = new NodeValue();
                 nodeValue.id = int.Parse(item["id"].ToString());
                 nodeValue.NodeType = int.Parse(item["NodeType"].ToString());
-                nodeValue.repeatTimes = int.Parse(item["repeatTimes"].ToString());
                 nodeValue.nodeName = item["nodeName"].ToString();
                 nodeValue.identification = int.Parse(item["identification"].ToString());
                 nodeValue.descript = item["descript"].ToString();
 
-                if (((IDictionary)item).Contains("childNodeList"))
+                if (((IDictionary)item).Contains("transitionList"))
                 {
-                    JsonData childNodeList = item["childNodeList"];
-                    nodeValue.childNodeList = GetChildIdList(childNodeList);
+                    JsonData transitionList = item["transitionList"];
+                    nodeValue.transitionList = GetTransitionList(transitionList);
                 }
 
                 if (((IDictionary)item).Contains("parameterList"))
@@ -96,16 +95,20 @@ namespace HSMTree
             return nodeList;
         }
 
-        private List<int> GetChildIdList(JsonData jsonData)
+        private List<Transition> GetTransitionList(JsonData jsonData)
         {
-            List<int> childIdList = new List<int>();
-            for (int i = 0; i < jsonData.Count; ++i)
+            List<Transition> transitionList = new List<Transition>();
+            foreach (JsonData item in jsonData)
             {
-                int value = int.Parse(jsonData[i].ToString());
-                childIdList.Add(value);
+                Transition transition = new Transition();
+                transition.transitionId = int.Parse(item["transitionId"].ToString());
+                transition.toNodeId = int.Parse(item["toNodeId"].ToString());
+                transition.parameterList = GetParameterList(item["parameterList"]);
+
+                transitionList.Add(transition);
             }
 
-            return childIdList;
+            return transitionList;
         }
 
         private RectT GetPosition(JsonData data)

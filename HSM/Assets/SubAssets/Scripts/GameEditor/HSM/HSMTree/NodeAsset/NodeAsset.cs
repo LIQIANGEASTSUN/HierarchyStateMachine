@@ -17,10 +17,9 @@ namespace HSMTree
     {
         public int id = 0;
         public int NodeType = (int)(NODE_TYPE.STATE);     // 节点类型 // NODE_TYPE NodeType = NODE_TYPE.SELECT;
-        public List<int> childNodeList = new List<int>();  // 子节点集合
+        //public List<int> childNodeList = new List<int>();  // 子节点集合
         public List<HSMParameter> parameterList = new List<HSMParameter>();
         public List<Transition> transitionList = new List<Transition>();
-        public int repeatTimes = 0;
         public string nodeName = string.Empty;
         public int identification = -1;
         public string descript = string.Empty;
@@ -30,8 +29,7 @@ namespace HSMTree
 
     public class Transition
     {
-        public int id;
-        public int fromNodeId;
+        public int transitionId;
         public int toNodeId;
         public List<HSMParameter> parameterList = new List<HSMParameter>();
     }

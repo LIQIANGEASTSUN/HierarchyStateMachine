@@ -19,13 +19,6 @@ public class NodeEditor {
                 GUI.backgroundColor = Color.white;
             }
 
-            int parentID = nodeValue.parentNodeID;
-            //if (parentID > 0)
-            {
-                string msg = string.Format("父节点_{0}", parentID);
-                EditorGUILayout.LabelField(msg);
-            }
-
             nodeValue.descript = EditorGUILayout.TextArea(nodeValue.descript);
 
             {

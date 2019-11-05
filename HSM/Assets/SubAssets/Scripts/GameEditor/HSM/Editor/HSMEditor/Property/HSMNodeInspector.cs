@@ -74,12 +74,6 @@ namespace HSMTree
                 string nodeId = string.Format("节点_{0}", nodeValue.id);
                 EditorGUILayout.LabelField(nodeId);
 
-                if (nodeValue.parentNodeID >= 0)
-                {
-                    string parentName = string.Format("父节点_{0}", nodeValue.parentNodeID);
-                    EditorGUILayout.LabelField(parentName);
-                }
-
                 if (nodeValue.identification > 0)
                 {
                     string identificationName = string.Format("类标识_{0}", nodeValue.identification);

@@ -125,11 +125,13 @@ public class HSMDrawModel
     {
         {
             // 状态节点
-            Node_Draw_Info conditionDrawInfo = new Node_Draw_Info("状态节点");
+            Node_Draw_Info conditionDrawInfo = new Node_Draw_Info("CreateState");
+            conditionDrawInfo.AddNodeType(NODE_TYPE.STATE);
             infoList.Add(conditionDrawInfo);
 
             // 子状态机节点
-            Node_Draw_Info actionDrawInfo = new Node_Draw_Info("子状态机节点");
+            Node_Draw_Info actionDrawInfo = new Node_Draw_Info("Create-Sub State Machine");
+            actionDrawInfo.AddNodeType(NODE_TYPE.SUB_STATE_MACHINE);
             infoList.Add(actionDrawInfo);
         }
     }
@@ -313,7 +315,7 @@ public class HSMDrawView
                 for (int j = 0; j < draw_Info._nodeArr.Count; ++j)
                 {
                     KeyValuePair<string, Node_Draw_Info_Item> kv = draw_Info._nodeArr[j];
-                    string itemName = string.Format("Add Node/{0}", kv.Key);
+                    string itemName = string.Format("{0}", kv.Key);
                     menu.AddItem(new GUIContent(itemName), false, CallBack, kv.Value);
                 }
             }
@@ -329,10 +331,10 @@ public class HSMDrawView
             // 删除节点
             menu.AddItem(new GUIContent("Delete Node"), false, DeleteNode);
 
-            if (nodeValue.parentNodeID >= 0)
-            {
-                menu.AddItem(new GUIContent("Remove Parent"), false, RemoveParentNode);
-            }
+            //if (nodeValue.parentNodeID >= 0)
+            //{
+            //    menu.AddItem(new GUIContent("Remove Parent"), false, RemoveParentNode);
+            //}
         }
 
         menu.ShowAsContext();
@@ -358,21 +360,6 @@ public class HSMDrawView
         if (null != HSMManager.hSMDeleteNode)
         {
             HSMManager.hSMDeleteNode(nodeValue.id);
-        }
-    }
-
-    // 移除父节点
-    private void RemoveParentNode()
-    {
-        NodeValue nodeValue = GetMouseInNode(_nodeList);
-        if (!EditorUtility.DisplayDialog("提示", "确定要删除父节点吗", "Yes", "No"))
-        {
-            return;
-        }
-
-        if (null != HSMManager.hSMRemoveParentNode)
-        {
-            HSMManager.hSMRemoveParentNode(nodeValue.id);
         }
     }
 

@@ -13,7 +13,6 @@ public class HSMManager
     public delegate void HSMChangeSelectId(int nodeId);
     public delegate void HSMAddNode(Node_Draw_Info_Item info, Vector3 mousePosition);
     public delegate void HSMDeleteNode(int nodeId);
-    public delegate void HSMRemoveParentNode(int nodeId);
     public delegate void HSMLoadFile(string fileName);
     public delegate void HSMSaveFile(string fileName);
     public delegate void HSMDeleteFile(string fileName);
@@ -34,7 +33,6 @@ public class HSMManager
     public static HSMChangeSelectId hSMChangeSelectId;
     public static HSMAddNode hSMAddNode;
     public static HSMDeleteNode hSMDeleteNode;
-    public static HSMRemoveParentNode hSMRemoveParentNode;
     public static HSMLoadFile hSMLoadFile;
     public static HSMSaveFile hSMSaveFile;
     public static HSMDeleteFile hSMDeleteFile;
@@ -57,7 +55,6 @@ public class HSMManager
         hSMSaveFile += SaveFile;
         hSMDeleteFile += DeleteFile;
         hSMNodeAddChild += NodeAddChild;
-        hSMRemoveParentNode += RemoveParentNode;
         hSMNodeParameter += NodeParameterChange;
         parameterChange += ParameterChange;
         hSMNodeChangeParameter += NodeChangeParameter;
@@ -75,7 +72,6 @@ public class HSMManager
         hSMSaveFile -= SaveFile;
         hSMDeleteFile -= DeleteFile;
         hSMNodeAddChild -= NodeAddChild;
-        hSMRemoveParentNode -= RemoveParentNode;
         hSMNodeParameter -= NodeParameterChange;
         parameterChange -= ParameterChange;
         hSMNodeChangeParameter -= NodeChangeParameter;
@@ -221,28 +217,13 @@ public class HSMManager
 
         string msg = string.Empty;
         bool result = true;
-        if (childNode.parentNodeID >= 0)
+        for (int i = 0; i < parentNode.childNodeList.Count; ++i)
         {
-            result = false;
-            if (childNode.parentNodeID != parentId)
+            if (parentNode.childNodeList[i] == childId)
             {
-                msg = "已经有父节点";
+                result = false;
+                break;
             }
-            else
-            {
-                msg = "不能重复添加父节点";
-            }
-        }
-
-        if (parentNode.parentNodeID >= 0 && parentNode.parentNodeID == childNode.id)
-        {
-            msg = "不能添加父节点作为子节点";
-            result = false;
-        }
-
-        if (!result && TreeNodeWindow.window != null)
-        {
-            TreeNodeWindow.window.ShowNotification(msg);
         }
 
         if (!result)
@@ -251,33 +232,6 @@ public class HSMManager
         }
 
         parentNode.childNodeList.Add(childNode.id);
-        childNode.parentNodeID = parentNode.id;
-    }
-
-    private void RemoveParentNode(int nodeId)
-    {
-        NodeValue nodeValue = GetNode(nodeId);
-        if (nodeValue.parentNodeID < 0)
-        {
-            return;
-        }
-
-        NodeValue parentNode = GetNode(nodeValue.parentNodeID);
-        if (null != parentNode)
-        {
-            for (int i = 0; i < parentNode.childNodeList.Count; ++i)
-            {
-                int childId = parentNode.childNodeList[i];
-                NodeValue childNode = GetNode(childId);
-                if (childNode.id == nodeValue.id)
-                {
-                    parentNode.childNodeList.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-        
-        nodeValue.parentNodeID = -1;
     }
 
     private void NodeParameterChange(int nodeId, HSMParameter parameter, bool isAdd)
@@ -426,7 +380,6 @@ public class HSMManager
         newNodeValue.nodeName = info._nodeName;
         newNodeValue.identification = info._identification;
         newNodeValue.NodeType = (int)info._nodeType;
-        newNodeValue.parentNodeID = -1;
 
         Rect rect = new Rect(mousePosition.x, mousePosition.y, 100, 100);
         newNodeValue.position = RectTool.RectToRectT(rect);
@@ -465,12 +418,10 @@ public class HSMManager
                 continue;
             }
 
-            RemoveParentNode(nodeValue.id);
             for (int j = 0; j < nodeValue.childNodeList.Count; ++j)
             {
                 int childId = nodeValue.childNodeList[j];
                 NodeValue childNode = GetNode(childId);
-                childNode.parentNodeID = -1;
             }
             NodeList.RemoveAt(i);
             break;

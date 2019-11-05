@@ -5,22 +5,22 @@ namespace HSMTree
     /// <summary>
     /// 组合节点
     /// </summary>
-    public abstract class NodeComposite : NodeBase
+    public abstract class NodeComposite : StateBase
     {
         // 保存子节点
-        protected List<NodeBase> nodeChildList = new List<NodeBase>();
+        protected List<StateBase> nodeChildList = new List<StateBase>();
 
         public NodeComposite(NODE_TYPE nodeType) : base(nodeType)
         {}
 
-        public void AddNode(NodeBase nodeRoot)
+        public void AddNode(StateBase nodeRoot)
         {
             int count = nodeChildList.Count;
             nodeRoot.NodeIndex = count;
             nodeChildList.Add(nodeRoot);
         }
 
-        public List<NodeBase> GetChilds()
+        public List<StateBase> GetChilds()
         {
             return nodeChildList;
         }

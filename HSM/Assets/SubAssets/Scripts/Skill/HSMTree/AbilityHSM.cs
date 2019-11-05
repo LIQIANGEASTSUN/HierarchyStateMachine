@@ -7,7 +7,7 @@ using HSMTree;
 public class AbilityHSM : IAbilityEnvironment, IAction
 {
     //private Skill _skill;
-    private NodeBase _rootNode = null;
+    private StateBase _rootNode = null;
     private IConditionCheck _iconditionCheck = null;
     //private AbilityInputExtend _abilityInputExtend = null;
 

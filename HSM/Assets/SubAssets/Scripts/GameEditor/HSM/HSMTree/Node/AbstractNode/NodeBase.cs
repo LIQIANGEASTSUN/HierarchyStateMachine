@@ -5,7 +5,7 @@ namespace HSMTree
     /// <summary>
     /// 节点超类
     /// </summary>
-    public abstract class NodeBase
+    public abstract class StateBase
     {
         /// <summary>
         /// 节点类型
@@ -21,7 +21,7 @@ namespace HSMTree
         /// </summary>
         private int nodeId;
 
-        public NodeBase(NODE_TYPE nodeType)
+        public StateBase(NODE_TYPE nodeType)
         {
             this.nodeType = nodeType;
         }

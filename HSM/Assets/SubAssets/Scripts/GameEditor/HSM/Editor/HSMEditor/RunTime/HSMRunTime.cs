@@ -9,7 +9,7 @@ namespace HSMTree
     {
         public static readonly HSMRunTime Instance = new HSMRunTime();
 
-        private NodeBase _rootNode = null;
+        private StateBase _rootNode = null;
         private IConditionCheck _iconditionCheck = null;
 
         private RunTimeRotateGo _runtimeRotateGo;

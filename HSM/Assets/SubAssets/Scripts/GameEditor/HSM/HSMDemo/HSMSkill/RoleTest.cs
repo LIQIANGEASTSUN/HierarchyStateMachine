@@ -44,7 +44,7 @@ public class RoleTest : MonoBehaviour
 public class RolePlayer : IAction
 {
     private HSMAnalysis analysis = null;
-    private NodeBase _rootNode = null;
+    private StateBase _rootNode = null;
     private IConditionCheck _iconditionCheck = null;
 
     public void Init()

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using HSMTree;
 
-public class NodeConditionCustom : NodeCondition
+public class NodeConditionCustom : StateBase
 {
+    protected List<HSMParameter> _parameterList = new List<HSMParameter>();
+    protected IConditionCheck _iconditionCheck = null;
+
     private static CustomIdentification _customIdentification = new CustomIdentification("通用条件节点", IDENTIFICATION.COMMON_CONDITION, typeof(NodeConditionCustom), NODE_TYPE.CONDITION);
 
-    public NodeConditionCustom()
+    public NodeConditionCustom() : base(NODE_TYPE.CONDITION)
     {
 
     }
@@ -23,5 +26,18 @@ public class NodeConditionCustom : NodeCondition
     public static CustomIdentification CustomIdentification()
     {
         return _customIdentification;
+    }
+
+    public void SetConditionCheck(IConditionCheck iConditionCheck)
+    {
+        _iconditionCheck = iConditionCheck;
+    }
+
+    public void SetParameters(List<HSMParameter> parameterList)
+    {
+        if (parameterList.Count > 0)
+        {
+            _parameterList.AddRange(parameterList);
+        }
     }
 }

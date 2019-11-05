@@ -52,7 +52,7 @@ namespace HSMTree
             {
                 NodeValue nodeValue = data.nodeList[i];
                 StateBase nodeBase = AnalysisNode(nodeValue, iAction, iConditionCheck);
-                nodeBase.NodeId = nodeValue.id;
+                //nodeBase.NodeId = nodeValue.id;
 
                 if (!IsLeafNode(nodeValue.NodeType))
                 {
@@ -81,20 +81,20 @@ namespace HSMTree
             foreach (var kv in compositeDic)
             {
                 int id = kv.Key;
-                NodeComposite composite = (NodeComposite)(kv.Value);
+                //NodeComposite composite = (NodeComposite)(kv.Value);
 
-                List<int> childList = childDic[id];
-                for (int i = 0; i < childList.Count; ++i)
-                {
-                    int nodeId = childList[i];
-                    StateBase childNode = allNodeDic[nodeId];
-                    if (null == childNode)
-                    {
-                        Debug.LogError("null node :" + nodeId);
-                        continue;
-                    }
-                    composite.AddNode(childNode);
-                }
+                //List<int> childList = childDic[id];
+                //for (int i = 0; i < childList.Count; ++i)
+                //{
+                //    int nodeId = childList[i];
+                //    StateBase childNode = allNodeDic[nodeId];
+                //    if (null == childNode)
+                //    {
+                //        Debug.LogError("null node :" + nodeId);
+                //        continue;
+                //    }
+                //    composite.AddNode(childNode);
+                //}
             }
 
             return rootNode;

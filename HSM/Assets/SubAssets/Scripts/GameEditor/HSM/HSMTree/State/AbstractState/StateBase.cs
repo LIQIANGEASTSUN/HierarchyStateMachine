@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace HSMTree
 {
@@ -21,6 +22,9 @@ namespace HSMTree
         /// </summary>
         private int nodeId;
 
+        // 保存子节点
+        protected List<StateBase> nodeChildList = new List<StateBase>();
+
         public StateBase(NODE_TYPE nodeType)
         {
             this.nodeType = nodeType;
@@ -42,6 +46,18 @@ namespace HSMTree
         {
             get { return nodeId; }
             set { nodeId = value; }
+        }
+
+        public void AddNode(StateBase nodeRoot)
+        {
+            int count = nodeChildList.Count;
+            nodeRoot.NodeIndex = count;
+            nodeChildList.Add(nodeRoot);
+        }
+
+        public List<StateBase> GetChilds()
+        {
+            return nodeChildList;
         }
 
     }

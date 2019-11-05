@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 顺序节点(组合节点)

@@ -4,23 +4,23 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
-    public class BehaviorRuntimeParameter
+    public class HSMRuntimeParameter
     {
-        private BehaviorRuntimeParameterModel _runtimeParameterModel;
-        private BehaviorRuntimeParameterView _runtimeParameterView;
+        private HSMRuntimeParameterModel _runtimeParameterModel;
+        private HSMRuntimeParameterView _runtimeParameterView;
 
-        public BehaviorRuntimeParameter()
+        public HSMRuntimeParameter()
         {
             Init();
         }
 
         public void Init()
         {
-            _runtimeParameterModel = new BehaviorRuntimeParameterModel();
-            _runtimeParameterView = new BehaviorRuntimeParameterView();
+            _runtimeParameterModel = new HSMRuntimeParameterModel();
+            _runtimeParameterView = new HSMRuntimeParameterView();
         }
 
         public void OnDestroy()
@@ -32,7 +32,7 @@ namespace BehaviorTree
         {
             if (_runtimeParameterModel.ParameterList.Count <= 0)
             {
-                List<BehaviorParameter> parameterList = BehaviorRunTime.Instance.ConditionCheck.GetAllParameter();
+                List<HSMParameter> parameterList = HSMRunTime.Instance.ConditionCheck.GetAllParameter();
                 _runtimeParameterModel.AddParameter(parameterList);
             }
 
@@ -41,20 +41,20 @@ namespace BehaviorTree
 
     }
 
-    public class BehaviorRuntimeParameterModel
+    public class HSMRuntimeParameterModel
     {
-        private List<BehaviorParameter> _parameterList = new List<BehaviorParameter>();
+        private List<HSMParameter> _parameterList = new List<HSMParameter>();
 
-        public BehaviorRuntimeParameterModel()
+        public HSMRuntimeParameterModel()
         {
         }
 
-        public void AddParameter(List<BehaviorParameter> parameterList)
+        public void AddParameter(List<HSMParameter> parameterList)
         {
             _parameterList = parameterList;
         }
 
-        public List<BehaviorParameter> ParameterList
+        public List<HSMParameter> ParameterList
         {
             get
             {
@@ -64,10 +64,10 @@ namespace BehaviorTree
 
     }
 
-    public class BehaviorRuntimeParameterView
+    public class HSMRuntimeParameterView
     {
         private Vector2 scrollPos = Vector2.zero;
-        public void Draw(List<BehaviorParameter> parameterList)
+        public void Draw(List<HSMParameter> parameterList)
         {
             EditorGUILayout.LabelField("运行时变量");
 
@@ -79,10 +79,10 @@ namespace BehaviorTree
                     GUI.backgroundColor = new Color(0.85f, 0.85f, 0.85f, 1f);
                     for (int i = 0; i < parameterList.Count; ++i)
                     {
-                        BehaviorParameter behaviorParameter = parameterList[i];
+                        HSMParameter HSMParameter = parameterList[i];
                         EditorGUILayout.BeginVertical("box");
                         {
-                            behaviorParameter = DrawParameter.Draw(behaviorParameter, DrawParameterType.RUNTIME_PARAMETER, null);
+                            HSMParameter = DrawParameter.Draw(HSMParameter, DrawParameterType.RUNTIME_PARAMETER, null);
                         }
                         EditorGUILayout.EndVertical();
                     }

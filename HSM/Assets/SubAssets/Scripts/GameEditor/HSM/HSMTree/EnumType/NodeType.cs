@@ -1,4 +1,4 @@
-﻿namespace BehaviorTree
+﻿namespace HSMTree
 {
     /// <summary>
     /// 行为树节点类型

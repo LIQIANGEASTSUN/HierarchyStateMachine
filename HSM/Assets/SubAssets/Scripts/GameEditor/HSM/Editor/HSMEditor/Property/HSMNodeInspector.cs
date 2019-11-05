@@ -4,24 +4,24 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
 
-    public class BehaviorNodeInspector
+    public class HSMNodeInspector
     {
-        private BehaviorNodeInspectorModel _nodeInspectorModel;
-        private BehaviorNodeInspectorView _nodeInspectorView;
+        private HSMNodeInspectorModel _nodeInspectorModel;
+        private HSMNodeInspectorView _nodeInspectorView;
 
-        public BehaviorNodeInspector()
+        public HSMNodeInspector()
         {
             Init();
         }
 
         public void Init()
         {
-            _nodeInspectorModel = new BehaviorNodeInspectorModel();
-            _nodeInspectorView = new BehaviorNodeInspectorView();
+            _nodeInspectorModel = new HSMNodeInspectorModel();
+            _nodeInspectorView = new HSMNodeInspectorView();
         }
 
         public void OnDestroy()
@@ -38,15 +38,15 @@ namespace BehaviorTree
     }
 
 
-    public class BehaviorNodeInspectorModel
+    public class HSMNodeInspectorModel
     {
         public NodeValue GetCurrentSelectNode()
         {
-            return BehaviorManager.Instance.CurrentNode;
+            return HSMManager.Instance.CurrentNode;
         }
     }
 
-    public class BehaviorNodeInspectorView
+    public class HSMNodeInspectorView
     {
 
         public void Draw(NodeValue nodeValue)
@@ -121,32 +121,32 @@ namespace BehaviorTree
                     GUI.backgroundColor = new Color(0.85f, 0.85f, 0.85f, 1f);
                     for (int i = 0; i < nodeValue.parameterList.Count; ++i)
                     {
-                        BehaviorParameter behaviorParameter = nodeValue.parameterList[i];
+                        HSMParameter HSMParameter = nodeValue.parameterList[i];
 
                         Action DelCallBack = () =>
                         {
-                            if (null != BehaviorManager.behaviorNodeParameter)
+                            if (null != HSMManager.hSMNodeParameter)
                             {
-                                BehaviorManager.behaviorNodeParameter(nodeValue.id, behaviorParameter, false);
+                                HSMManager.hSMNodeParameter(nodeValue.id, HSMParameter, false);
                             }
                         };
 
                         EditorGUILayout.BeginVertical("box");
                         {
-                            string parameterName = behaviorParameter.parameterName;
+                            string parameterName = HSMParameter.parameterName;
 
-                            BehaviorParameter tempParameter = behaviorParameter.Clone();
-                            tempParameter = DrawParameter.Draw(behaviorParameter, DrawParameterType.NODE_PARAMETER, DelCallBack);
-                            if (parameterName.CompareTo(behaviorParameter.parameterName) != 0)
+                            HSMParameter tempParameter = HSMParameter.Clone();
+                            tempParameter = DrawParameter.Draw(HSMParameter, DrawParameterType.NODE_PARAMETER, DelCallBack);
+                            if (parameterName.CompareTo(HSMParameter.parameterName) != 0)
                             {
-                                if (null != BehaviorManager.behaviorNodeChangeParameter)
+                                if (null != HSMManager.hSMNodeChangeParameter)
                                 {
-                                    BehaviorManager.behaviorNodeChangeParameter(nodeValue.id, parameterName, behaviorParameter.parameterName);
+                                    HSMManager.hSMNodeChangeParameter(nodeValue.id, parameterName, HSMParameter.parameterName);
                                 }
                             }
                             else
                             {
-                                behaviorParameter.CloneFrom(tempParameter);
+                                HSMParameter.CloneFrom(tempParameter);
                             }
                         }
                         EditorGUILayout.EndVertical();
@@ -170,7 +170,7 @@ namespace BehaviorTree
             if (GUILayout.Button("添加条件"))
             {
 
-                if (BehaviorManager.Instance.BehaviorTreeData.parameterList.Count <= 0)
+                if (HSMManager.Instance.HSMTreeData.parameterList.Count <= 0)
                 {
                     string msg = "没有参数可添加，请先添加参数";
 
@@ -181,10 +181,10 @@ namespace BehaviorTree
                 }
                 else
                 {
-                    if (null != BehaviorManager.behaviorNodeParameter)
+                    if (null != HSMManager.hSMNodeParameter)
                     {
-                        BehaviorParameter behaviorParameter = BehaviorManager.Instance.BehaviorTreeData.parameterList[0];
-                        BehaviorManager.behaviorNodeParameter(nodeValue.id, behaviorParameter, true);
+                        HSMParameter hSMParameter = HSMManager.Instance.HSMTreeData.parameterList[0];
+                        HSMManager.hSMNodeParameter(nodeValue.id, hSMParameter, true);
                     }
                 }
             }

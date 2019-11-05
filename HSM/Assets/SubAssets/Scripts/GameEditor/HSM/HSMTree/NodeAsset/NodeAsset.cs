@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
-using BehaviorTree;
+using HSMTree;
 using System;
 using System.Collections.Generic;
 
-namespace BehaviorTree
+namespace HSMTree
 {
-    public class BehaviorTreeData
+    public class HSMTreeData
     {
         public int rootNodeId = -1;
         public List<NodeValue> nodeList = new List<NodeValue>();
-        public List<BehaviorParameter> parameterList = new List<BehaviorParameter>();
+        public List<HSMParameter> parameterList = new List<HSMParameter>();
         public string descript = string.Empty;
     }
 
@@ -20,7 +20,7 @@ namespace BehaviorTree
         public int NodeType = (int)(NODE_TYPE.SELECT);     // 节点类型 // NODE_TYPE NodeType = NODE_TYPE.SELECT;
         public int parentNodeID = -1;                      // 父节点
         public List<int> childNodeList = new List<int>();  // 子节点集合
-        public List<BehaviorParameter> parameterList = new List<BehaviorParameter>();
+        public List<HSMParameter> parameterList = new List<HSMParameter>();
         public int repeatTimes = 0;
         public string nodeName = string.Empty;
         public int identification = -1;
@@ -29,7 +29,7 @@ namespace BehaviorTree
         public RectT position = new RectT(0, 0, 100, 100); // 节点位置（编辑器显示使用）
     }
 
-    public enum BehaviorParameterType
+    public enum HSMParameterType
     {
         /// <summary>
         /// Float
@@ -50,7 +50,7 @@ namespace BehaviorTree
         Bool = 5,
     }
 
-    public enum BehaviorCompare
+    public enum HSMCompare
     {
         INVALID = 0,
         /// <summary>
@@ -86,7 +86,7 @@ namespace BehaviorTree
 
     [SerializeField]
     [Serializable]
-    public class BehaviorParameter
+    public class HSMParameter
     {
         public int parameterType = 0;
         public string parameterName = string.Empty;
@@ -95,14 +95,14 @@ namespace BehaviorTree
         public bool boolValue = true;
         public int compare;
 
-        public BehaviorParameter Clone()
+        public HSMParameter Clone()
         {
-            BehaviorParameter newParameter = new BehaviorParameter();
+            HSMParameter newParameter = new HSMParameter();
             newParameter.CloneFrom(this);
             return newParameter;
         }
 
-        public void CloneFrom(BehaviorParameter parameter)
+        public void CloneFrom(HSMParameter parameter)
         {
             parameterType = parameter.parameterType;
             parameterName = parameter.parameterName;
@@ -112,55 +112,55 @@ namespace BehaviorTree
             compare = parameter.compare;
         }
 
-        private BehaviorCompare Compare(int value)
+        private HSMCompare Compare(int value)
         {
-            BehaviorCompare behaviorCompare = Compare(intValue, value);
-            return behaviorCompare;
+            HSMCompare HSMCompare = Compare(intValue, value);
+            return HSMCompare;
         }
 
-        private BehaviorCompare Compare(float value)
+        private HSMCompare Compare(float value)
         {
-            BehaviorCompare behaviorCompare = Compare(floatValue, value);
-            return behaviorCompare;
+            HSMCompare HSMCompare = Compare(floatValue, value);
+            return HSMCompare;
         }
 
-        private BehaviorCompare Compare(float a, float b)
+        private HSMCompare Compare(float a, float b)
         {
-            BehaviorCompare behaviorCompare = BehaviorCompare.INVALID;
+            HSMCompare HSMCompare = HSMCompare.INVALID;
             if (a > b)
             {
-                behaviorCompare |= BehaviorCompare.GREATER;
+                HSMCompare |= HSMCompare.GREATER;
             }
 
             if (a >= b)
             {
-                behaviorCompare |= BehaviorCompare.GREATER_EQUALS;
+                HSMCompare |= HSMCompare.GREATER_EQUALS;
             }
 
             if (a == b)
             {
-                behaviorCompare |= BehaviorCompare.EQUALS;
+                HSMCompare |= HSMCompare.EQUALS;
             }
 
             if (a <= b)
             {
-                behaviorCompare |= BehaviorCompare.LESS_EQUAL;
+                HSMCompare |= HSMCompare.LESS_EQUAL;
             }
 
             if (a < b)
             {
-                behaviorCompare |= BehaviorCompare.LESS;
+                HSMCompare |= HSMCompare.LESS;
             }
 
-            return behaviorCompare;
+            return HSMCompare;
         }
 
-        private BehaviorCompare Compare(bool value)
+        private HSMCompare Compare(bool value)
         {
-            return (boolValue == value) ? BehaviorCompare.EQUALS : BehaviorCompare.NOT_EQUAL;
+            return (boolValue == value) ? HSMCompare.EQUALS : HSMCompare.NOT_EQUAL;
         }
 
-        public bool Compare(BehaviorParameter parameter)
+        public bool Compare(HSMParameter parameter)
         {
             if (parameterType != parameter.parameterType)
             {
@@ -168,21 +168,21 @@ namespace BehaviorTree
                 return false;
             }
 
-            BehaviorCompare behaviorCompare = BehaviorCompare.NOT_EQUAL;
-            if (parameterType == (int)BehaviorParameterType.Float)
+            HSMCompare HSMCompare = HSMCompare.NOT_EQUAL;
+            if (parameterType == (int)HSMParameterType.Float)
             {
-                behaviorCompare = (Compare(parameter.floatValue));
+                HSMCompare = (Compare(parameter.floatValue));
             }
-            else if (parameterType == (int)BehaviorParameterType.Int)
+            else if (parameterType == (int)HSMParameterType.Int)
             {
-                behaviorCompare = (Compare(parameter.intValue));
+                HSMCompare = (Compare(parameter.intValue));
             }
             else
             {
-                behaviorCompare = (Compare(parameter.boolValue));
+                HSMCompare = (Compare(parameter.boolValue));
             }
 
-            return (compare & (int)behaviorCompare) > 0;
+            return (compare & (int)HSMCompare) > 0;
         }
     }
     

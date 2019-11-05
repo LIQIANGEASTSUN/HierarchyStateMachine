@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 重复执行修饰节点 Repeater 重复执行子节点 N 次

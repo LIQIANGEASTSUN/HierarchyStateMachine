@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
-    public class BehaviorRunTime : IAction
+    public class HSMRunTime : IAction
     {
-        public static readonly BehaviorRunTime Instance = new BehaviorRunTime();
+        public static readonly HSMRunTime Instance = new HSMRunTime();
 
         private NodeBase _rootNode = null;
         private IConditionCheck _iconditionCheck = null;
 
         private RunTimeRotateGo _runtimeRotateGo;
-        private BehaviorRunTime()
+        private HSMRunTime()
         {
         }
 
@@ -27,11 +27,11 @@ namespace BehaviorTree
             _runtimeRotateGo.OnDestroy();
         }
 
-        public void Reset(BehaviorTreeData behaviorTreeData)
+        public void Reset(HSMTreeData HSMTreeData)
         {
-            BehaviorAnalysis analysis = new BehaviorAnalysis();
+            HSMAnalysis analysis = new HSMAnalysis();
             _iconditionCheck = new ConditionCheck();
-            _rootNode = analysis.Analysis(behaviorTreeData, this, _iconditionCheck);
+            _rootNode = analysis.Analysis(HSMTreeData, this, _iconditionCheck);
         }
 
         public ConditionCheck ConditionCheck
@@ -48,8 +48,8 @@ namespace BehaviorTree
 
         public void Execute()
         {
-            if (BehaviorManager.Instance.PlayType == BehaviorPlayType.STOP
-                || (BehaviorManager.Instance.PlayType == BehaviorPlayType.PAUSE))
+            if (HSMManager.Instance.PlayType == HSMPlayType.STOP
+                || (HSMManager.Instance.PlayType == HSMPlayType.PAUSE))
             {
                 return;
             }
@@ -60,7 +60,7 @@ namespace BehaviorTree
             }
         }
 
-        public bool DoAction(int nodeId, List<BehaviorParameter> parameterList)
+        public bool DoAction(int nodeId, List<HSMParameter> parameterList)
         {
             bool result = true;
             for (int i = 0; i < parameterList.Count; ++i)
@@ -75,7 +75,7 @@ namespace BehaviorTree
             return result;
         }
 
-        public bool DoAction(int nodeId, BehaviorParameter parameter)
+        public bool DoAction(int nodeId, HSMParameter parameter)
         {
             return true;
         }

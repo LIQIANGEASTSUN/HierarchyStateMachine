@@ -1,4 +1,4 @@
-﻿using BehaviorTree;
+﻿using HSMTree;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +7,7 @@ public class RoleTest : MonoBehaviour
 {
     public static RoleTest Instance = null;
     private RolePlayer _role;
-    public List<BehaviorParameter> parameterList = new List<BehaviorParameter>();
+    public List<HSMParameter> parameterList = new List<HSMParameter>();
     void Start()
     {
         Instance = this;
@@ -43,7 +43,7 @@ public class RoleTest : MonoBehaviour
 
 public class RolePlayer : IAction
 {
-    private BehaviorAnalysis analysis = null;
+    private HSMAnalysis analysis = null;
     private NodeBase _rootNode = null;
     private IConditionCheck _iconditionCheck = null;
 
@@ -67,21 +67,21 @@ public class RolePlayer : IAction
         _iconditionCheck.SetParameter("GenericBtn", type);
     }
 
-    public void SetData(BehaviorTreeData behaviorTreeData)
+    public void SetData(HSMTreeData HSMTreeData)
     {
-        BehaviorAnalysis analysis = new BehaviorAnalysis();
+        HSMAnalysis analysis = new HSMAnalysis();
         _iconditionCheck = new ConditionCheck();
-        _rootNode = analysis.Analysis(behaviorTreeData, this, _iconditionCheck);
+        _rootNode = analysis.Analysis(HSMTreeData, this, _iconditionCheck);
     }
 
     public void SetData(string content)
     {
-        BehaviorAnalysis analysis = new BehaviorAnalysis();
+        HSMAnalysis analysis = new HSMAnalysis();
         _iconditionCheck = new ConditionCheck();
         _rootNode = analysis.Analysis(content, this, _iconditionCheck);
     }
 
-    public bool DoAction(int nodeId, List<BehaviorParameter> parameterList)
+    public bool DoAction(int nodeId, List<HSMParameter> parameterList)
     {
         bool result = true;
         for (int i = 0; i < parameterList.Count; ++i)
@@ -96,7 +96,7 @@ public class RolePlayer : IAction
         return result;
     }
 
-    public bool DoAction(int nodeId, BehaviorParameter parameter)
+    public bool DoAction(int nodeId, HSMParameter parameter)
     {
         Debug.LogError("Execute:" + parameter.parameterName + "   bool:" + parameter.boolValue + "    float:" + parameter.floatValue + "    int:" + parameter.intValue);
 

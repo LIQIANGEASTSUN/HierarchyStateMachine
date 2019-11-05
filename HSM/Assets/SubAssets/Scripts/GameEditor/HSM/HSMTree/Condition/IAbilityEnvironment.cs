@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     public interface IAbilityEnvironment
     {

@@ -2,86 +2,86 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using BehaviorTree;
+using HSMTree;
 using System.IO;
 
-public class BehaviorManager
+public class HSMManager
 {
-    public static readonly BehaviorManager Instance = new BehaviorManager();
+    public static readonly HSMManager Instance = new HSMManager();
 
-    public delegate void BehaviorChangeRootNode(int nodeId);
-    public delegate void BehaviorChangeSelectId(int nodeId);
-    public delegate void BehaviorAddNode(Node_Draw_Info_Item info, Vector3 mousePosition);
-    public delegate void BehaviorDeleteNode(int nodeId);
-    public delegate void BehaviorRemoveParentNode(int nodeId);
-    public delegate void BehaviorLoadFile(string fileName);
-    public delegate void BehaviorSaveFile(string fileName);
-    public delegate void BehaviorDeleteFile(string fileName);
-    public delegate void BehaviorNodeAddChild(int parentId, int childId);
-    public delegate void BehaviorNodeParameter(int nodeId, BehaviorParameter parameter, bool isAdd);
-    public delegate void BehaviorParameterChange(BehaviorParameter parameter, bool isAdd);
-    public delegate void BehaviorNodeChangeParameter(int nodeId, string oldParameter, string newParameter);
-    public delegate void BehaviorRuntimePlay(BehaviorPlayType state);
+    public delegate void HSMChangeRootNode(int nodeId);
+    public delegate void HSMChangeSelectId(int nodeId);
+    public delegate void HSMAddNode(Node_Draw_Info_Item info, Vector3 mousePosition);
+    public delegate void HSMDeleteNode(int nodeId);
+    public delegate void HSMRemoveParentNode(int nodeId);
+    public delegate void HSMLoadFile(string fileName);
+    public delegate void HSMSaveFile(string fileName);
+    public delegate void HSMDeleteFile(string fileName);
+    public delegate void HSMNodeAddChild(int parentId, int childId);
+    public delegate void HSMNodeParameter(int nodeId, HSMParameter parameter, bool isAdd);
+    public delegate void HSMParameterChange(HSMParameter parameter, bool isAdd);
+    public delegate void HSMNodeChangeParameter(int nodeId, string oldParameter, string newParameter);
+    public delegate void HSMRuntimePlay(HSMPlayType state);
 
     private string _filePath = string.Empty;
     private string _fileName = string.Empty;
-    private BehaviorTreeData _behaviorTreeData;
-    private BehaviorPlayType _playState = BehaviorPlayType.STOP;
+    private HSMTreeData _HSMTreeData;
+    private HSMPlayType _playState = HSMPlayType.STOP;
 
     // 当前选择的节点
     private int _currentSelectId = 0;
 
-    public static BehaviorChangeSelectId behaviorChangeSelectId;
-    public static BehaviorAddNode behaviorAddNode;
-    public static BehaviorDeleteNode behaviorDeleteNode;
-    public static BehaviorRemoveParentNode behaviorRemoveParentNode;
-    public static BehaviorLoadFile behaviorLoadFile;
-    public static BehaviorSaveFile behaviorSaveFile;
-    public static BehaviorDeleteFile behaviorDeleteFile;
-    public static BehaviorNodeAddChild behaviorNodeAddChild;
-    public static BehaviorNodeParameter behaviorNodeParameter;
-    public static BehaviorParameterChange parameterChange;
-    public static BehaviorNodeChangeParameter behaviorNodeChangeParameter;
-    public static BehaviorRuntimePlay behaviorRuntimePlay;
+    public static HSMChangeSelectId hSMChangeSelectId;
+    public static HSMAddNode hSMAddNode;
+    public static HSMDeleteNode hSMDeleteNode;
+    public static HSMRemoveParentNode hSMRemoveParentNode;
+    public static HSMLoadFile hSMLoadFile;
+    public static HSMSaveFile hSMSaveFile;
+    public static HSMDeleteFile hSMDeleteFile;
+    public static HSMNodeAddChild hSMNodeAddChild;
+    public static HSMNodeParameter hSMNodeParameter;
+    public static HSMParameterChange parameterChange;
+    public static HSMNodeChangeParameter hSMNodeChangeParameter;
+    public static HSMRuntimePlay hSMRuntimePlay;
 
     public void Init()
     {
-        _filePath = "Assets/SubAssets/GameData/BehaviorTree/";
+        _filePath = "Assets/SubAssets/GameData/HSM/";
         _fileName = string.Empty;
-        _behaviorTreeData = new BehaviorTreeData();
+        _HSMTreeData = new HSMTreeData();
 
-        behaviorChangeSelectId += ChangeSelectId;
-        behaviorAddNode += AddNode;
-        behaviorDeleteNode += DeleteNode;
-        behaviorLoadFile += LoadFile;
-        behaviorSaveFile += SaveFile;
-        behaviorDeleteFile += DeleteFile;
-        behaviorNodeAddChild += NodeAddChild;
-        behaviorRemoveParentNode += RemoveParentNode;
-        behaviorNodeParameter += NodeParameterChange;
+        hSMChangeSelectId += ChangeSelectId;
+        hSMAddNode += AddNode;
+        hSMDeleteNode += DeleteNode;
+        hSMLoadFile += LoadFile;
+        hSMSaveFile += SaveFile;
+        hSMDeleteFile += DeleteFile;
+        hSMNodeAddChild += NodeAddChild;
+        hSMRemoveParentNode += RemoveParentNode;
+        hSMNodeParameter += NodeParameterChange;
         parameterChange += ParameterChange;
-        behaviorNodeChangeParameter += NodeChangeParameter;
-        behaviorRuntimePlay += RuntimePlay;
+        hSMNodeChangeParameter += NodeChangeParameter;
+        hSMRuntimePlay += RuntimePlay;
 
-        _playState = BehaviorPlayType.STOP;
+        _playState = HSMPlayType.STOP;
     }
 
     public void OnDestroy()
     {
-        behaviorChangeSelectId -= ChangeSelectId;
-        behaviorAddNode -= AddNode;
-        behaviorDeleteNode -= DeleteNode;
-        behaviorLoadFile -= LoadFile;
-        behaviorSaveFile -= SaveFile;
-        behaviorDeleteFile -= DeleteFile;
-        behaviorNodeAddChild -= NodeAddChild;
-        behaviorRemoveParentNode -= RemoveParentNode;
-        behaviorNodeParameter -= NodeParameterChange;
+        hSMChangeSelectId -= ChangeSelectId;
+        hSMAddNode -= AddNode;
+        hSMDeleteNode -= DeleteNode;
+        hSMLoadFile -= LoadFile;
+        hSMSaveFile -= SaveFile;
+        hSMDeleteFile -= DeleteFile;
+        hSMNodeAddChild -= NodeAddChild;
+        hSMRemoveParentNode -= RemoveParentNode;
+        hSMNodeParameter -= NodeParameterChange;
         parameterChange -= ParameterChange;
-        behaviorNodeChangeParameter -= NodeChangeParameter;
-        behaviorRuntimePlay -= RuntimePlay;
+        hSMNodeChangeParameter -= NodeChangeParameter;
+        hSMRuntimePlay -= RuntimePlay;
 
-        _playState = BehaviorPlayType.STOP;
+        _playState = HSMPlayType.STOP;
 
         AssetDatabase.Refresh();
         UnityEngine.Caching.ClearCache();
@@ -89,7 +89,7 @@ public class BehaviorManager
 
     public void Update()
     {
-        CheckNode(_behaviorTreeData.nodeList);
+        CheckNode(_HSMTreeData.nodeList);
     }
 
     public string FileName
@@ -114,12 +114,12 @@ public class BehaviorManager
         get { return _currentSelectId; }
     }
 
-    public BehaviorTreeData BehaviorTreeData
+    public HSMTreeData HSMTreeData
     {
-        get { return _behaviorTreeData; }
+        get { return _HSMTreeData; }
     }
 
-    public BehaviorPlayType PlayType
+    public HSMPlayType PlayType
     {
         get { return _playState; }
     }
@@ -136,7 +136,7 @@ public class BehaviorManager
     {
         get
         {
-            return _behaviorTreeData.nodeList;
+            return _HSMTreeData.nodeList;
         }
     }
 
@@ -150,26 +150,26 @@ public class BehaviorManager
             return;
         }
 
-        _playState = BehaviorPlayType.STOP;
+        _playState = HSMPlayType.STOP;
         NodeNotify.SetPlayState((int)_playState);
 
-        BehaviorReadWrite readWrite = new BehaviorReadWrite();
-        BehaviorTreeData behaviorTreeData = readWrite.ReadJson(path);
-        if (null == behaviorTreeData)
+        HSMReadWrite readWrite = new HSMReadWrite();
+        HSMTreeData HSMTreeData = readWrite.ReadJson(path);
+        if (null == HSMTreeData)
         {
             Debug.LogError("file is null:" + fileName);
             return;
         }
 
         _fileName = fileName;
-        _behaviorTreeData = behaviorTreeData;
+        _HSMTreeData = HSMTreeData;
 
-        BehaviorRunTime.Instance.Reset(behaviorTreeData);
+        HSMRunTime.Instance.Reset(HSMTreeData);
     }
 
     private void SaveFile(string fileName)
     {
-        if (_behaviorTreeData == null)
+        if (_HSMTreeData == null)
         {
             Debug.LogError("rootNode is null");
             return;
@@ -191,8 +191,8 @@ public class BehaviorManager
             Directory.CreateDirectory(directory);
         }
 
-        BehaviorReadWrite readWrite = new BehaviorReadWrite();
-        readWrite.WriteJson(_behaviorTreeData, path);
+        HSMReadWrite readWrite = new HSMReadWrite();
+        readWrite.WriteJson(_HSMTreeData, path);
     }
 
     private void DeleteFile(string fileName)
@@ -294,7 +294,7 @@ public class BehaviorManager
         nodeValue.parentNodeID = -1;
     }
 
-    private void NodeParameterChange(int nodeId, BehaviorParameter parameter, bool isAdd)
+    private void NodeParameterChange(int nodeId, HSMParameter parameter, bool isAdd)
     {
         NodeValue nodeValue = GetNode(nodeId);
         if (null == nodeValue)
@@ -320,10 +320,10 @@ public class BehaviorManager
             return;
         }
 
-        BehaviorParameter parameter = null;
-        for (int i = 0; i < _behaviorTreeData.parameterList.Count; ++i)
+        HSMParameter parameter = null;
+        for (int i = 0; i < _HSMTreeData.parameterList.Count; ++i)
         {
-            BehaviorParameter temp = _behaviorTreeData.parameterList[i];
+            HSMParameter temp = _HSMTreeData.parameterList[i];
             if (temp.parameterName.CompareTo(newParameter) == 0)
             {
                 parameter = temp;
@@ -337,7 +337,7 @@ public class BehaviorManager
 
         for (int i = 0; i < nodeValue.parameterList.Count; ++i)
         {
-            BehaviorParameter temp = nodeValue.parameterList[i];
+            HSMParameter temp = nodeValue.parameterList[i];
             if (temp.parameterName.CompareTo(parameter.parameterName) == 0)
             {
                 nodeValue.parameterList[i] = parameter.Clone();
@@ -346,25 +346,25 @@ public class BehaviorManager
         }
     }
 
-    private void RuntimePlay(BehaviorPlayType state)
+    private void RuntimePlay(HSMPlayType state)
     {
         NodeNotify.SetPlayState((int)state);
         _playState = state;
     }
 
-    private void ParameterChange(BehaviorParameter parameter, bool isAdd)
+    private void ParameterChange(HSMParameter parameter, bool isAdd)
     {
         if (isAdd)
         {
-            AddParameter(_behaviorTreeData.parameterList, parameter);
+            AddParameter(_HSMTreeData.parameterList, parameter);
         }
         else
         {
-            DelParameter(_behaviorTreeData.parameterList, parameter);
+            DelParameter(_HSMTreeData.parameterList, parameter);
         }
     }
 
-    private bool AddParameter(List<BehaviorParameter> parameterList, BehaviorParameter parameter, bool repeatAdd = false)
+    private bool AddParameter(List<HSMParameter> parameterList, HSMParameter parameter, bool repeatAdd = false)
     {
         bool result = true;
         if (string.IsNullOrEmpty(parameter.parameterName))
@@ -376,7 +376,7 @@ public class BehaviorManager
 
         for (int i = 0; i < parameterList.Count; ++i)
         {
-            BehaviorParameter tempParameter = parameterList[i];
+            HSMParameter tempParameter = parameterList[i];
             if (!repeatAdd && tempParameter.parameterName.CompareTo(parameter.parameterName) == 0)
             {
                 string meg = string.Format("条件参数:{0} 已存在", parameter.parameterName);
@@ -388,18 +388,18 @@ public class BehaviorManager
 
         if (result)
         {
-            BehaviorParameter newParameter = parameter.Clone();
+            HSMParameter newParameter = parameter.Clone();
             parameterList.Add(newParameter);
         }
 
         return result;
     }
 
-    private void DelParameter(List<BehaviorParameter> parameterList, BehaviorParameter parameter)
+    private void DelParameter(List<HSMParameter> parameterList, HSMParameter parameter)
     {
         for (int i = 0; i < parameterList.Count; ++i)
         {
-            BehaviorParameter tempParameter = parameterList[i];
+            HSMParameter tempParameter = parameterList[i];
             if (tempParameter.parameterName.CompareTo(parameter.parameterName) == 0)
             {
                 parameterList.RemoveAt(i);
@@ -432,9 +432,9 @@ public class BehaviorManager
     {
         NodeValue newNodeValue = new NodeValue();
         newNodeValue.id = GetNewNodeId();
-        if (_behaviorTreeData.rootNodeId < 0)
+        if (_HSMTreeData.rootNodeId < 0)
         {
-            _behaviorTreeData.rootNodeId = newNodeValue.id;
+            _HSMTreeData.rootNodeId = newNodeValue.id;
             newNodeValue.isRootNode = true;
         }
 

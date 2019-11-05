@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
     public interface IConditionCheck
     {
-        void AddParameter(List<BehaviorParameter> parameterList);
+        void AddParameter(List<HSMParameter> parameterList);
 
         void SetParameter(string parameterName, bool boolValue);
 
@@ -15,13 +15,13 @@ namespace BehaviorTree
 
         void SetParameter(string parameterName, int intValue);
 
-        void SetParameter(BehaviorParameter parameter);
+        void SetParameter(HSMParameter parameter);
 
-        bool Condition(BehaviorParameter parameter);
+        bool Condition(HSMParameter parameter);
 
-        bool Condition(List<BehaviorParameter> parameterList);
+        bool Condition(List<HSMParameter> parameterList);
 
-        List<BehaviorParameter> GetAllParameter();
+        List<HSMParameter> GetAllParameter();
     }
 
 }

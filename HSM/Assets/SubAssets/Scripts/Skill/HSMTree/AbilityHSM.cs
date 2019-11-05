@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BehaviorTree;
+using HSMTree;
 //using GenPB;
 
-public class AbilityBehavior : IAbilityEnvironment, IAction
+public class AbilityHSM : IAbilityEnvironment, IAction
 {
     //private Skill _skill;
     private NodeBase _rootNode = null;
@@ -34,7 +34,7 @@ public class AbilityBehavior : IAbilityEnvironment, IAction
         //{ (int)SkillHandleType.DEPUTY_SKILL_THROW,  "AbilityThrow" },
     };
 
-    public AbilityBehavior(/*Skill skill*/)
+    public AbilityHSM(/*Skill skill*/)
     {
         //_skill = skill;
 
@@ -57,7 +57,7 @@ public class AbilityBehavior : IAbilityEnvironment, IAction
         {
             return;
         }
-        BehaviorAnalysis analysis = new BehaviorAnalysis();
+        HSMAnalysis analysis = new HSMAnalysis();
         _rootNode = analysis.Analysis(textAsset.text, this, _iconditionCheck);
 
         Clear();
@@ -168,7 +168,7 @@ public class AbilityBehavior : IAbilityEnvironment, IAction
     //}
 
     #region IAction
-    public bool DoAction(int nodeId, List<BehaviorParameter> parameterList)
+    public bool DoAction(int nodeId, List<HSMParameter> parameterList)
     {
         bool result = true;
         for (int i = 0; i < parameterList.Count; ++i)
@@ -183,7 +183,7 @@ public class AbilityBehavior : IAbilityEnvironment, IAction
         return result;
     }
 
-    public bool DoAction(int nodeId, BehaviorParameter parameter)
+    public bool DoAction(int nodeId, HSMParameter parameter)
     {
         if (parameter.parameterName.CompareTo(SkillRequestState) == 0)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
     public enum IDENTIFICATION

@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using BehaviorTree;
+using HSMTree;
 using System;
 
-public class BehaviorDrawController
+public class HSMDrawController
 {
     private TreeNodeWindow _treeNodeWindow = null;
 
-    public BehaviorDrawModel _behaviorDrawModel = null;
-    private BehaviorDrawView _behaviorDrawView = null;
+    public HSMDrawModel _HSMDrawModel = null;
+    private HSMDrawView _HSMDrawView = null;
 
     public void Init()
     {
-        _behaviorDrawModel = new BehaviorDrawModel();
-        _behaviorDrawView = new BehaviorDrawView();
+        _HSMDrawModel = new HSMDrawModel();
+        _HSMDrawView = new HSMDrawView();
     }
 
     public void OnDestroy()
@@ -26,12 +26,12 @@ public class BehaviorDrawController
     public void OnGUI(TreeNodeWindow window)
     {
         _treeNodeWindow = window;
-        _behaviorDrawView.Init(_treeNodeWindow, this);
+        _HSMDrawView.Init(_treeNodeWindow, this);
 
-        NodeValue currentNode = _behaviorDrawModel.GetCurrentSelectNode();
-        List<NodeValue> nodeList = _behaviorDrawModel.GetNodeList();
+        NodeValue currentNode = _HSMDrawModel.GetCurrentSelectNode();
+        List<NodeValue> nodeList = _HSMDrawModel.GetNodeList();
 
-        _behaviorDrawView.Draw(_treeNodeWindow.position, currentNode, nodeList);
+        _HSMDrawView.Draw(_treeNodeWindow.position, currentNode, nodeList);
     }
 
 }
@@ -97,11 +97,11 @@ public class Node_Draw_Info_Item
 }
 
 
-public class BehaviorDrawModel
+public class HSMDrawModel
 {
     private List<Node_Draw_Info> infoList = new List<Node_Draw_Info>();
 
-    public BehaviorDrawModel()
+    public HSMDrawModel()
     {
         infoList.Clear();
         SetInfoList();
@@ -109,12 +109,12 @@ public class BehaviorDrawModel
 
     public NodeValue GetCurrentSelectNode()
     {
-        return BehaviorManager.Instance.CurrentNode;
+        return HSMManager.Instance.CurrentNode;
     }
 
     public List<NodeValue> GetNodeList()
     {
-        return BehaviorManager.Instance.NodeList;
+        return HSMManager.Instance.NodeList;
     }
 
     private List<NODE_TYPE[]> nodeList = new List<NODE_TYPE[]>() {
@@ -171,10 +171,10 @@ public class BehaviorDrawModel
 
 }
 
-public class BehaviorDrawView
+public class HSMDrawView
 {
     private TreeNodeWindow _treeNodeWindow = null;
-    private BehaviorDrawController _drawController = null;
+    private HSMDrawController _drawController = null;
 
     // 鼠标的位置
     private Vector2 mousePosition;
@@ -187,7 +187,7 @@ public class BehaviorDrawView
 
     private List<NodeValue> _nodeList = new List<NodeValue>();
 
-    public void Init(TreeNodeWindow window, BehaviorDrawController drawController)
+    public void Init(TreeNodeWindow window, HSMDrawController drawController)
     {
         _treeNodeWindow = window;
         _drawController = drawController;
@@ -231,9 +231,9 @@ public class BehaviorDrawView
                     // 如果按下鼠标时，选中了一个节点，则将 新选中根节点 添加为 selectNode 的子节点
                     if (null != nodeValue && currentNode.id != nodeValue.id)
                     {
-                        if (null != BehaviorManager.behaviorNodeAddChild)
+                        if (null != HSMManager.hSMNodeAddChild)
                         {
-                            BehaviorManager.behaviorNodeAddChild(currentNode.id, nodeValue.id);
+                            HSMManager.hSMNodeAddChild(currentNode.id, nodeValue.id);
                         }
                     }
 
@@ -243,10 +243,10 @@ public class BehaviorDrawView
                 else
                 {
                     NodeValue nodeValue = GetMouseInNode(nodeList);
-                    if (BehaviorManager.behaviorChangeSelectId != null)
+                    if (HSMManager.hSMChangeSelectId != null)
                     {
                         int nodeId = (null != nodeValue) ? nodeValue.id : -1;
-                        BehaviorManager.behaviorChangeSelectId(nodeId);
+                        HSMManager.hSMChangeSelectId(nodeId);
                     }
                 }
             }
@@ -298,7 +298,7 @@ public class BehaviorDrawView
     void DrawNodeWindow(int id)
     {
         NodeValue nodeValue = _nodeList[id];
-        NodeEditor.Draw(nodeValue, BehaviorManager.Instance.CurrentSelectId);
+        NodeEditor.Draw(nodeValue, HSMManager.Instance.CurrentSelectId);
         GUI.DragWindow();
     }
 
@@ -328,13 +328,13 @@ public class BehaviorDrawView
         if (menuType == 0)
         {
             GenericMenu.MenuFunction2 CallBack = (object userData) => {
-                if (null != BehaviorManager.behaviorAddNode)
+                if (null != HSMManager.hSMAddNode)
                 {
-                    BehaviorManager.behaviorAddNode((Node_Draw_Info_Item)userData, mousePosition);
+                    HSMManager.hSMAddNode((Node_Draw_Info_Item)userData, mousePosition);
                 }
             };
 
-            List<Node_Draw_Info> nodeList = _drawController._behaviorDrawModel.InfoList;
+            List<Node_Draw_Info> nodeList = _drawController._HSMDrawModel.InfoList;
             for (int i = 0; i < nodeList.Count; ++i)
             {
                 Node_Draw_Info draw_Info = nodeList[i];
@@ -383,9 +383,9 @@ public class BehaviorDrawView
             return;
         }
 
-        if (null != BehaviorManager.behaviorDeleteNode)
+        if (null != HSMManager.hSMDeleteNode)
         {
-            BehaviorManager.behaviorDeleteNode(nodeValue.id);
+            HSMManager.hSMDeleteNode(nodeValue.id);
         }
     }
 
@@ -398,9 +398,9 @@ public class BehaviorDrawView
             return;
         }
 
-        if (null != BehaviorManager.behaviorRemoveParentNode)
+        if (null != HSMManager.hSMRemoveParentNode)
         {
-            BehaviorManager.behaviorRemoveParentNode(nodeValue.id);
+            HSMManager.hSMRemoveParentNode(nodeValue.id);
         }
     }
 
@@ -410,7 +410,7 @@ public class BehaviorDrawView
         for (int i = nodeValue.childNodeList.Count - 1; i >= 0; --i)
         {
             int childId = nodeValue.childNodeList[i];
-            NodeValue childNode = BehaviorManager.Instance.GetNode(childId);
+            NodeValue childNode = HSMManager.Instance.GetNode(childId);
             DrawNodeCurve(nodeValue.position, childNode.position);
         }
     }
@@ -433,8 +433,8 @@ public class BehaviorDrawView
 
             nodeValue.childNodeList.Sort((a, b) =>
             {
-                NodeValue nodeA = BehaviorManager.Instance.GetNode(a);
-                NodeValue nodeB = BehaviorManager.Instance.GetNode(b);
+                NodeValue nodeA = HSMManager.Instance.GetNode(a);
+                NodeValue nodeB = HSMManager.Instance.GetNode(b);
                 return (int)(nodeA.position.x - nodeB.position.x);
             });
         }

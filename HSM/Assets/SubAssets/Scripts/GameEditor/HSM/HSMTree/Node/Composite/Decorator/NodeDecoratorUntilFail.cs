@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 直到为Fail修饰节点， 一直执行节点，直到返回结果为 Fail。

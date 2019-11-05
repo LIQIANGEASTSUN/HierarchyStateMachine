@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BehaviorTree;
+using HSMTree;
 
 public class ConditionCheck : IConditionCheck
 {
     // 缓存当前行为树使用到的所有参数类型,保存当前世界状态中所有参数动态变化的值
-    private Dictionary<string, BehaviorParameter> _allParameterDic = new Dictionary<string, BehaviorParameter>();
+    private Dictionary<string, HSMParameter> _allParameterDic = new Dictionary<string, HSMParameter>();
 
     public ConditionCheck()
     {
@@ -15,13 +15,13 @@ public class ConditionCheck : IConditionCheck
 
     public void SetParameter(string parameterName, bool boolValue)
     {
-        BehaviorParameter parameter = null;
+        HSMParameter parameter = null;
         if (!_allParameterDic.TryGetValue(parameterName, out parameter)) // 当前行为树不需要的参数值就不保存了
         {
             return;
         }
 
-        if (parameter.parameterType == (int)BehaviorParameterType.Bool)
+        if (parameter.parameterType == (int)HSMParameterType.Bool)
         {
             parameter.boolValue = boolValue;
             _allParameterDic[parameterName] = parameter;
@@ -30,13 +30,13 @@ public class ConditionCheck : IConditionCheck
 
     public void SetParameter(string parameterName, float floatValue)
     {
-        BehaviorParameter parameter = null;
+        HSMParameter parameter = null;
         if (!_allParameterDic.TryGetValue(parameterName, out parameter)) // 当前行为树不需要的参数值就不保存了
         {
             return;
         }
 
-        if (parameter.parameterType == (int)BehaviorParameterType.Float)
+        if (parameter.parameterType == (int)HSMParameterType.Float)
         {
             parameter.floatValue = floatValue;
             _allParameterDic[parameterName] = parameter;
@@ -45,22 +45,22 @@ public class ConditionCheck : IConditionCheck
 
     public void SetParameter(string parameterName, int intValue)
     {
-        BehaviorParameter parameter = null;
+        HSMParameter parameter = null;
         if (!_allParameterDic.TryGetValue(parameterName, out parameter)) // 当前行为树不需要的参数值就不保存了
         {
             return;
         }
 
-        if (parameter.parameterType == (int)BehaviorParameterType.Int)
+        if (parameter.parameterType == (int)HSMParameterType.Int)
         {
             parameter.intValue = intValue;
             _allParameterDic[parameterName] = parameter;
         }
     }
 
-    public void SetParameter(BehaviorParameter parameter)
+    public void SetParameter(HSMParameter parameter)
     {
-        BehaviorParameter cacheParameter = null;
+        HSMParameter cacheParameter = null;
         if (!_allParameterDic.TryGetValue(parameter.parameterName, out cacheParameter)) // 当前行为树不需要的参数值就不保存了
         {
             return;
@@ -76,11 +76,11 @@ public class ConditionCheck : IConditionCheck
         _allParameterDic[parameter.parameterName] = cacheParameter;
     }
 
-    public void AddParameter(List<BehaviorParameter> parameterList)
+    public void AddParameter(List<HSMParameter> parameterList)
     {
         for (int i = 0; i < parameterList.Count; ++i)
         {
-            BehaviorParameter parameter = parameterList[i];
+            HSMParameter parameter = parameterList[i];
             if (_allParameterDic.ContainsKey(parameter.parameterName))
             {
                 continue;
@@ -93,9 +93,9 @@ public class ConditionCheck : IConditionCheck
         }
     }
 
-    public bool CompareParameter(BehaviorParameter parameter)
+    public bool CompareParameter(HSMParameter parameter)
     {
-        BehaviorParameter cacheParameter = null;
+        HSMParameter cacheParameter = null;
         if (!_allParameterDic.TryGetValue(parameter.parameterName, out cacheParameter))
         {
             return false;
@@ -110,17 +110,17 @@ public class ConditionCheck : IConditionCheck
         return parameter.Compare(cacheParameter);
     }
 
-    public bool Condition(BehaviorParameter parameter)
+    public bool Condition(HSMParameter parameter)
     {
         return CompareParameter(parameter);
     }
 
-    public bool Condition(List<BehaviorParameter> parameterList)
+    public bool Condition(List<HSMParameter> parameterList)
     {
         bool result = true;
         for (int i = 0; i < parameterList.Count; ++i)
         {
-            BehaviorParameter parameter = parameterList[i];
+            HSMParameter parameter = parameterList[i];
             bool value = Condition(parameter);
             if (!value)
             {
@@ -132,9 +132,9 @@ public class ConditionCheck : IConditionCheck
         return result;
     }
 
-    public List<BehaviorParameter> GetAllParameter()
+    public List<HSMParameter> GetAllParameter()
     {
-        List<BehaviorParameter> parameterList = new List<BehaviorParameter>();
+        List<HSMParameter> parameterList = new List<HSMParameter>();
         foreach(var kv in _allParameterDic)
         {
             parameterList.Add(kv.Value);

@@ -4,30 +4,30 @@ using UnityEngine;
 using LitJson;
 
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
-    public class BehaviorAnalysis
+    public class HSMAnalysis
     {
-        public BehaviorAnalysis()
+        public HSMAnalysis()
         {
 
         }
 
         public NodeBase Analysis(string content, IAction iAction, IConditionCheck iConditionCheck)
         {
-            BehaviorTreeData behaviorTreeData = JsonMapper.ToObject<BehaviorTreeData>(content);
-            if (null == behaviorTreeData)
+            HSMTreeData HSMTreeData = JsonMapper.ToObject<HSMTreeData>(content);
+            if (null == HSMTreeData)
             {
-                Debug.LogError("behaviorTreeData is null");
+                Debug.LogError("HSMTreeData is null");
                 return null;
             }
 
-            iConditionCheck.AddParameter(behaviorTreeData.parameterList);
-            return Analysis(behaviorTreeData, iAction, iConditionCheck);
+            iConditionCheck.AddParameter(HSMTreeData.parameterList);
+            return Analysis(HSMTreeData, iAction, iConditionCheck);
         }
 
-        public NodeBase Analysis(BehaviorTreeData data, IAction iAction, IConditionCheck iConditionCheck)
+        public NodeBase Analysis(HSMTreeData data, IAction iAction, IConditionCheck iConditionCheck)
         {
             NodeBase rootNode = null;
 

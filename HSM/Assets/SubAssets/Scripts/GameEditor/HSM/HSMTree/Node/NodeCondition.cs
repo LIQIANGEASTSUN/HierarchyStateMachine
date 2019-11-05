@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 条件节点(叶节点)
     /// </summary>
     public class NodeCondition : NodeLeaf
     {
-        protected List<BehaviorParameter> _parameterList = new List<BehaviorParameter>();
+        protected List<HSMParameter> _parameterList = new List<HSMParameter>();
         protected IConditionCheck _iconditionCheck = null;
 
         public NodeCondition() : base(NODE_TYPE.CONDITION)
@@ -24,7 +24,7 @@ namespace BehaviorTree
             _iconditionCheck = iConditionCheck;
         }
 
-        public void SetParameters(List<BehaviorParameter> parameterList)
+        public void SetParameters(List<HSMParameter> parameterList)
         {
             if (parameterList.Count > 0)
             {

@@ -6,23 +6,23 @@ using System.IO;
 using System.Text;
 using System;
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
-    public class BehaviorFileHandleController
+    public class HSMFileHandleController
     {
-        private BehaviorFileHandleModel _fileHandleModel;
-        private BehaviorFileHandleView _fileHandleView;
+        private HSMFileHandleModel _fileHandleModel;
+        private HSMFileHandleView _fileHandleView;
 
-        public BehaviorFileHandleController()
+        public HSMFileHandleController()
         {
             Init();
         }
 
         public void Init()
         {
-            _fileHandleModel = new BehaviorFileHandleModel();
-            _fileHandleView = new BehaviorFileHandleView();
+            _fileHandleModel = new HSMFileHandleModel();
+            _fileHandleView = new HSMFileHandleView();
         }
 
         public void OnDestroy()
@@ -37,13 +37,13 @@ namespace BehaviorTree
 
     }
 
-    public class BehaviorFileHandleModel
+    public class HSMFileHandleModel
     {
 
 
     }
 
-    public class BehaviorFileHandleView
+    public class HSMFileHandleView
     {
 
         public void Draw()
@@ -54,23 +54,23 @@ namespace BehaviorTree
                 {
                     if (GUILayout.Button("选择文件"))
                     {
-                        SelectFile(BehaviorManager.Instance.FilePath);
+                        SelectFile(HSMManager.Instance.FilePath);
                     }
 
                     if (GUILayout.Button("保存"))
                     {
-                        CreateSaveFile(BehaviorManager.Instance.FileName);
+                        CreateSaveFile(HSMManager.Instance.FileName);
                         AssetDatabase.Refresh();
                     }
 
                     if (GUILayout.Button("删除"))
                     {
-                        DeleteFile(BehaviorManager.Instance.FileName);
+                        DeleteFile(HSMManager.Instance.FileName);
                         AssetDatabase.Refresh();
                     }
                     if (GUILayout.Button("批量更新"))
                     {
-                        UpdateAllFile(BehaviorManager.Instance.FilePath);
+                        UpdateAllFile(HSMManager.Instance.FilePath);
                         AssetDatabase.Refresh();
                     }
                 }
@@ -80,7 +80,7 @@ namespace BehaviorTree
                 EditorGUILayout.BeginHorizontal();
                 {
                     EditorGUILayout.LabelField("文件名", GUILayout.Width(80));
-                    BehaviorManager.Instance.FileName = EditorGUILayout.TextField(BehaviorManager.Instance.FileName);
+                    HSMManager.Instance.FileName = EditorGUILayout.TextField(HSMManager.Instance.FileName);
                 }
                 EditorGUILayout.EndHorizontal();
             }
@@ -101,9 +101,9 @@ namespace BehaviorTree
                 string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    if (null != BehaviorManager.behaviorLoadFile)
+                    if (null != HSMManager.hSMLoadFile)
                     {
-                        BehaviorManager.behaviorLoadFile(fileName);
+                        HSMManager.hSMLoadFile(fileName);
                     }
                 }
             }
@@ -111,17 +111,17 @@ namespace BehaviorTree
 
         private static void CreateSaveFile(string fileName)
         {
-            if (null != BehaviorManager.behaviorSaveFile)
+            if (null != HSMManager.hSMSaveFile)
             {
-                BehaviorManager.behaviorSaveFile(fileName);
+                HSMManager.hSMSaveFile(fileName);
             }
         }
 
         private static void DeleteFile(string fileName)
         {
-            if (null != BehaviorManager.behaviorDeleteFile)
+            if (null != HSMManager.hSMDeleteFile)
             {
-                BehaviorManager.behaviorDeleteFile(fileName);
+                HSMManager.hSMDeleteFile(fileName);
             }
         }
 
@@ -132,8 +132,8 @@ namespace BehaviorTree
             for (int i = 0; i < fileInfoArr.Length; ++i)
             {
                 string fullName = fileInfoArr[i].FullName;
-                BehaviorReadWrite readWrite = new BehaviorReadWrite();
-                BehaviorTreeData treeData = readWrite.ReadJson(fullName);
+                HSMReadWrite readWrite = new HSMReadWrite();
+                HSMTreeData treeData = readWrite.ReadJson(fullName);
 
                 treeData = UpdateData(treeData);
 
@@ -146,7 +146,7 @@ namespace BehaviorTree
             }
         }
 
-        private static BehaviorTreeData UpdateData(BehaviorTreeData treeData)
+        private static HSMTreeData UpdateData(HSMTreeData treeData)
         {
             return treeData;
         }

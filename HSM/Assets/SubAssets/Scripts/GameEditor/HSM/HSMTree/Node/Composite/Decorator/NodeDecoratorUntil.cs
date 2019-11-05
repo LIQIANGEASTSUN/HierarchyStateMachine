@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 修饰节点：一直执行节点，直到达到条件

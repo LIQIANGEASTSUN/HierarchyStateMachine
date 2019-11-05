@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 组合节点

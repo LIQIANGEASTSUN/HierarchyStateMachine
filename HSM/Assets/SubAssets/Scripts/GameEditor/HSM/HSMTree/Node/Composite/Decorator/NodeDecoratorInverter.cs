@@ -1,9 +1,9 @@
-﻿using BehaviorTree;
+﻿using HSMTree;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 取反修饰节点 Inverter        对子节点执行结果取反

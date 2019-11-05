@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace BehaviorTree
+namespace HSMTree
 {
-    public class BehaviorDrawPropertyController
+    public class HSMDrawProperty
     {
-        private BehaviorFileHandleController _fileHandleController;
-        private BehaviorPlayController _playController;
-        private BehaviorPropertyOption _propertyOption;
-        private BehaviorDescriptController _descriptController;
-        private BehaviorNodeInspector _nodeInspector;
-        private BehaviorParameterController _parameterController;
-        private BehaviorRuntimeParameter _runtimeParameter;
+        private HSMFileHandleController _fileHandleController;
+        private HSMPlayController _playController;
+        private HSMPropertyOption _propertyOption;
+        private HSMDescriptController _descriptController;
+        private HSMNodeInspector _nodeInspector;
+        private HSMParameterController _parameterController;
+        private HSMRuntimeParameter _runtimeParameter;
 
         public void Init()
         {
-            _fileHandleController = new BehaviorFileHandleController();
-            _playController = new BehaviorPlayController();
-            _propertyOption = new BehaviorPropertyOption();
-            _descriptController = new BehaviorDescriptController();
-            _nodeInspector = new BehaviorNodeInspector();
-            _parameterController = new BehaviorParameterController();
-            _runtimeParameter = new BehaviorRuntimeParameter();
+            _fileHandleController = new HSMFileHandleController();
+            _playController = new HSMPlayController();
+            _propertyOption = new HSMPropertyOption();
+            _descriptController = new HSMDescriptController();
+            _nodeInspector = new HSMNodeInspector();
+            _parameterController = new HSMParameterController();
+            _runtimeParameter = new HSMRuntimeParameter();
         }
 
         public void OnDestroy()
@@ -54,8 +54,8 @@ namespace BehaviorTree
             }
             else if (option == 2)
             {
-                if (BehaviorManager.Instance.PlayType == BehaviorPlayType.PLAY
-                    || BehaviorManager.Instance.PlayType == BehaviorPlayType.PAUSE)
+                if (HSMManager.Instance.PlayType == HSMPlayType.PLAY
+                    || HSMManager.Instance.PlayType == HSMPlayType.PAUSE)
                 {
                     _runtimeParameter.OnGUI();
                 }
@@ -67,7 +67,7 @@ namespace BehaviorTree
         }
     }
 
-    public class BehaviorPropertyOption
+    public class HSMPropertyOption
     {
         private int option = 1;
         private readonly string[] optionArr = new string[] { "Descript", "Inspect", "Parameter" };

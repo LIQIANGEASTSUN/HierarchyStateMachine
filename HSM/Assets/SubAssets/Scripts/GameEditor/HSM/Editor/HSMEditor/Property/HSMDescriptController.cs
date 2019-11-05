@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace BehaviorTree
+namespace HSMTree
 {
-    public class BehaviorDescriptController
+    public class HSMDescriptController
     {
-        private BehaviorDescriptModel _descriptModel;
-        private BehaviorDescriptView _descriptView;
+        private HSMDescriptModel _descriptModel;
+        private HSMDescriptView _descriptView;
 
-        public BehaviorDescriptController()
+        public HSMDescriptController()
         {
             Init();
         }
 
         public void Init()
         {
-            _descriptModel = new BehaviorDescriptModel();
-            _descriptView = new BehaviorDescriptView();
+            _descriptModel = new HSMDescriptModel();
+            _descriptView = new HSMDescriptView();
         }
 
         public void OnDestroy()
@@ -28,25 +28,25 @@ namespace BehaviorTree
 
         public void OnGUI()
         {
-            BehaviorTreeData data = _descriptModel.GetData();
+            HSMTreeData data = _descriptModel.GetData();
             _descriptView.Draw(data);
         }
 
     }
 
 
-    public class BehaviorDescriptModel
+    public class HSMDescriptModel
     {
-        public BehaviorTreeData GetData()
+        public HSMTreeData GetData()
         {
-            return BehaviorManager.Instance.BehaviorTreeData;
+            return HSMManager.Instance.HSMTreeData;
         }
     }
 
-    public class BehaviorDescriptView
+    public class HSMDescriptView
     {
 
-        public void Draw(BehaviorTreeData data)
+        public void Draw(HSMTreeData data)
         {
             Rect rect = GUILayoutUtility.GetRect(0f, 0, GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical("box");

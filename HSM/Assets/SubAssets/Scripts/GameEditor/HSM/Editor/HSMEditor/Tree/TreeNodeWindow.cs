@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEditor;
 using System;
-using BehaviorTree;
+using HSMTree;
 
 public class TreeNodeWindow : EditorWindow {
-    private BehaviorDrawPropertyController _behaviorDrawPropertyController;
-    private BehaviorDrawController _behaviorDrawController;
+    private HSMDrawProperty _HSMDrawPropertyController;
+    private HSMDrawController _HSMDrawController;
 
     public static TreeNodeWindow window;
     private static Rect windowsPosition = new Rect(10, 30, 1236, 864);
@@ -22,34 +22,34 @@ public class TreeNodeWindow : EditorWindow {
 
     private void OnEnable()
     {
-        BehaviorManager.Instance.Init();
+        HSMManager.Instance.Init();
 
-        _behaviorDrawPropertyController = new BehaviorDrawPropertyController();
-        _behaviorDrawPropertyController.Init();
+        _HSMDrawPropertyController = new HSMDrawProperty();
+        _HSMDrawPropertyController.Init();
 
-        _behaviorDrawController = new BehaviorDrawController();
-        _behaviorDrawController.Init();
+        _HSMDrawController = new HSMDrawController();
+        _HSMDrawController.Init();
 
-        BehaviorRunTime.Instance.Init();
+        HSMRunTime.Instance.Init();
 
         EditorApplication.update += OnFrame;
     }
 
     private void OnDisable()
     {
-        BehaviorManager.Instance.OnDestroy();
+        HSMManager.Instance.OnDestroy();
         EditorApplication.update -= OnFrame;
 
-        _behaviorDrawController.OnDestroy();
-        _behaviorDrawPropertyController.OnDestroy();
+        _HSMDrawController.OnDestroy();
+        _HSMDrawPropertyController.OnDestroy();
 
-        BehaviorRunTime.Instance.OnDestroy();
+        HSMRunTime.Instance.OnDestroy();
     }
 
     private void OnFrame()
     {
-        BehaviorManager.Instance.Update();
-        BehaviorRunTime.Instance.Update();
+        HSMManager.Instance.Update();
+        HSMRunTime.Instance.Update();
     }
 
     private void OnGUI()
@@ -63,13 +63,13 @@ public class TreeNodeWindow : EditorWindow {
         {
             EditorGUILayout.BeginVertical("box", GUILayout.Width(300), GUILayout.ExpandHeight(true));
             {
-                _behaviorDrawPropertyController.OnGUI();
+                _HSMDrawPropertyController.OnGUI();
             }
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             {
-                _behaviorDrawController.OnGUI(window);
+                _HSMDrawController.OnGUI(window);
             }
             EditorGUILayout.EndVertical();
         }

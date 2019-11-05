@@ -4,12 +4,12 @@ using UnityEngine;
 using LitJson;
 using System;
 
-namespace BehaviorTree
+namespace HSMTree
 {
-    public class BehaviorReadWrite
+    public class HSMReadWrite
     {
-        #region BehaviorTreeData
-        public bool WriteJson(BehaviorTreeData data, string filePath)
+        #region HSMTreeData
+        public bool WriteJson(HSMTreeData data, string filePath)
         {
             string content = LitJson.JsonMapper.ToJson(data);
             bool value = FileReadWrite.Write(filePath, content);
@@ -26,36 +26,36 @@ namespace BehaviorTree
             return value;
         }
 
-        public BehaviorTreeData ReadJson(string filePath)
+        public HSMTreeData ReadJson(string filePath)
         {
             Debug.Log("Read:" + filePath);
-            BehaviorTreeData behaviorData = new BehaviorTreeData();
+            HSMTreeData HSMData = new HSMTreeData();
 
             string content = FileReadWrite.Read(filePath);
             if (string.IsNullOrEmpty(content))
             {
-                return behaviorData;
+                return HSMData;
             }
 
             JsonData jsonData = JsonMapper.ToObject(content);
 
-            behaviorData.rootNodeId = int.Parse(jsonData["rootNodeId"].ToString());
+            HSMData.rootNodeId = int.Parse(jsonData["rootNodeId"].ToString());
 
             if (((IDictionary)jsonData).Contains("nodeList"))
             {
                 JsonData nodeList = jsonData["nodeList"];
-                behaviorData.nodeList = GetNodeList(nodeList);
+                HSMData.nodeList = GetNodeList(nodeList);
             }
 
             if (((IDictionary)jsonData).Contains("parameterList"))
             {
                 JsonData parameterList = jsonData["parameterList"];
-                behaviorData.parameterList = GetParameterList(parameterList);
+                HSMData.parameterList = GetParameterList(parameterList);
             }
 
-            behaviorData.descript = jsonData["descript"].ToString();
+            HSMData.descript = jsonData["descript"].ToString();
 
-            return behaviorData;
+            return HSMData;
         }
 
         private List<NodeValue> GetNodeList(JsonData data)
@@ -121,12 +121,12 @@ namespace BehaviorTree
             return position;
         }
 
-        private List<BehaviorParameter> GetParameterList(JsonData data)
+        private List<HSMParameter> GetParameterList(JsonData data)
         {
-            List<BehaviorParameter> dataList = new List<BehaviorParameter>();
+            List<HSMParameter> dataList = new List<HSMParameter>();
             foreach (JsonData item in data)
             {
-                BehaviorParameter parameter = new BehaviorParameter();
+                HSMParameter parameter = new HSMParameter();
                 parameter.parameterType = int.Parse(item["parameterType"].ToString());
                 parameter.parameterName = item["parameterName"].ToString();
                 parameter.intValue = int.Parse(item["intValue"].ToString());

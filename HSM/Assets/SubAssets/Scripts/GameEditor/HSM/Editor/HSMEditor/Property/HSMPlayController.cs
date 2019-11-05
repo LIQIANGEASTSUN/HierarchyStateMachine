@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace BehaviorTree
+namespace HSMTree
 {
-    public enum BehaviorPlayType
+    public enum HSMPlayType
     {
         INVALID = -1,
         PLAY    = 0,
@@ -13,20 +13,20 @@ namespace BehaviorTree
         STOP    = 2,
     }
 
-    public class BehaviorPlayController
+    public class HSMPlayController
     {
-        private BehaviorPlayModel _playModel;
-        private BehaviorPlayView _playView;
+        private HSMPlayModel _playModel;
+        private HSMPlayView _playView;
 
-        public BehaviorPlayController()
+        public HSMPlayController()
         {
             Init();
         }
 
         private void Init()
         {
-            _playModel = new BehaviorPlayModel();
-            _playView = new BehaviorPlayView();
+            _playModel = new HSMPlayModel();
+            _playView = new HSMPlayView();
         }
 
         public void OnDestroy()
@@ -41,21 +41,21 @@ namespace BehaviorTree
         
     }
 
-    public class BehaviorPlayModel
+    public class HSMPlayModel
     {
 
-        public BehaviorPlayModel()
+        public HSMPlayModel()
         {
 
         }
 
     }
 
-    public class BehaviorPlayView
+    public class HSMPlayView
     {
         private int option = 2;
         private readonly string[] optionArr = new string[] { "Play", "Pause", "Stop"};
-        public BehaviorPlayView()
+        public HSMPlayView()
         {
 
         }
@@ -68,9 +68,9 @@ namespace BehaviorTree
                 option = GUILayout.Toolbar(option, optionArr, EditorStyles.toolbarButton);
                 if (index != option)
                 {
-                    if (null != BehaviorManager.behaviorRuntimePlay)
+                    if (null != HSMManager.hSMRuntimePlay)
                     {
-                        BehaviorManager.behaviorRuntimePlay((BehaviorPlayType)option);
+                        HSMManager.hSMRuntimePlay((HSMPlayType)option);
                     }
                 }
 

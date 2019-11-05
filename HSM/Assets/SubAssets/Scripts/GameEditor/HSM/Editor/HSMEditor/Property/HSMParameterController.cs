@@ -4,23 +4,23 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace BehaviorTree
+namespace HSMTree
 {
 
-    public class BehaviorParameterController
+    public class HSMParameterController
     {
-        private BehaviorParameterModel _parameterModel;
-        private BehaviorParameterView _parameterView;
+        private HSMParameterModel _parameterModel;
+        private HSMParameterView _parameterView;
 
-        public BehaviorParameterController()
+        public HSMParameterController()
         {
             Init();
         }
 
         public void Init()
         {
-            _parameterModel = new BehaviorParameterModel();
-            _parameterView = new BehaviorParameterView();
+            _parameterModel = new HSMParameterModel();
+            _parameterView = new HSMParameterView();
         }
 
         public void OnDestroy()
@@ -30,32 +30,32 @@ namespace BehaviorTree
 
         public void OnGUI()
         {
-            List<BehaviorParameter> parameterList = _parameterModel.ParameterList;
+            List<HSMParameter> parameterList = _parameterModel.ParameterList;
             _parameterView.Draw(parameterList);
         }
 
     }
 
-    public class BehaviorParameterModel
+    public class HSMParameterModel
     {
-        public BehaviorParameterModel()
+        public HSMParameterModel()
         {
         }
 
-        public List<BehaviorParameter> ParameterList
+        public List<HSMParameter> ParameterList
         {
             get
             {
-                return BehaviorManager.Instance.BehaviorTreeData.parameterList;
+                return HSMManager.Instance.HSMTreeData.parameterList;
             }
         }
     }
 
-    public class BehaviorParameterView
+    public class HSMParameterView
     {
 
         private Vector2 scrollPos = Vector2.zero;
-        public void Draw(List<BehaviorParameter> parameterList)
+        public void Draw(List<HSMParameter> parameterList)
         {
             EditorGUILayout.LabelField("全部变量");
 
@@ -67,19 +67,19 @@ namespace BehaviorTree
                     GUI.backgroundColor = new Color(0.85f, 0.85f, 0.85f, 1f);
                     for (int i = 0; i < parameterList.Count; ++i)
                     {
-                        BehaviorParameter behaviorParameter = parameterList[i];
+                        HSMParameter HSMParameter = parameterList[i];
 
                         Action DelCallBack = () =>
                         {
-                            if (null != BehaviorManager.behaviorNodeParameter)
+                            if (null != HSMManager.hSMNodeParameter)
                             {
-                                BehaviorManager.parameterChange(behaviorParameter, false);
+                                HSMManager.parameterChange(HSMParameter, false);
                             }
                         };
 
                         EditorGUILayout.BeginVertical("box");
                         {
-                            behaviorParameter = DrawParameter.Draw(behaviorParameter, DrawParameterType.BEHAVIOR_PARAMETER, DelCallBack);
+                            HSMParameter = DrawParameter.Draw(HSMParameter, DrawParameterType.HSM_PARAMETER, DelCallBack);
                         }
                         EditorGUILayout.EndVertical();
                     }
@@ -97,26 +97,26 @@ namespace BehaviorTree
             EditorGUILayout.EndVertical();
         }
 
-        private BehaviorParameter newAddParameter = new BehaviorParameter();
+        private HSMParameter newAddParameter = new HSMParameter();
         private void DrawAddParameter()
         {
             if (null == newAddParameter)
             {
-                newAddParameter = new BehaviorParameter();
+                newAddParameter = new HSMParameter();
             }
 
             EditorGUILayout.BeginVertical("box");
             {
-                newAddParameter = DrawParameter.Draw(newAddParameter, DrawParameterType.BEHAVIOR_PARAMETER_ADD, null);
+                newAddParameter = DrawParameter.Draw(newAddParameter, DrawParameterType.HSM_PARAMETER_ADD, null);
             }
             EditorGUILayout.EndVertical();
             GUILayout.Space(5);
 
             if (GUILayout.Button("添加条件"))
             {
-                if (null != BehaviorManager.behaviorNodeParameter)
+                if (null != HSMManager.hSMNodeParameter)
                 {
-                    BehaviorManager.parameterChange(newAddParameter, true);
+                    HSMManager.parameterChange(newAddParameter, true);
                 }
             }
         }

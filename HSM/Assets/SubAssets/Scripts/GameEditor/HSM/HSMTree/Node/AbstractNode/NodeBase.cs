@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 节点超类

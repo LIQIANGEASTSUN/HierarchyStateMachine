@@ -4,35 +4,35 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     public enum DrawParameterType
     {
         NODE_PARAMETER = 0,
-        BEHAVIOR_PARAMETER,
-        BEHAVIOR_PARAMETER_ADD,
+        HSM_PARAMETER,
+        HSM_PARAMETER_ADD,
         RUNTIME_PARAMETER,
     }
 
     public class DrawParameter
     {
-        public static BehaviorParameter Draw(BehaviorParameter behaviorParameter, DrawParameterType drawParameterType, Action DelCallBack)
+        public static HSMParameter Draw(HSMParameter HSMParameter, DrawParameterType drawParameterType, Action DelCallBack)
         {
-            if (null == behaviorParameter)
+            if (null == HSMParameter)
             {
-                return behaviorParameter;
+                return HSMParameter;
             }
 
             {
-                string[] parameterNameArr = EnumNames.GetEnumNames<BehaviorParameterType>();
-                int index = EnumNames.GetEnumIndex<BehaviorParameterType>((BehaviorParameterType)(behaviorParameter.parameterType));
-                BehaviorParameterType behaviorParameterType = EnumNames.GetEnum<BehaviorParameterType>(index);
+                string[] parameterNameArr = EnumNames.GetEnumNames<HSMParameterType>();
+                int index = EnumNames.GetEnumIndex<HSMParameterType>((HSMParameterType)(HSMParameter.parameterType));
+                HSMParameterType HSMParameterType = EnumNames.GetEnum<HSMParameterType>(index);
 
-                bool enableChangeType = (drawParameterType == DrawParameterType.BEHAVIOR_PARAMETER_ADD);
+                bool enableChangeType = (drawParameterType == DrawParameterType.HSM_PARAMETER_ADD);
                 GUI.enabled = enableChangeType;
                 {
                     index = EditorGUILayout.Popup(index, parameterNameArr);
-                    behaviorParameter.parameterType = (int)EnumNames.GetEnum<BehaviorParameterType>(index);
+                    HSMParameter.parameterType = (int)EnumNames.GetEnum<HSMParameterType>(index);
                     GUILayout.Space(5);
                 }
                 GUI.enabled = true;
@@ -42,14 +42,14 @@ namespace BehaviorTree
             {
                 if (drawParameterType == DrawParameterType.NODE_PARAMETER)
                 {
-                    List<BehaviorParameter> parameterList = BehaviorManager.Instance.BehaviorTreeData.parameterList;
+                    List<HSMParameter> parameterList = HSMManager.Instance.HSMTreeData.parameterList;
                     string[] parameterArr = new string[parameterList.Count];
                     int index = -1;
                     for (int i = 0; i < parameterList.Count; ++i)
                     {
-                        BehaviorParameter p = parameterList[i];
+                        HSMParameter p = parameterList[i];
                         parameterArr[i] = p.parameterName;
-                        if (behaviorParameter.parameterName.CompareTo(p.parameterName) == 0)
+                        if (HSMParameter.parameterName.CompareTo(p.parameterName) == 0)
                         {
                             index = i;
                         }
@@ -58,39 +58,39 @@ namespace BehaviorTree
                     int result = EditorGUILayout.Popup(index, parameterArr, GUILayout.ExpandWidth(true));
                     if (result != index)
                     {
-                        behaviorParameter.parameterName = parameterArr[result];
+                        HSMParameter.parameterName = parameterArr[result];
                     }
                 }
-                else if (drawParameterType == DrawParameterType.BEHAVIOR_PARAMETER
-                    || (drawParameterType == DrawParameterType.BEHAVIOR_PARAMETER_ADD)
+                else if (drawParameterType == DrawParameterType.HSM_PARAMETER
+                    || (drawParameterType == DrawParameterType.HSM_PARAMETER_ADD)
                     || drawParameterType == DrawParameterType.RUNTIME_PARAMETER)
                 {
-                    GUI.enabled = (drawParameterType == DrawParameterType.BEHAVIOR_PARAMETER_ADD);
-                    behaviorParameter.parameterName = EditorGUILayout.TextField(behaviorParameter.parameterName);
+                    GUI.enabled = (drawParameterType == DrawParameterType.HSM_PARAMETER_ADD);
+                    HSMParameter.parameterName = EditorGUILayout.TextField(HSMParameter.parameterName);
                     GUI.enabled = true;
                 }
 
-                BehaviorCompare[] compareEnumArr = new BehaviorCompare[] { };
-                if (behaviorParameter.parameterType == (int)BehaviorParameterType.Int)
+                HSMCompare[] compareEnumArr = new HSMCompare[] { };
+                if (HSMParameter.parameterType == (int)HSMParameterType.Int)
                 {
-                    compareEnumArr = new BehaviorCompare[] { BehaviorCompare.GREATER, BehaviorCompare.GREATER_EQUALS, BehaviorCompare.LESS_EQUAL, BehaviorCompare.LESS, BehaviorCompare.EQUALS, BehaviorCompare.NOT_EQUAL };
+                    compareEnumArr = new HSMCompare[] { HSMCompare.GREATER, HSMCompare.GREATER_EQUALS, HSMCompare.LESS_EQUAL, HSMCompare.LESS, HSMCompare.EQUALS, HSMCompare.NOT_EQUAL };
                 }
-                if (behaviorParameter.parameterType == (int)BehaviorParameterType.Float)
+                if (HSMParameter.parameterType == (int)HSMParameterType.Float)
                 {
-                    compareEnumArr = new BehaviorCompare[] { BehaviorCompare.GREATER, BehaviorCompare.LESS };
+                    compareEnumArr = new HSMCompare[] { HSMCompare.GREATER, HSMCompare.LESS };
                 }
-                if (behaviorParameter.parameterType == (int)BehaviorParameterType.Bool)
+                if (HSMParameter.parameterType == (int)HSMParameterType.Bool)
                 {
-                    compareEnumArr = new BehaviorCompare[] { BehaviorCompare.EQUALS, BehaviorCompare.NOT_EQUAL };
+                    compareEnumArr = new HSMCompare[] { HSMCompare.EQUALS, HSMCompare.NOT_EQUAL };
                 }
                 string[] compareArr = new string[compareEnumArr.Length];
-                int compare = behaviorParameter.compare;
+                int compare = HSMParameter.compare;
                 bool found = false;
                 for (int i = 0; i < compareEnumArr.Length; ++i)
                 {
-                    string name = System.Enum.GetName(typeof(BehaviorCompare), compareEnumArr[i]);
+                    string name = System.Enum.GetName(typeof(HSMCompare), compareEnumArr[i]);
                     compareArr[i] = name;
-                    if ((BehaviorCompare)behaviorParameter.compare == compareEnumArr[i])
+                    if ((HSMCompare)HSMParameter.compare == compareEnumArr[i])
                     {
                         compare = i;
                         found = true;
@@ -102,10 +102,10 @@ namespace BehaviorTree
                     compare = 0;
                 }
 
-                GUI.enabled = (drawParameterType != DrawParameterType.BEHAVIOR_PARAMETER) && (drawParameterType != DrawParameterType.RUNTIME_PARAMETER);
+                GUI.enabled = (drawParameterType != DrawParameterType.HSM_PARAMETER) && (drawParameterType != DrawParameterType.RUNTIME_PARAMETER);
                 {
                     compare = EditorGUILayout.Popup(compare, compareArr, GUILayout.Width(65));
-                    behaviorParameter.compare = (int)(compareEnumArr[compare]);
+                    HSMParameter.compare = (int)(compareEnumArr[compare]);
                 }
                 GUI.enabled = true;
             }
@@ -114,26 +114,26 @@ namespace BehaviorTree
 
             EditorGUILayout.BeginHorizontal();
             {
-                GUI.enabled = true;// (drawParameterType != DrawParameterType.BEHAVIOR_PARAMETER);
+                GUI.enabled = true;// (drawParameterType != DrawParameterType.HSM_PARAMETER);
                 {
-                    if (behaviorParameter.parameterType == (int)BehaviorParameterType.Int)
+                    if (HSMParameter.parameterType == (int)HSMParameterType.Int)
                     {
-                        behaviorParameter.intValue = EditorGUILayout.IntField("IntValue", behaviorParameter.intValue);
+                        HSMParameter.intValue = EditorGUILayout.IntField("IntValue", HSMParameter.intValue);
                     }
 
-                    if (behaviorParameter.parameterType == (int)BehaviorParameterType.Float)
+                    if (HSMParameter.parameterType == (int)HSMParameterType.Float)
                     {
-                        behaviorParameter.floatValue = EditorGUILayout.FloatField("FloatValue", behaviorParameter.floatValue);
+                        HSMParameter.floatValue = EditorGUILayout.FloatField("FloatValue", HSMParameter.floatValue);
                     }
 
-                    if (behaviorParameter.parameterType == (int)BehaviorParameterType.Bool)
+                    if (HSMParameter.parameterType == (int)HSMParameterType.Bool)
                     {
-                        behaviorParameter.boolValue = EditorGUILayout.Toggle("BoolValue", behaviorParameter.boolValue);
+                        HSMParameter.boolValue = EditorGUILayout.Toggle("BoolValue", HSMParameter.boolValue);
                     }
                 }
                 GUI.enabled = true;
 
-                if (drawParameterType == DrawParameterType.NODE_PARAMETER || drawParameterType == DrawParameterType.BEHAVIOR_PARAMETER)
+                if (drawParameterType == DrawParameterType.NODE_PARAMETER || drawParameterType == DrawParameterType.HSM_PARAMETER)
                 {
                     if (GUILayout.Button("Del"))
                     {
@@ -146,7 +146,7 @@ namespace BehaviorTree
             }
             EditorGUILayout.EndHorizontal();
 
-            return behaviorParameter;
+            return HSMParameter;
         }
 
     }

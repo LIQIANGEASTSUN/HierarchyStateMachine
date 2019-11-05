@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BehaviorTree
+namespace HSMTree
 {
     /// <summary>
     /// 行为节点(叶节点)
@@ -8,7 +8,7 @@ namespace BehaviorTree
     public abstract class NodeAction : NodeLeaf
     {
         protected IAction iAction;
-        protected List<BehaviorParameter> _parameterList = new List<BehaviorParameter>();
+        protected List<HSMParameter> _parameterList = new List<HSMParameter>();
 
         public NodeAction() : base(NODE_TYPE.ACTION)
         {
@@ -19,7 +19,7 @@ namespace BehaviorTree
             iAction = iA;
         }
 
-        public void SetParameters(List<BehaviorParameter> parameterList)
+        public void SetParameters(List<HSMParameter> parameterList)
         {
             if (parameterList.Count > 0)
             {

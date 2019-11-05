@@ -16,7 +16,7 @@ namespace HSMTree
     public class NodeValue
     {
         public int id = 0;
-        public int NodeType = (int)(NODE_TYPE.SELECT);     // 节点类型 // NODE_TYPE NodeType = NODE_TYPE.SELECT;
+        public int NodeType = (int)(NODE_TYPE.STATE);     // 节点类型 // NODE_TYPE NodeType = NODE_TYPE.SELECT;
         public int parentNodeID = -1;                      // 父节点
         public List<int> childNodeList = new List<int>();  // 子节点集合
         public List<HSMParameter> parameterList = new List<HSMParameter>();

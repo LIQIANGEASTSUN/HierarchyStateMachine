@@ -59,8 +59,8 @@ namespace HSMTree
 
             EditorGUILayout.BeginVertical("box");
             {
-                if (nodeValue.NodeType == (int)NODE_TYPE.CONDITION
-                    || nodeValue.NodeType == (int)NODE_TYPE.ACTION)
+                if (nodeValue.NodeType == (int)NODE_TYPE.STATE
+                    || nodeValue.NodeType == (int)NODE_TYPE.SUB_STATE_MACHINE)
                 {
                     int index = EnumNames.GetEnumIndex<NODE_TYPE>((NODE_TYPE)nodeValue.NodeType);
                     string name = EnumNames.GetEnumName<NODE_TYPE>(index);
@@ -100,8 +100,8 @@ namespace HSMTree
         private Vector2 scrollPos = Vector2.zero;
         private void DrawNode(NodeValue nodeValue, string title)
         {
-            if (nodeValue.NodeType != (int)NODE_TYPE.CONDITION 
-                && nodeValue.NodeType != (int)NODE_TYPE.ACTION)
+            if (nodeValue.NodeType != (int)NODE_TYPE.STATE 
+                && nodeValue.NodeType != (int)NODE_TYPE.SUB_STATE_MACHINE)
             {
                 return;
             }

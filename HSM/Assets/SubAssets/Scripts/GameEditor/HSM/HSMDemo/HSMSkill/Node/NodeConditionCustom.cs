@@ -8,9 +8,9 @@ public class NodeConditionCustom : StateBase
     protected List<HSMParameter> _parameterList = new List<HSMParameter>();
     protected IConditionCheck _iconditionCheck = null;
 
-    private static CustomIdentification _customIdentification = new CustomIdentification("通用条件节点", IDENTIFICATION.COMMON_CONDITION, typeof(NodeConditionCustom), NODE_TYPE.CONDITION);
+    private static CustomIdentification _customIdentification = new CustomIdentification("通用条件节点", IDENTIFICATION.COMMON_CONDITION, typeof(NodeConditionCustom), NODE_TYPE.STATE);
 
-    public NodeConditionCustom() : base(NODE_TYPE.CONDITION)
+    public NodeConditionCustom() : base(NODE_TYPE.STATE)
     {
 
     }

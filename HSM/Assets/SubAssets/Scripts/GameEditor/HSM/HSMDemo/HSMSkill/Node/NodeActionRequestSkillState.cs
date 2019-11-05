@@ -8,9 +8,9 @@ public class NodeActionRequestSkillState : StateBase
     protected IAction iAction;
     protected List<HSMParameter> _parameterList = new List<HSMParameter>();
 
-    private static CustomIdentification _customIdentification = new CustomIdentification("切换状态节点", IDENTIFICATION.SKILL_STATE_REQUEST, typeof(NodeActionRequestSkillState), NODE_TYPE.ACTION);
+    private static CustomIdentification _customIdentification = new CustomIdentification("切换状态节点", IDENTIFICATION.SKILL_STATE_REQUEST, typeof(NodeActionRequestSkillState), NODE_TYPE.STATE);
 
-    public NodeActionRequestSkillState():base(NODE_TYPE.ACTION)
+    public NodeActionRequestSkillState():base(NODE_TYPE.STATE)
     {
 
     }

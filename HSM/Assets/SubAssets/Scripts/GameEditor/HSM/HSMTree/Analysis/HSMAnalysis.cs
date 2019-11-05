@@ -102,18 +102,18 @@ namespace HSMTree
 
         private bool IsLeafNode(int type)
         {
-            return (type == (int)NODE_TYPE.ACTION) || (type == (int)NODE_TYPE.CONDITION);
+            return (type == (int)NODE_TYPE.STATE) || (type == (int)NODE_TYPE.STATE);
         }
 
         private StateBase AnalysisNode(NodeValue nodeValue, IAction iAction, IConditionCheck iConditionCheck)
         {
             StateBase node = null;
-            if (nodeValue.NodeType == (int)NODE_TYPE.CONDITION)  // 条件节点
+            if (nodeValue.NodeType == (int)NODE_TYPE.STATE)  // 条件节点
             {
                 //return GetCondition(nodeValue, iConditionCheck);
             }
 
-            if (nodeValue.NodeType == (int)NODE_TYPE.ACTION)  // 行为节点
+            if (nodeValue.NodeType == (int)NODE_TYPE.STATE)  // 行为节点
             {
                 //return GetAction(nodeValue, iAction);
             }

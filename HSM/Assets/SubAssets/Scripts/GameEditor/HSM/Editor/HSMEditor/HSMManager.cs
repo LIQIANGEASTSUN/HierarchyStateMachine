@@ -250,20 +250,6 @@ public class HSMManager
             return;
         }
 
-        // 修饰节点只能有一个子节点
-        if (parentNode.NodeType >= (int)NODE_TYPE.DECORATOR_INVERTER && parentNode.NodeType <= (int)NODE_TYPE.DECORATOR_UNTIL_SUCCESS)
-        {
-            for (int i = 0; i < parentNode.childNodeList.Count; ++i)
-            {
-                NodeValue node = GetNode(parentNode.childNodeList[i]);
-                if (null != node)
-                {
-                    node.parentNodeID = -1;
-                }
-            }
-            parentNode.childNodeList.Clear();
-        }
-
         parentNode.childNodeList.Add(childNode.id);
         childNode.parentNodeID = parentNode.id;
     }

@@ -118,47 +118,19 @@ public class HSMDrawModel
     }
 
     private List<NODE_TYPE[]> nodeList = new List<NODE_TYPE[]>() {
-        new NODE_TYPE[] { NODE_TYPE.SELECT, NODE_TYPE.PARALLEL },  // 组合节点
-        new NODE_TYPE[]{ NODE_TYPE.DECORATOR_INVERTER, NODE_TYPE.DECORATOR_UNTIL_SUCCESS}, // 修饰节点
+        new NODE_TYPE[] { NODE_TYPE.STATE },           // 状态节点
+        new NODE_TYPE[]{ NODE_TYPE.SUB_STATE_MACHINE}, // 子状态机节点
     };
-    private string[] typeNameArr = { "组合节点", "修饰节点" };
     private void SetInfoList()
     {
-        for (int i = 0; i < nodeList.Count; ++i)
         {
-            Node_Draw_Info drawInfo = new Node_Draw_Info(typeNameArr[i]);
-            NODE_TYPE[] arr = nodeList[i];
-            for (NODE_TYPE nodeType = arr[0]; nodeType <= arr[1]; ++nodeType)
-            {
-                drawInfo.AddNodeType(nodeType);
-                infoList.Add(drawInfo);
-            }
-        }
-
-        
-        {
-            // 条件节点
-            Node_Draw_Info conditionDrawInfo = new Node_Draw_Info("条件节点");
+            // 状态节点
+            Node_Draw_Info conditionDrawInfo = new Node_Draw_Info("状态节点");
             infoList.Add(conditionDrawInfo);
 
-            // 行为节点
-            Node_Draw_Info actionDrawInfo = new Node_Draw_Info("行为节点");
+            // 子状态机节点
+            Node_Draw_Info actionDrawInfo = new Node_Draw_Info("子状态机节点");
             infoList.Add(actionDrawInfo);
-
-            List<CustomIdentification> nodeList = CustomNode.Instance.GetNodeList();
-            for (int i = 0; i < nodeList.Count; ++i)
-            {
-                CustomIdentification customIdentification = nodeList[i];
-                if (customIdentification.NodeType == NODE_TYPE.CONDITION)
-                {
-                    conditionDrawInfo.AddNodeType(NODE_TYPE.CONDITION, customIdentification.Name, (int)customIdentification.Identification);
-                }
-                else if (customIdentification.NodeType == NODE_TYPE.ACTION)
-                {
-                    actionDrawInfo.AddNodeType(NODE_TYPE.ACTION, customIdentification.Name, (int)customIdentification.Identification);
-                }
-            }
-
         }
     }
 
@@ -348,7 +320,7 @@ public class HSMDrawView
         }
         else
         {
-            if (null != currentNode && nodeValue.id == currentNode.id && (NODE_TYPE)nodeValue.NodeType < NODE_TYPE.CONDITION)
+            if (null != currentNode && nodeValue.id == currentNode.id)
             {
                 // 连线子节点
                 menu.AddItem(new GUIContent("Make Transition"), false, MakeTransition);

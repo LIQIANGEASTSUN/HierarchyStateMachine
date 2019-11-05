@@ -100,6 +100,11 @@ namespace HSMTree
                 return;
             }
 
+            for (int i = 0; i < nodeValue.transitionList.Count; ++i)
+            {
+                GUILayout.Label("transition:" + i);
+            }
+
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandWidth(true));
             {
                 EditorGUILayout.LabelField(title);

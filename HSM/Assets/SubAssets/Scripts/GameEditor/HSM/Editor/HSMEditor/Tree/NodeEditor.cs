@@ -19,13 +19,6 @@ public class NodeEditor {
                 GUI.backgroundColor = Color.white;
             }
 
-            EditorGUILayout.BeginHorizontal();
-            {
-                EditorGUILayout.LabelField(new GUIContent("根节点"), GUILayout.Width(50));
-                nodeValue.isRootNode = EditorGUILayout.Toggle(nodeValue.isRootNode, GUILayout.Width(50));
-            }
-            EditorGUILayout.EndHorizontal();
-
             int parentID = nodeValue.parentNodeID;
             //if (parentID > 0)
             {

@@ -74,10 +74,6 @@ namespace HSMTree
                 string nodeId = string.Format("节点_{0}", nodeValue.id);
                 EditorGUILayout.LabelField(nodeId);
 
-                GUI.enabled = false;
-                nodeValue.isRootNode = EditorGUILayout.Toggle(new GUIContent("根节点"), nodeValue.isRootNode, GUILayout.Width(50));
-                GUI.enabled = true;
-
                 if (nodeValue.parentNodeID >= 0)
                 {
                     string parentName = string.Format("父节点_{0}", nodeValue.parentNodeID);

@@ -66,7 +66,6 @@ namespace HSMTree
             {
                 NodeValue nodeValue = new NodeValue();
                 nodeValue.id = int.Parse(item["id"].ToString());
-                nodeValue.isRootNode = bool.Parse(item["isRootNode"].ToString());
                 nodeValue.NodeType = int.Parse(item["NodeType"].ToString());
                 nodeValue.parentNodeID = int.Parse(item["parentNodeID"].ToString());
                 nodeValue.repeatTimes = int.Parse(item["repeatTimes"].ToString());

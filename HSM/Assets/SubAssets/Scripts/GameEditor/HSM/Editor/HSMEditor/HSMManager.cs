@@ -435,7 +435,6 @@ public class HSMManager
         if (_HSMTreeData.rootNodeId < 0)
         {
             _HSMTreeData.rootNodeId = newNodeValue.id;
-            newNodeValue.isRootNode = true;
         }
 
         newNodeValue.nodeName = info._nodeName;
@@ -494,41 +493,7 @@ public class HSMManager
 
     private static void CheckNode(List<NodeValue> nodeValueList)
     {
-        int rootNodeCount = 0;
-        NodeValue invalidNodeValue = null;
-        // 开始绘制节点 
-        // 注意：必须在  BeginWindows(); 和 EndWindows(); 之间 调用 GUI.Window 才能显示
-        for (int i = 0; i < nodeValueList.Count; i++)
-        {
-            NodeValue nodeValue = nodeValueList[i];
-            if (nodeValue.isRootNode)
-            {
-                ++rootNodeCount;
-            }
-
-            if (((NODE_TYPE)nodeValue.NodeType >= NODE_TYPE.CONDITION) && nodeValue.childNodeList.Count > 0)
-            {
-                invalidNodeValue = nodeValue;  // 叶节点 不能有子节点
-            }
-        }
-
         string meg = string.Empty;
-        if (rootNodeCount > 1)
-        {
-            meg = "只能有一个根节点";
-        }
-        else if (rootNodeCount == 0)
-        {
-            meg = "必须有一个根节点";
-        }
-
-        if (null != invalidNodeValue)
-        {
-            int index = EnumNames.GetEnumIndex<NODE_TYPE>((NODE_TYPE)invalidNodeValue.NodeType);
-            string name = EnumNames.GetEnumName<NODE_TYPE>(index);
-            meg = string.Format("节点:{0} {1} 不能有子节点", invalidNodeValue.id, name);
-        }
-
         if (TreeNodeWindow.window != null && !string.IsNullOrEmpty(meg))
         {
             TreeNodeWindow.window.ShowNotification(meg);

@@ -21,12 +21,21 @@ namespace HSMTree
         public int parentNodeID = -1;                      // 父节点
         public List<int> childNodeList = new List<int>();  // 子节点集合
         public List<HSMParameter> parameterList = new List<HSMParameter>();
+        public List<Transition> transitionList = new List<Transition>();
         public int repeatTimes = 0;
         public string nodeName = string.Empty;
         public int identification = -1;
         public string descript = string.Empty;
 
         public RectT position = new RectT(0, 0, 100, 100); // 节点位置（编辑器显示使用）
+    }
+
+    public class Transition
+    {
+        public int id;
+        public int fromNodeId;
+        public int toNodeId;
+        public List<HSMParameter> parameterList = new List<HSMParameter>();
     }
 
     public enum HSMParameterType

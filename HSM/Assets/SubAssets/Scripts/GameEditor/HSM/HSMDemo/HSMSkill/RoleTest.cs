@@ -41,10 +41,9 @@ public class RoleTest : MonoBehaviour
 }
 
 
-public class RolePlayer : IAction
+public class RolePlayer
 {
-    private HSMAnalysis analysis = null;
-    private StateBase _rootNode = null;
+    private HSMStateMachine hsmStateMachine = null;
     private IConditionCheck _iconditionCheck = null;
 
     public void Init()
@@ -56,9 +55,9 @@ public class RolePlayer : IAction
     // Update is called once per frame
     public void Update()
     {
-        if (null != _rootNode)
+        if (null != hsmStateMachine)
         {
-            _rootNode.Execute();
+            hsmStateMachine.Execute();
         }
     }
 
@@ -71,14 +70,14 @@ public class RolePlayer : IAction
     {
         HSMAnalysis analysis = new HSMAnalysis();
         _iconditionCheck = new ConditionCheck();
-        _rootNode = analysis.Analysis(HSMTreeData, this, _iconditionCheck);
+        hsmStateMachine = analysis.Analysis(HSMTreeData, _iconditionCheck);
     }
 
     public void SetData(string content)
     {
         HSMAnalysis analysis = new HSMAnalysis();
         _iconditionCheck = new ConditionCheck();
-        _rootNode = analysis.Analysis(content, this, _iconditionCheck);
+        hsmStateMachine = analysis.Analysis(content, _iconditionCheck);
     }
 
     public bool DoAction(int nodeId, List<HSMParameter> parameterList)

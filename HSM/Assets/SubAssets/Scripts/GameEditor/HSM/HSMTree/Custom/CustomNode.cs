@@ -84,7 +84,7 @@ namespace HSMTree
         {
         }
 
-        public object GetNode(IDENTIFICATION identification)
+        public object GetState(IDENTIFICATION identification)
         {
             object obj = null;
             CustomIdentification info = GetIdentification(identification);

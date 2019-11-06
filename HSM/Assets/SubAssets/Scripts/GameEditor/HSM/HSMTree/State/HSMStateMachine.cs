@@ -15,12 +15,17 @@ namespace HSMTree
         }
 
 
-        public void Update()
+        public void Execute()
         {
             if (null != currentState)
             {
                 currentState.Execute();
             }
+        }
+
+        public void AddState(HSMState state)
+        {
+            _stateList.Add(state);
         }
 
         public void ChangeState(int id)

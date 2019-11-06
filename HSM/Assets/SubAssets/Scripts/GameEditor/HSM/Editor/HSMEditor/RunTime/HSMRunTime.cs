@@ -5,11 +5,11 @@ using UnityEngine;
 namespace HSMTree
 {
 
-    public class HSMRunTime : IAction
+    public class HSMRunTime
     {
         public static readonly HSMRunTime Instance = new HSMRunTime();
 
-        private StateBase _rootNode = null;
+        private HSMStateMachine _hsmStateMachine = null;
         private IConditionCheck _iconditionCheck = null;
 
         private RunTimeRotateGo _runtimeRotateGo;
@@ -31,7 +31,7 @@ namespace HSMTree
         {
             HSMAnalysis analysis = new HSMAnalysis();
             _iconditionCheck = new ConditionCheck();
-            _rootNode = analysis.Analysis(HSMTreeData, this, _iconditionCheck);
+            _hsmStateMachine = analysis.Analysis(HSMTreeData, _iconditionCheck);
         }
 
         public ConditionCheck ConditionCheck
@@ -54,9 +54,9 @@ namespace HSMTree
                 return;
             }
 
-            if (null != _rootNode)
+            if (null != _hsmStateMachine)
             {
-                _rootNode.Execute();
+                _hsmStateMachine.Execute();
             }
         }
 

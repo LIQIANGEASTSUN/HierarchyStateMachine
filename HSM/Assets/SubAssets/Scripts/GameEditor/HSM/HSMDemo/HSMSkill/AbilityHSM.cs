@@ -4,10 +4,11 @@ using UnityEngine;
 using HSMTree;
 //using GenPB;
 
-public class AbilityHSM : IAbilityEnvironment, IAction
+public class AbilityHSM : IAbilityEnvironment
 {
     //private Skill _skill;
-    private StateBase _rootNode = null;
+
+    private HSMStateMachine _hsmStateMachine = null;
     private IConditionCheck _iconditionCheck = null;
     //private AbilityInputExtend _abilityInputExtend = null;
 
@@ -58,7 +59,7 @@ public class AbilityHSM : IAbilityEnvironment, IAction
             return;
         }
         HSMAnalysis analysis = new HSMAnalysis();
-        _rootNode = analysis.Analysis(textAsset.text, this, _iconditionCheck);
+        _hsmStateMachine = analysis.Analysis(textAsset.text, _iconditionCheck);
 
         Clear();
     }
@@ -67,9 +68,9 @@ public class AbilityHSM : IAbilityEnvironment, IAction
     {
         UpdateEnvironment();
 
-        if (null != _rootNode)
+        if (null != _hsmStateMachine)
         {
-            _rootNode.Execute();
+            _hsmStateMachine.Execute();
         }
     }
 

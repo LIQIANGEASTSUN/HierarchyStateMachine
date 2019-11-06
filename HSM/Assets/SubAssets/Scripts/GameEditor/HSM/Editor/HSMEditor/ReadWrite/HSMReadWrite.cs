@@ -77,12 +77,6 @@ namespace HSMTree
                     nodeValue.transitionList = GetTransitionList(transitionList);
                 }
 
-                if (((IDictionary)item).Contains("parameterList"))
-                {
-                    JsonData parameterList = item["parameterList"];
-                    nodeValue.parameterList = GetParameterList(parameterList);
-                }
-
                 if (((IDictionary)item).Contains("position"))
                 {
                     JsonData position = item["position"];

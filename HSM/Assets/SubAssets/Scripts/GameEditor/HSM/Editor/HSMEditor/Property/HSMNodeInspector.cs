@@ -101,40 +101,49 @@ namespace HSMTree
                 return;
             }
 
+            EditorGUILayout.LabelField("选择Transition查看/添加/删除参数");
+            Transition transition = null;
             for (int i = 0; i < nodeValue.transitionList.Count; ++i)
             {
-                Transition transition = nodeValue.transitionList[i];
-                string name = string.Format("Transition{0}", transition.transitionId);
-                bool value = (nodeValue.id * 1000 + transition.transitionId) == HSMManager.Instance.CurrentTransitionId;
-                value = EditorGUILayout.Toggle(new GUIContent(name), value);
-                if (value)
+                Transition temp = nodeValue.transitionList[i];
+                string name = string.Format("Transition{0}", temp.transitionId);
+                bool lastValue = (nodeValue.id * 1000 + temp.transitionId) == HSMManager.Instance.CurrentTransitionId;
+                if (lastValue)
+                {
+                    transition = temp;
+                }
+                bool value = EditorGUILayout.Toggle(new GUIContent(name), lastValue);
+                if (value && !lastValue)
                 {
                     if (null != HSMManager.hSMChangeSelectTransitionId)
                     {
-                        int id = nodeValue.id * 1000 + transition.transitionId;
+                        int id = nodeValue.id * 1000 + temp.transitionId;
                         HSMManager.hSMChangeSelectTransitionId(id);
                     }
                 }
             }
 
+            int transitionId = (null != transition) ? transition.transitionId : -1;
+
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandWidth(true));
             {
                 EditorGUILayout.LabelField(title);
 
-                int height = (nodeValue.parameterList.Count * 70) + 20;
+                List<HSMParameter> parametersList = (null != transition) ? transition.parameterList : new List<HSMParameter>();
+                int height = (parametersList.Count * 70) + 20;
                 height = height <= 300 ? height : 300;
                 scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(height));
                 {
                     GUI.backgroundColor = new Color(0.85f, 0.85f, 0.85f, 1f);
-                    for (int i = 0; i < nodeValue.parameterList.Count; ++i)
+                    for (int i = 0; i < parametersList.Count; ++i)
                     {
-                        HSMParameter HSMParameter = nodeValue.parameterList[i];
+                        HSMParameter HSMParameter = parametersList[i];
 
                         Action DelCallBack = () =>
                         {
                             if (null != HSMManager.hSMNodeParameter)
                             {
-                                HSMManager.hSMNodeParameter(nodeValue.id, HSMParameter, false);
+                                HSMManager.hSMNodeParameter(nodeValue.id, transitionId, HSMParameter, false);
                             }
                         };
 
@@ -148,7 +157,7 @@ namespace HSMTree
                             {
                                 if (null != HSMManager.hSMNodeChangeParameter)
                                 {
-                                    HSMManager.hSMNodeChangeParameter(nodeValue.id, parameterName, HSMParameter.parameterName);
+                                    HSMManager.hSMNodeChangeParameter(nodeValue.id, transitionId, parameterName, HSMParameter.parameterName);
                                 }
                             }
                             else
@@ -167,16 +176,17 @@ namespace HSMTree
             GUILayout.Space(10);
             EditorGUILayout.BeginVertical("box");
             {
-                DrawAddParameter(nodeValue);
+                DrawAddParameter(nodeValue, transitionId);
             }
             EditorGUILayout.EndVertical();
         }
 
-        private void DrawAddParameter(NodeValue nodeValue)
+        private void DrawAddParameter(NodeValue nodeValue, int transitionId)
         {
+            GUI.enabled = (transitionId >= 0);
+
             if (GUILayout.Button("添加条件"))
             {
-
                 if (HSMManager.Instance.HSMTreeData.parameterList.Count <= 0)
                 {
                     string msg = "没有参数可添加，请先添加参数";
@@ -191,10 +201,12 @@ namespace HSMTree
                     if (null != HSMManager.hSMNodeParameter)
                     {
                         HSMParameter hSMParameter = HSMManager.Instance.HSMTreeData.parameterList[0];
-                        HSMManager.hSMNodeParameter(nodeValue.id, hSMParameter, true);
+                        HSMManager.hSMNodeParameter(nodeValue.id, transitionId, hSMParameter, true);
                     }
                 }
             }
+
+            GUI.enabled = true;
         }
 
     }

@@ -17,8 +17,6 @@ namespace HSMTree
     {
         public int id = 0;
         public int NodeType = (int)(NODE_TYPE.STATE);     // 节点类型 // NODE_TYPE NodeType = NODE_TYPE.SELECT;
-        //public List<int> childNodeList = new List<int>();  // 子节点集合
-        public List<HSMParameter> parameterList = new List<HSMParameter>();
         public List<Transition> transitionList = new List<Transition>();
         public string nodeName = string.Empty;
         public int identification = -1;

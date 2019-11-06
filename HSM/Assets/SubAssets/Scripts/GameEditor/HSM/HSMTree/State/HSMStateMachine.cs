@@ -6,6 +6,7 @@ namespace HSMTree
 {
     public class HSMStateMachine
     {
+        private int currentStateId;
         private HSMState currentState;
         private List<HSMState> _stateList = new List<HSMState>();
         
@@ -14,18 +15,33 @@ namespace HSMTree
 
         }
 
-
         public void Execute()
         {
+            if (null == currentState)
+            {
+                ChangeState(CurrentStateId);
+            }
+
             if (null != currentState)
             {
-                currentState.Execute();
+                bool result = false;
+                int toStateId = currentState.Execute(ref result);
+                if (result)
+                {
+                    ChangeState(toStateId);
+                }
             }
         }
 
         public void AddState(HSMState state)
         {
             _stateList.Add(state);
+        }
+
+        public int CurrentStateId
+        {
+            get { return currentStateId; }
+            set { currentStateId = value; }
         }
 
         public void ChangeState(int id)
@@ -51,9 +67,10 @@ namespace HSMTree
                 currentState.Exit();
             }
 
-            if (null != state)
+            currentState = state;
+            if (null != currentState)
             {
-                state.Enter();
+                currentState.Enter();
             }
         }
 

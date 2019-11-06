@@ -212,9 +212,9 @@ public class HSMDrawView
                     // 如果按下鼠标时，选中了一个节点，则将 新选中根节点 添加为 selectNode 的子节点
                     if (null != nodeValue && currentNode.id != nodeValue.id)
                     {
-                        if (null != HSMManager.hSMNodeAddChild)
+                        if (null != HSMManager.hSMNodeChangeTransition)
                         {
-                            HSMManager.hSMNodeAddChild(currentNode.id, nodeValue.id);
+                            HSMManager.hSMNodeChangeTransition(currentNode.id, nodeValue.id, true);
                         }
                     }
 

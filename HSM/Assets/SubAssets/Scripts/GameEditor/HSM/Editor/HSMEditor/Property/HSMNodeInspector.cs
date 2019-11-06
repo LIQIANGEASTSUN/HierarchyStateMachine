@@ -101,27 +101,44 @@ namespace HSMTree
                 return;
             }
 
-            EditorGUILayout.LabelField("选择Transition查看/添加/删除参数");
             Transition transition = null;
-            for (int i = 0; i < nodeValue.transitionList.Count; ++i)
+            EditorGUILayout.BeginVertical("box");
             {
-                Transition temp = nodeValue.transitionList[i];
-                string name = string.Format("Transition{0}", temp.transitionId);
-                bool lastValue = (nodeValue.id * 1000 + temp.transitionId) == HSMManager.Instance.CurrentTransitionId;
-                if (lastValue)
+                EditorGUILayout.LabelField("选择Transition查看/添加/删除参数");
+                for (int i = 0; i < nodeValue.transitionList.Count; ++i)
                 {
-                    transition = temp;
-                }
-                bool value = EditorGUILayout.Toggle(new GUIContent(name), lastValue);
-                if (value && !lastValue)
-                {
-                    if (null != HSMManager.hSMChangeSelectTransitionId)
+                    Transition temp = nodeValue.transitionList[i];
+                    string name = string.Format("TransitionTo:{0}", temp.toStateId);
+                    bool lastValue = (nodeValue.id * 1000 + temp.transitionId) == HSMManager.Instance.CurrentTransitionId;
+                    if (lastValue)
                     {
-                        int id = nodeValue.id * 1000 + temp.transitionId;
-                        HSMManager.hSMChangeSelectTransitionId(id);
+                        transition = temp;
                     }
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        bool value = EditorGUILayout.Toggle(new GUIContent(name), lastValue);
+                        if (value && !lastValue)
+                        {
+                            if (null != HSMManager.hSMChangeSelectTransitionId)
+                            {
+                                int id = nodeValue.id * 1000 + temp.transitionId;
+                                HSMManager.hSMChangeSelectTransitionId(id);
+                            }
+                        }
+
+                        if (GUILayout.Button("Delete"))
+                        {
+                            if (null != HSMManager.hSMNodeChangeTransition)
+                            {
+                                HSMManager.hSMNodeChangeTransition(nodeValue.id, temp.toStateId, false);
+                            }
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
                 }
             }
+            EditorGUILayout.EndVertical();
 
             int transitionId = (null != transition) ? transition.transitionId : -1;
 

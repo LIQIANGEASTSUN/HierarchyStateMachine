@@ -43,6 +43,8 @@ namespace HSMTree
                 return hsmStateMachine;
             }
 
+            hsmStateMachine.CurrentStateId = data.defaultStateId;
+
             iConditionCheck.AddParameter(data.parameterList);
 
             for (int i = 0; i < data.nodeList.Count; ++i)
@@ -53,6 +55,7 @@ namespace HSMTree
                 {
                     Debug.LogError("AllNODE:" + nodeValue.id + "     " + (null != stateBase));
                 }
+                stateBase.SetConditionCheck(iConditionCheck);
                 hsmStateMachine.AddState(stateBase);
             }
 

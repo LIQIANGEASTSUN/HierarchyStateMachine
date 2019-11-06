@@ -17,9 +17,7 @@ namespace HSMTree
         /// 节点Id
         /// </summary>
         private int _stateId;
-
         protected List<Transition> _transitionList = new List<Transition>();
-
         protected IConditionCheck _iconditionCheck = null;
 
         public StateBase(NODE_TYPE nodeType)
@@ -36,14 +34,23 @@ namespace HSMTree
         /// 执行节点抽象方法
         /// </summary>
         /// <returns>返回执行结果</returns>
-        public virtual void Execute()
+        public virtual int Execute(ref bool result)
         {
+            result = false;
             NodeNotify.NotifyExecute(StateId, Time.realtimeSinceStartup);
-
+            int toStateId = -1;
             for (int i = 0; i < _transitionList.Count; ++i)
             {
-                bool result = _iconditionCheck.Condition(_transitionList[i].parameterList);
+                Transition transition = _transitionList[i];
+                result = _iconditionCheck.Condition(transition.parameterList);
+                if (result)
+                {
+                    toStateId = transition.toStateId;
+                    break;
+                }
             }
+
+            return toStateId;
         }
 
         public virtual void Exit()

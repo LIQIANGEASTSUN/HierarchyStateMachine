@@ -107,7 +107,7 @@ public class ConditionCheck : IConditionCheck
             return false;
         }
 
-        return parameter.Compare(cacheParameter);
+        return cacheParameter.Compare(parameter);
     }
 
     public bool Condition(HSMParameter parameter)

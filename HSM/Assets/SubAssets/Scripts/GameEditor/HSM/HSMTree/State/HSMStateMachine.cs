@@ -34,7 +34,7 @@ namespace HSMTree
             for (int i = 0; i < _stateList.Count; ++i)
             {
                 HSMState state = _stateList[i];
-                if (state.NodeId == id)
+                if (state.StateId == id)
                 {
                     newState = state;
                     break;

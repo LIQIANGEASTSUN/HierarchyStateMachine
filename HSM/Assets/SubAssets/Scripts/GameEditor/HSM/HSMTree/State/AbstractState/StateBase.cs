@@ -16,7 +16,7 @@ namespace HSMTree
         /// <summary>
         /// 节点Id
         /// </summary>
-        private int _nodeId;
+        private int _stateId;
 
         protected List<Transition> _transitionList = new List<Transition>();
 
@@ -38,7 +38,7 @@ namespace HSMTree
         /// <returns>返回执行结果</returns>
         public virtual void Execute()
         {
-            NodeNotify.NotifyExecute(NodeId, Time.realtimeSinceStartup);
+            NodeNotify.NotifyExecute(StateId, Time.realtimeSinceStartup);
 
             for (int i = 0; i < _transitionList.Count; ++i)
             {
@@ -51,10 +51,10 @@ namespace HSMTree
 
         }
 
-        public int NodeId
+        public int StateId
         {
-            get { return _nodeId; }
-            set { _nodeId = value; }
+            get { return _stateId; }
+            set { _stateId = value; }
         }
 
         public void AddTransition(List<Transition> transitionList)

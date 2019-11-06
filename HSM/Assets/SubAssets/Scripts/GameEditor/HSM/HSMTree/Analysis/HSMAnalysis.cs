@@ -62,6 +62,7 @@ namespace HSMTree
         private HSMState AnalysisNode(NodeValue nodeValue, IConditionCheck iConditionCheck)
         {
             HSMState state = (HSMState)CustomNode.Instance.GetState((IDENTIFICATION)nodeValue.identification);
+            state.StateId = nodeValue.id;
             state.AddTransition(nodeValue.transitionList);
             return state;
         }

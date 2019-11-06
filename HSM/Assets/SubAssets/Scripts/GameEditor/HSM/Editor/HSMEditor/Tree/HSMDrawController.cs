@@ -235,7 +235,7 @@ public class HSMDrawView
         if (makeTransitionMode && currentNode != null)
         {
             RectT mouseRect = new RectT(mousePosition.x, mousePosition.y, 10, 10);
-            DrawNodeCurve(currentNode.position, mouseRect);
+            DrawNodeCurve(currentNode.position, mouseRect, Color.black);
         }
     }
 
@@ -367,14 +367,17 @@ public class HSMDrawView
         {
             int toId = nodeValue.transitionList[i].toNodeId;
             NodeValue toNode = HSMManager.Instance.GetNode(toId);
-            DrawNodeCurve(nodeValue.position, toNode.position);
+
+            int transitionId = nodeValue.id * 1000 + nodeValue.transitionList[i].transitionId;
+            Color color = (transitionId == HSMManager.Instance.CurrentTransitionId) ? Color.green : Color.black;
+            DrawNodeCurve(nodeValue.position, toNode.position, color);
         }
     }
 
     // 绘制线
-    public static void DrawNodeCurve(RectT start, RectT end)
+    public static void DrawNodeCurve(RectT start, RectT end, Color color)
     {
-        Handles.color = Color.black;
+        Handles.color = color;
         Vector3 startPos = new Vector3(start.x + start.width / 2, start.y + start.height, 0);
         Vector3 endPos = new Vector3(end.x + end.width / 2, end.y, 0);
         //Handles.DrawLine(startPos, endPos);

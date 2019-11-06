@@ -7,7 +7,6 @@ using System;
 namespace HSMTree
 {
 
-
     public class HSMNodeInspector
     {
         private HSMNodeInspectorModel _nodeInspectorModel;
@@ -40,12 +39,14 @@ namespace HSMTree
 
     public class HSMNodeInspectorModel
     {
+        private int transitionId = -1;
         public NodeValue GetCurrentSelectNode()
         {
             return HSMManager.Instance.CurrentNode;
         }
     }
 
+    
     public class HSMNodeInspectorView
     {
 
@@ -102,7 +103,18 @@ namespace HSMTree
 
             for (int i = 0; i < nodeValue.transitionList.Count; ++i)
             {
-                GUILayout.Label("transition:" + i);
+                Transition transition = nodeValue.transitionList[i];
+                string name = string.Format("Transition{0}", transition.transitionId);
+                bool value = (nodeValue.id * 1000 + transition.transitionId) == HSMManager.Instance.CurrentTransitionId;
+                value = EditorGUILayout.Toggle(new GUIContent(name), value);
+                if (value)
+                {
+                    if (null != HSMManager.hSMChangeSelectTransitionId)
+                    {
+                        int id = nodeValue.id * 1000 + transition.transitionId;
+                        HSMManager.hSMChangeSelectTransitionId(id);
+                    }
+                }
             }
 
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandWidth(true));

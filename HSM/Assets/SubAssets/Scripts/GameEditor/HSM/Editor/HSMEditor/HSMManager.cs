@@ -21,6 +21,7 @@ public class HSMManager
     public delegate void HSMParameterChange(HSMParameter parameter, bool isAdd);
     public delegate void HSMNodeChangeParameter(int nodeId, string oldParameter, string newParameter);
     public delegate void HSMRuntimePlay(HSMPlayType state);
+    public delegate void HSMChangeSelectTransitionId(int id);
 
     private string _filePath = string.Empty;
     private string _fileName = string.Empty;
@@ -29,6 +30,8 @@ public class HSMManager
 
     // 当前选择的节点
     private int _currentSelectId = 0;
+
+    private int _currentTransitionId = -1;
 
     public static HSMChangeSelectId hSMChangeSelectId;
     public static HSMAddNode hSMAddNode;
@@ -41,6 +44,7 @@ public class HSMManager
     public static HSMParameterChange parameterChange;
     public static HSMNodeChangeParameter hSMNodeChangeParameter;
     public static HSMRuntimePlay hSMRuntimePlay;
+    public static HSMChangeSelectTransitionId hSMChangeSelectTransitionId;
 
     public void Init()
     {
@@ -59,6 +63,7 @@ public class HSMManager
         parameterChange += ParameterChange;
         hSMNodeChangeParameter += NodeChangeParameter;
         hSMRuntimePlay += RuntimePlay;
+        hSMChangeSelectTransitionId += ChangeSelectTransition;
 
         _playState = HSMPlayType.STOP;
     }
@@ -76,6 +81,7 @@ public class HSMManager
         parameterChange -= ParameterChange;
         hSMNodeChangeParameter -= NodeChangeParameter;
         hSMRuntimePlay -= RuntimePlay;
+        hSMChangeSelectTransitionId += ChangeSelectTransition;
 
         _playState = HSMPlayType.STOP;
 
@@ -108,6 +114,11 @@ public class HSMManager
     public int CurrentSelectId
     {
         get { return _currentSelectId; }
+    }
+
+    public int CurrentTransitionId
+    {
+        get { return _currentTransitionId; }
     }
 
     public HSMTreeData HSMTreeData
@@ -313,6 +324,11 @@ public class HSMManager
     {
         NodeNotify.SetPlayState((int)state);
         _playState = state;
+    }
+
+    private void ChangeSelectTransition(int id)
+    {
+        _currentTransitionId = id;
     }
 
     private void ParameterChange(HSMParameter parameter, bool isAdd)

@@ -15,11 +15,11 @@ public class NodeActionRequestSkillState : StateBase
 
     }
 
-    public override ResultType Execute()
+    public override void Execute()
     {
         NodeNotify.NotifyExecute(NodeId, Time.realtimeSinceStartup);
         bool result = iAction.DoAction(NodeId, _parameterList);
-        return result ? ResultType.Success : ResultType.Fail;
+        //return result ? ResultType.Success : ResultType.Fail;
     }
 
     public static CustomIdentification CustomIdentification()

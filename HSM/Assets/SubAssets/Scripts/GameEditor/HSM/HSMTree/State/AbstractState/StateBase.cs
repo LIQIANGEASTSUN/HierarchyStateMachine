@@ -11,53 +11,55 @@ namespace HSMTree
         /// <summary>
         /// 节点类型
         /// </summary>
-        protected NODE_TYPE nodeType;
-        /// <summary>
-        /// 节点序列
-        /// </summary>
-        private int nodeIndex;
+        protected NODE_TYPE _nodeType;
 
         /// <summary>
         /// 节点Id
         /// </summary>
-        private int nodeId;
+        private int _nodeId;
 
-        // 保存子节点
-        protected List<StateBase> nodeChildList = new List<StateBase>();
+        protected List<Transition> _transitionList = new List<Transition>();
+
+        protected IConditionCheck _iconditionCheck = null;
 
         public StateBase(NODE_TYPE nodeType)
         {
-            this.nodeType = nodeType;
+            this._nodeType = nodeType;
         }
 
         /// <summary>
         /// 执行节点抽象方法
         /// </summary>
         /// <returns>返回执行结果</returns>
-        public abstract ResultType Execute();
-
-        public int NodeIndex
+        public virtual void Execute()
         {
-            get { return nodeIndex; }
-            set { nodeIndex = value; }
+            NodeNotify.NotifyExecute(NodeId, Time.realtimeSinceStartup);
+
+            for (int i = 0; i < _transitionList.Count; ++i)
+            {
+                bool result = _iconditionCheck.Condition(_transitionList[i].parameterList);
+            }
         }
 
         public int NodeId
         {
-            get { return nodeId; }
-            set { nodeId = value; }
+            get { return _nodeId; }
+            set { _nodeId = value; }
         }
 
-        public void AddNode(StateBase nodeRoot)
+        public void AddTransition(List<Transition> transitionList)
         {
-            int count = nodeChildList.Count;
-            nodeRoot.NodeIndex = count;
-            nodeChildList.Add(nodeRoot);
+            _transitionList.AddRange(transitionList);
         }
 
-        public List<StateBase> GetChilds()
+        public void AddTransition(Transition transition)
         {
-            return nodeChildList;
+            _transitionList.Add(transition);
+        }
+
+        public void SetConditionCheck(IConditionCheck iConditionCheck)
+        {
+            _iconditionCheck = iConditionCheck;
         }
 
     }

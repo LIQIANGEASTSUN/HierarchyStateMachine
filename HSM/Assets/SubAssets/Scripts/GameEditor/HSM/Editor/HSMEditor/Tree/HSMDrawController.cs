@@ -125,9 +125,19 @@ public class HSMDrawModel
     {
         {
             // 状态节点
-            Node_Draw_Info conditionDrawInfo = new Node_Draw_Info("CreateState");
-            conditionDrawInfo.AddNodeType(NODE_TYPE.STATE);
-            infoList.Add(conditionDrawInfo);
+            Node_Draw_Info stateDrawInfo = new Node_Draw_Info("CreateState");
+            //stateDrawInfo.AddNodeType(NODE_TYPE.STATE);
+            infoList.Add(stateDrawInfo);
+
+            List<CustomIdentification> nodeList = CustomNode.Instance.GetNodeList();
+            for (int i = 0; i < nodeList.Count; ++i)
+            {
+                CustomIdentification customIdentification = nodeList[i];
+                if (customIdentification.NodeType == NODE_TYPE.STATE)
+                {
+                    stateDrawInfo.AddNodeType(NODE_TYPE.STATE, customIdentification.Name, (int)customIdentification.Identification);
+                }
+            }
 
             // 子状态机节点
             Node_Draw_Info actionDrawInfo = new Node_Draw_Info("Create-Sub State Machine");

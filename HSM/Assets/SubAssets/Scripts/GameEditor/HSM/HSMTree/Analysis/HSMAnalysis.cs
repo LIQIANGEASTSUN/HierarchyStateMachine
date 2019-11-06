@@ -29,7 +29,7 @@ namespace HSMTree
 
         public HSMStateMachine Analysis(HSMTreeData data, IConditionCheck iConditionCheck)
         {
-            HSMStateMachine hsmStateMachine = null;
+            HSMStateMachine hsmStateMachine = new HSMStateMachine();
 
             if (null == data)
             {

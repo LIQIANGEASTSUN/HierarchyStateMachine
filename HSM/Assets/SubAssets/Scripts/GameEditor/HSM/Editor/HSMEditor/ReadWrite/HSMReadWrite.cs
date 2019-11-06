@@ -39,7 +39,7 @@ namespace HSMTree
 
             JsonData jsonData = JsonMapper.ToObject(content);
 
-            HSMData.rootNodeId = int.Parse(jsonData["rootNodeId"].ToString());
+            HSMData.defaultStateId = int.Parse(jsonData["defaultStateId"].ToString());
 
             if (((IDictionary)jsonData).Contains("nodeList"))
             {
@@ -96,7 +96,7 @@ namespace HSMTree
             {
                 Transition transition = new Transition();
                 transition.transitionId = int.Parse(item["transitionId"].ToString());
-                transition.toNodeId = int.Parse(item["toNodeId"].ToString());
+                transition.toStateId = int.Parse(item["toStateId"].ToString());
                 transition.parameterList = GetParameterList(item["parameterList"]);
 
                 transitionList.Add(transition);

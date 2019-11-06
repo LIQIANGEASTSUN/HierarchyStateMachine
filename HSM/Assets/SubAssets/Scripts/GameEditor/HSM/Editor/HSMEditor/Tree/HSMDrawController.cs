@@ -257,16 +257,7 @@ public class HSMDrawView
             for (int i = 0; i < nodeList.Count; i++)
             {
                 NodeValue nodeValue = nodeList[i];
-                string name = nodeValue.nodeName; // 
-                //if (string.IsNullOrEmpty(name))
-                //{
-                //    if (nodeValue.NodeType < (int)NODE_TYPE.CONDITION)
-                //    {
-                //        nodeValue.nodeName = NodeEditor.GetTitle((NODE_TYPE)nodeValue.NodeType);
-                //    }
-                //}
-
-                name = string.Format("{0}_{1}", name, nodeValue.id);
+                string name = string.Format("{0}_{1}", nodeValue.nodeName, nodeValue.id);
                 Rect rect = GUI.Window(i, RectTool.RectTToRect(nodeValue.position), DrawNodeWindow, name);
                 nodeValue.position = RectTool.RectToRectT(rect);
                 DrawToChildCurve(nodeValue);
@@ -279,7 +270,7 @@ public class HSMDrawView
     void DrawNodeWindow(int id)
     {
         NodeValue nodeValue = _nodeList[id];
-        NodeEditor.Draw(nodeValue, HSMManager.Instance.CurrentSelectId);
+        NodeEditor.Draw(nodeValue, HSMManager.Instance.CurrentSelectId, HSMManager.Instance.DefaultStateId);
         GUI.DragWindow();
     }
 
@@ -309,9 +300,9 @@ public class HSMDrawView
         if (menuType == 0)
         {
             GenericMenu.MenuFunction2 CallBack = (object userData) => {
-                if (null != HSMManager.hSMAddNode)
+                if (null != HSMManager.hSMAddState)
                 {
-                    HSMManager.hSMAddNode((Node_Draw_Info_Item)userData, mousePosition);
+                    HSMManager.hSMAddState((Node_Draw_Info_Item)userData, mousePosition);
                 }
             };
 
@@ -336,7 +327,10 @@ public class HSMDrawView
                 menu.AddSeparator("");
             }
             // 删除节点
-            menu.AddItem(new GUIContent("Delete Node"), false, DeleteNode);
+            menu.AddItem(new GUIContent("Delete State"), false, DeleteNode);
+
+            // 设置默认节点
+            menu.AddItem(new GUIContent("Set Default State"), false, SetDefaultState);
 
             //if (nodeValue.parentNodeID >= 0)
             //{
@@ -370,16 +364,30 @@ public class HSMDrawView
         }
     }
 
+    private void SetDefaultState()
+    {
+        NodeValue nodeValue = GetMouseInNode(_nodeList);
+        if (null == nodeValue)
+        {
+            return;
+        }
+
+        if (null != HSMManager.hSMSetDefaultState)
+        {
+            HSMManager.hSMSetDefaultState(nodeValue.id);
+        }
+    }
+
     /// 每帧绘制从 节点到所有子节点的连线
     private void DrawToChildCurve(NodeValue nodeValue)
     {
         for (int i = nodeValue.transitionList.Count - 1; i >= 0; --i)
         {
-            int toId = nodeValue.transitionList[i].toNodeId;
+            int toId = nodeValue.transitionList[i].toStateId;
             NodeValue toNode = HSMManager.Instance.GetNode(toId);
 
             int transitionId = nodeValue.id * 1000 + nodeValue.transitionList[i].transitionId;
-            Color color = (transitionId == HSMManager.Instance.CurrentTransitionId) ? new Color(0.4f, 1, 0.4f, 1f) : Color.black;
+            Color color = (transitionId == HSMManager.Instance.CurrentTransitionId) ? (Color)(new Color32(240, 120, 30, 255)) : Color.black;
             DrawNodeCurve(nodeValue.position, toNode.position, color);
         }
     }

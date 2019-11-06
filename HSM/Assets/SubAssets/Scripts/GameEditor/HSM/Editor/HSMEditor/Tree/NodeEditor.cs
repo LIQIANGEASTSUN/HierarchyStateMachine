@@ -8,16 +8,32 @@ public class NodeEditor {
     private static int height = 75;
     private static float value = 0.5f;
 
-    public static void Draw(NodeValue nodeValue, int selectNodeId, float value = 0f)
+    private static Color GetColor(int nodeId, int selectNodeId, int defaultStateId)
+    {
+        Color color = Color.white;
+        if (nodeId == selectNodeId)
+        {
+            color = new Color(0, 1, 0, 0.15f);
+        }
+
+        if (nodeId == defaultStateId)
+        {
+            color = (Color)(new Color32(207, 156, 5, 255));
+        }
+
+        return color;
+    }
+
+    public static void Draw(NodeValue nodeValue, int selectNodeId, int defaultStateId, float value = 0f)
     {
         EditorGUILayout.BeginVertical("box", GUILayout.Height(height));
         {
-            if (nodeValue.id == selectNodeId)
+            GUI.backgroundColor = GetColor(nodeValue.id, selectNodeId, defaultStateId);
+            //if (nodeValue.id == selectNodeId)
             {
-                GUI.backgroundColor = new Color(0, 1, 0, 0.15f);
                 GUI.Box(new Rect(5, 20, nodeValue.position.width - 10, height), string.Empty);
-                GUI.backgroundColor = Color.white;
             }
+            GUI.backgroundColor = Color.white;
 
             nodeValue.descript = EditorGUILayout.TextArea(nodeValue.descript);
 

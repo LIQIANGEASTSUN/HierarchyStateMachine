@@ -7,7 +7,7 @@ namespace HSMTree
 {
     public class HSMTreeData
     {
-        public int rootNodeId = -1;
+        public int defaultStateId = -1;
         public List<NodeValue> nodeList = new List<NodeValue>();
         public List<HSMParameter> parameterList = new List<HSMParameter>();
         public string descript = string.Empty;
@@ -28,7 +28,7 @@ namespace HSMTree
     public class Transition
     {
         public int transitionId;
-        public int toNodeId;
+        public int toStateId;
         public List<HSMParameter> parameterList = new List<HSMParameter>();
     }
 

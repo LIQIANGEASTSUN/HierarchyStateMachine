@@ -37,9 +37,9 @@ namespace HSMTree
                 return hsmStateMachine;
             }
 
-            if (data.rootNodeId < 0)
+            if (data.defaultStateId < 0)
             {
-                Debug.LogError("没有跟节点");
+                Debug.LogError("没有默认节点");
                 return hsmStateMachine;
             }
 

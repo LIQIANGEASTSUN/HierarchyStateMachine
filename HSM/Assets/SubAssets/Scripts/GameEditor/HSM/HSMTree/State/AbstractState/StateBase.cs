@@ -27,6 +27,11 @@ namespace HSMTree
             this._nodeType = nodeType;
         }
 
+        public virtual void Enter()
+        {
+
+        }
+
         /// <summary>
         /// 执行节点抽象方法
         /// </summary>
@@ -39,6 +44,11 @@ namespace HSMTree
             {
                 bool result = _iconditionCheck.Condition(_transitionList[i].parameterList);
             }
+        }
+
+        public virtual void Exit()
+        {
+
         }
 
         public int NodeId

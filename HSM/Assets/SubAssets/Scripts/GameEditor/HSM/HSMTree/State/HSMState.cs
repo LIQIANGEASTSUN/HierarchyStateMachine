@@ -8,8 +8,8 @@ namespace HSMTree
     {
         public HSMState():base(NODE_TYPE.STATE)
         {
-        }
 
+        }
     }
 
 }

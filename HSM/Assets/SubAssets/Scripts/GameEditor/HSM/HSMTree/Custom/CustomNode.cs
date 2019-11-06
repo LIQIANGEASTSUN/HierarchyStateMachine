@@ -8,26 +8,13 @@ namespace HSMTree
 
     public enum IDENTIFICATION
     {
-        #region Action    行为节点从 10000 开始
-        /// <summary>
-        /// 切换状态节点
-        /// </summary>
-        [EnumAttirbute("切换状态节点")]
-        SKILL_STATE_REQUEST = 10000,
-
+        #region
         /// <summary>
         /// 技能状态节点
         /// </summary>
-        //[EnumAttirbute("技能状态节点")]
-        //SKILL_STATE = 10001,
-        #endregion
+        [EnumAttirbute("技能状态节点")]
+        SKILL_STATE = 10000,
 
-        #region Condition  条件节点从 20000 开始
-        /// <summary>
-        /// 通用条件节点
-        /// </summary>
-        [EnumAttirbute("通用条件节点")]
-        COMMON_CONDITION = 20002,
         #endregion
     }
 
@@ -132,17 +119,8 @@ namespace HSMTree
             }
 
             #region Skill
-            // 条件节点
-            {
-                CustomIdentification custom = NodeConditionCustom.CustomIdentification();
-                nodeList.Add(custom);
-            }
-
-            // 行为节点
-            {
-                CustomIdentification requestSkillState = NodeActionRequestSkillState.CustomIdentification();
-                nodeList.Add(requestSkillState);
-            }
+            CustomIdentification custom = StateSkill.CustomIdentification();
+            nodeList.Add(custom);
             #endregion
 
             HashSet<IDENTIFICATION> hash = new HashSet<IDENTIFICATION>();

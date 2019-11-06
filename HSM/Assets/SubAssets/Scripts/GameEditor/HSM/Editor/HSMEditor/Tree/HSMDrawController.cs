@@ -392,11 +392,57 @@ public class HSMDrawView
         }
     }
 
+    private static void CalculatePoint(RectT fromRect, RectT toEnd, ref Vector3 start, ref Vector3 end)
+    {
+        List<Vector3> pointFromList = RectPoint(fromRect);
+        List<Vector3> pointToList = RectPoint(toEnd);
+
+        float distance = float.MaxValue;
+        for (int i = 0; i < pointFromList.Count; ++i)
+        {
+            for (int j = 0; j < pointToList.Count; ++j)
+            {
+                float value = Vector3.Distance(pointFromList[i], pointToList[j]);
+                if (value < distance)
+                {
+                    distance = value;
+                    start = pointFromList[i];
+                    end = pointToList[j];
+                }
+            }
+        }
+    }
+
+    private const float coefficient = 0.5f;
+    private static List<Vector3> RectPoint(RectT rect)
+    {
+        List<Vector3> pointList = new List<Vector3>();
+
+        Vector3 center = new Vector3(rect.x + rect.width * coefficient, rect.y + rect.height * coefficient);
+
+        Vector3 point0 = center + new Vector3(0, -rect.height * coefficient, 0);
+        Vector3 point1 = center + new Vector3(-rect.width * coefficient, 0, 0);
+        Vector3 point2 = center + new Vector3(rect.width * coefficient, 0, 0);
+        Vector3 point3 = center + new Vector3(0, rect.height * coefficient, 0);
+
+        pointList.Add(point0);
+        pointList.Add(point1);
+        pointList.Add(point2);
+        pointList.Add(point3);
+
+        return pointList;
+    }
+
     // 绘制线
     public static void DrawNodeCurve(RectT start, RectT end, Color color)
     {
-        Vector3 startPos = new Vector3(start.x + start.width / 2, start.y + start.height, 0);
-        Vector3 endPos = new Vector3(end.x + end.width / 2, end.y, 0);
+        //Vector3 startPos = new Vector3(start.x + start.width * 0.5f, start.y + start.height, 0);
+        //Vector3 endPos = new Vector3(end.x + end.width * 0.5f, end.y, 0);
+
+        Vector3 startPos = Vector3.zero;
+        Vector3 endPos = Vector3.zero;
+        CalculatePoint(start, end, ref startPos, ref endPos);
+
         //Handles.DrawLine(startPos, endPos);
         Vector3 middle = (startPos + endPos) * 0.5f;
         DrawArrow(startPos, endPos, color);

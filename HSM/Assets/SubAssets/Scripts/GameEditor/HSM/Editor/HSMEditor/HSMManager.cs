@@ -405,6 +405,8 @@ public class HSMManager
         {
             DelParameter(_HSMTreeData.parameterList, parameter);
         }
+
+        HSMRunTime.Instance.Reset(HSMTreeData);
     }
 
     private bool AddParameter(List<HSMParameter> parameterList, HSMParameter parameter, bool repeatAdd = false)

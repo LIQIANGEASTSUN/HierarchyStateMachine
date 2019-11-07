@@ -192,6 +192,7 @@ public class HSMDrawView
         {
             NodeMakeTransition(currentNode, nodeList);
             DrawNodeWindows(nodeList);
+            SelectTransition(nodeList);
             ResetScrollPos(nodeList);
         }
         GUI.EndScrollView();  //结束 ScrollView 窗口  
@@ -265,6 +266,52 @@ public class HSMDrawView
         };
 
         _treeNodeWindow.DrawWindow(CallBack);
+    }
+
+    private void SelectTransition(List<NodeValue> nodeList)
+    {
+        Event _event = Event.current;
+        Vector3 mousePos = _event.mousePosition;
+
+        if (_event.type != EventType.MouseDown || (_event.button != 0)) // 鼠标左键
+        {
+            return;
+        }
+
+        for (int i = 0; i < nodeList.Count; i++)
+        {
+            NodeValue nodeValue = nodeList[i];
+
+            for (int j = 0; j < nodeValue.transitionList.Count; ++j)
+            {
+                Transition transition = nodeValue.transitionList[j];
+                int toId = transition.toStateId;
+                NodeValue toNode = HSMManager.Instance.GetNode(toId);
+                if (null == toNode)
+                {
+                    continue;
+                }
+
+                int transitionId = nodeValue.id * 1000 + transition.transitionId;
+                Vector3 startPos = Vector3.zero;
+                Vector3 endPos = Vector3.zero;
+                CalculateTransitionPoint(nodeValue.position, toNode.position, ref startPos, ref endPos);
+
+                Vector3 AB = endPos - startPos;
+                Vector3 AP = mousePos - startPos;
+                float distance = Vector3.Cross(AB, AP).magnitude / AB.magnitude;
+
+                bool value = (distance < 10);
+                if (value && null != HSMManager.hSMChangeSelectTransitionId)
+                {
+                    int id = nodeValue.id * 1000 + transition.transitionId;
+                    HSMManager.hSMChangeSelectTransitionId(id);
+                }
+
+                //float distance = Vector3.Cross(AB, AP).magnitude / AB.magnitude;
+                //return distance <= (sRadius + cRadius);
+            }
+        }
     }
 
     void DrawNodeWindow(int id)
@@ -396,12 +443,19 @@ public class HSMDrawView
     // 绘制线
     public static void DrawNodeCurve(RectT start, RectT end, Color color)
     {
-        Vector3 startPos = new Vector3(start.x + start.width * coefficient, start.y + start.height * coefficient);
-        Vector3 endPos = new Vector3(end.x + end.width * coefficient, end.y + end.height * coefficient);
+        Vector3 startPos = Vector3.zero;
+        Vector3 endPos = Vector3.zero;
+        CalculateTransitionPoint(start, end, ref startPos, ref endPos);
         //Handles.DrawLine(startPos, endPos);
         Vector3 middle = (startPos + endPos) * 0.5f;
         DrawArrow(startPos, endPos, color);
         Handles.color = Color.white;
+    }
+
+    private static void CalculateTransitionPoint(RectT start, RectT end, ref Vector3 startPos, ref Vector3 endPos)
+    {
+        startPos = new Vector3(start.x + start.width * coefficient, start.y + start.height * coefficient);
+        endPos = new Vector3(end.x + end.width * coefficient, end.y + end.height * coefficient);
     }
 
     private static void DrawArrow(Vector2 from, Vector2 to, Color color)

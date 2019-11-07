@@ -21,24 +21,27 @@ namespace HSMTree
         {
             _runtimeParameterModel = new HSMRuntimeParameterModel();
             _runtimeParameterView = new HSMRuntimeParameterView();
+            HSMManager.hSMRuntimePlay += RuntimePlay;
         }
 
         public void OnDestroy()
         {
-
+            HSMManager.hSMRuntimePlay -= RuntimePlay;
         }
 
         public void OnGUI()
         {
-            if (_runtimeParameterModel.ParameterList.Count <= 0)
+            _runtimeParameterView.Draw(_runtimeParameterModel.ParameterList);
+        }
+
+        private void RuntimePlay(HSMPlayType state)
+        {
+            if (state == HSMPlayType.PLAY)
             {
                 List<HSMParameter> parameterList = HSMRunTime.Instance.ConditionCheck.GetAllParameter();
                 _runtimeParameterModel.AddParameter(parameterList);
             }
-
-            _runtimeParameterView.Draw(_runtimeParameterModel.ParameterList);
         }
-
     }
 
     public class HSMRuntimeParameterModel

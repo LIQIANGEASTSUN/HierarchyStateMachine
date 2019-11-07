@@ -20,11 +20,13 @@ namespace HSMTree
         public void Init()
         {
             _runtimeRotateGo = new RunTimeRotateGo();
+            HSMManager.hSMRuntimePlay += RuntimePlay;
         }
 
         public void OnDestroy()
         {
             _runtimeRotateGo.OnDestroy();
+            HSMManager.hSMRuntimePlay -= RuntimePlay;
         }
 
         public void Reset(HSMTreeData HSMTreeData)
@@ -60,24 +62,12 @@ namespace HSMTree
             }
         }
 
-        public bool DoAction(int nodeId, List<HSMParameter> parameterList)
+        private void RuntimePlay(HSMPlayType state)
         {
-            bool result = true;
-            for (int i = 0; i < parameterList.Count; ++i)
+            if (state == HSMPlayType.PLAY)
             {
-                bool value = DoAction(nodeId, parameterList[i]);
-                if (!value)
-                {
-                    result = false;
-                }
+                _iconditionCheck.AddParameter(HSMManager.Instance.HSMTreeData.parameterList);
             }
-
-            return result;
-        }
-
-        public bool DoAction(int nodeId, HSMParameter parameter)
-        {
-            return true;
         }
     }
 

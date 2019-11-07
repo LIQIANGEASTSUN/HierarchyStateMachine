@@ -225,7 +225,7 @@ public class HSMDrawView
                 else
                 {
                     NodeValue nodeValue = GetMouseInNode(nodeList);
-                    if (HSMManager.hSMChangeSelectId != null)
+                    if ((null != nodeValue) && HSMManager.hSMChangeSelectId != null)
                     {
                         int nodeId = (null != nodeValue) ? nodeValue.id : -1;
                         HSMManager.hSMChangeSelectId(nodeId);
@@ -302,12 +302,19 @@ public class HSMDrawView
                 float distance = Vector3.Cross(AB, AP).magnitude / AB.magnitude;
 
                 bool value = (distance < 10);
-                if (value && null != HSMManager.hSMChangeSelectTransitionId)
+                if(value)
                 {
-                    int id = nodeValue.id * 1000 + transition.transitionId;
-                    HSMManager.hSMChangeSelectTransitionId(id);
-                }
+                    if (null != HSMManager.hSMChangeSelectTransitionId)
+                    {
+                        int id = nodeValue.id * 1000 + transition.transitionId;
+                        HSMManager.hSMChangeSelectTransitionId(id);
+                    }
 
+                    if (null != HSMManager.hSMChangeSelectId)
+                    {
+                        HSMManager.hSMChangeSelectId(nodeValue.id);
+                    }
+                }
                 //float distance = Vector3.Cross(AB, AP).magnitude / AB.magnitude;
                 //return distance <= (sRadius + cRadius);
             }
@@ -434,7 +441,7 @@ public class HSMDrawView
             NodeValue toNode = HSMManager.Instance.GetNode(toId);
 
             int transitionId = nodeValue.id * 1000 + nodeValue.transitionList[i].transitionId;
-            Color color = (transitionId == HSMManager.Instance.CurrentTransitionId) ? (Color)(new Color32(240, 120, 30, 255)) : Color.black;
+            Color color = (transitionId == HSMManager.Instance.CurrentTransitionId) ? (Color)(new Color32(90, 210, 111, 255)) : Color.black;
             DrawNodeCurve(nodeValue.position, toNode.position, color);
         }
     }

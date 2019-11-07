@@ -60,6 +60,9 @@ namespace HSMTree
 
             EditorGUILayout.BeginVertical("box");
             {
+                string nodeId = string.Format("节点_{0}", nodeValue.id);
+                EditorGUILayout.LabelField(nodeId);
+
                 if (nodeValue.NodeType == (int)NODE_TYPE.STATE
                     || nodeValue.NodeType == (int)NODE_TYPE.SUB_STATE_MACHINE)
                 {
@@ -71,9 +74,6 @@ namespace HSMTree
 
                 string nodeName = nodeValue.nodeName;
                 EditorGUILayout.LabelField(nodeName);
-
-                string nodeId = string.Format("节点_{0}", nodeValue.id);
-                EditorGUILayout.LabelField(nodeId);
 
                 if (nodeValue.identification > 0)
                 {

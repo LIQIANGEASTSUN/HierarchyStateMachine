@@ -20,11 +20,13 @@ namespace HSMTree
         public void Init()
         {
             _runtimeRotateGo = new RunTimeRotateGo();
+            HSMManager.hSMRuntimePlay += RuntimePlay;
         }
 
         public void OnDestroy()
         {
             _runtimeRotateGo.OnDestroy();
+            HSMManager.hSMRuntimePlay -= RuntimePlay;
         }
 
         public void Reset(HSMTreeData HSMTreeData)
@@ -56,6 +58,17 @@ namespace HSMTree
             if (null != _hsmStateMachine)
             {
                 _hsmStateMachine.Execute();
+            }
+        }
+
+        private void RuntimePlay(HSMPlayType state)
+        {
+            if (state == HSMPlayType.PLAY || state == HSMPlayType.STOP)
+            {
+                if (null != _hsmStateMachine)
+                {
+                    _hsmStateMachine.Clear();
+                }
             }
         }
     }

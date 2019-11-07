@@ -43,7 +43,7 @@ namespace HSMTree
                 return hsmStateMachine;
             }
 
-            hsmStateMachine.CurrentStateId = data.defaultStateId;
+            hsmStateMachine.SetDefaultStateId(data.defaultStateId);
 
             iConditionCheck.AddParameter(data.parameterList);
 

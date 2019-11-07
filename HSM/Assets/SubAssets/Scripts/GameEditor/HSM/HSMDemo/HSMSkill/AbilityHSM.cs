@@ -31,7 +31,7 @@ public class AbilityHSM : IAbilityEnvironment
     };
 
     protected Dictionary<int, string> _skillConfigDic = new Dictionary<int, string>() {
-        //{ (int)SkillHandleType.CONTINUOUS_FIRE,     "AbilityGeneric"},
+        //{ (int)SkillHandleType.CONTINUOUS_FIRE,     "AbilityGenericHSM"},
         //{ (int)SkillHandleType.DEPUTY_SKILL_FOCO,   "AbliityFocoFull"},
         //{ (int)SkillHandleType.DEPUTY_SKILL_THROW,  "AbilityThrow" },
     };

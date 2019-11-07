@@ -450,12 +450,38 @@ public class HSMDrawView
         Vector3 middle = (startPos + endPos) * 0.5f;
         DrawArrow(startPos, endPos, color);
         Handles.color = Color.white;
+
+        CalculateTranstion(start, end, ref startPos, ref endPos);
     }
 
-    private static void CalculateTransitionPoint(RectT start, RectT end, ref Vector3 startPos, ref Vector3 endPos)
+    private static void CalculateTransitionPoint(RectT start, RectT end, ref Vector3 startCenter, ref Vector3 endCenter)
     {
-        startPos = new Vector3(start.x + start.width * coefficient, start.y + start.height * coefficient);
-        endPos = new Vector3(end.x + end.width * coefficient, end.y + end.height * coefficient);
+        startCenter = new Vector3(start.x + start.width * coefficient, start.y + start.height * coefficient);
+        endCenter = new Vector3(end.x + end.width * coefficient, end.y + end.height * coefficient);
+    }
+
+    private static void CalculateTranstion(RectT start, RectT end, ref Vector3 startPoint, ref Vector3 endPoint)
+    {
+        Vector3 startCenter = Vector3.zero;
+        Vector3 endCenter = Vector3.zero;
+        CalculateTransitionPoint(start, end, ref startCenter, ref endCenter);
+
+        Vector3 axis = Vector3.Cross((endCenter - startCenter), new Vector3(0, 0, 1)).normalized;
+        {
+            Vector3 pos = startCenter + 150 * axis;
+            Vector3 pos2 = startCenter + 150 * axis * -1;
+
+            GUI.Box(new Rect(pos, Vector2.one * 20), "");
+            GUI.Box(new Rect(pos2, Vector2.one * 20), "");
+        }
+
+        {
+            Vector3 pos = endCenter + 150 * axis;
+            Vector3 pos2 = endCenter + 150 * axis * -1;
+
+            GUI.Box(new Rect(pos, Vector2.one * 20), "");
+            GUI.Box(new Rect(pos2, Vector2.one * 20), "");
+        }
     }
 
     private static void DrawArrow(Vector2 from, Vector2 to, Color color)

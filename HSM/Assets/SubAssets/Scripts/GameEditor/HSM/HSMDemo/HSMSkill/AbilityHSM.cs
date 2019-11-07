@@ -17,8 +17,9 @@ public class AbilityHSM : IAbilityEnvironment
     protected const string EnableFire        = "EnableFire";
     protected const string EnergyEnougth     = "EnergyEnougth";
     protected const string EnableActive      = "EnableActive";
-    protected const string Hold              = "Hold";
-    protected const string Phase_End         = "PhaseEnd";
+    protected const string PhaseOrHold       = "PhaseOrHold";
+    //protected const string Hold              = "Hold";
+    //protected const string Phase_End         = "PhaseEnd";
     protected const string FocoFull          = "FocoFull";
 
     protected Dictionary<int, string> _btnNameDic = new Dictionary<int, string>() {
@@ -44,9 +45,6 @@ public class AbilityHSM : IAbilityEnvironment
 
     public void Init()
     {
-        _iconditionCheck = new ConditionCheck();
-        //_abilityInputExtend = new AbilityInputExtend();
-
         string configName = string.Empty;
         //if (!_skillConfigDic.TryGetValue(_skill.SkillData.HandleType, out configName))
         //{
@@ -58,6 +56,10 @@ public class AbilityHSM : IAbilityEnvironment
         {
             return;
         }
+
+        _iconditionCheck = new ConditionCheck();
+        //_abilityInputExtend = new AbilityInputExtend();
+
         HSMAnalysis analysis = new HSMAnalysis();
         _hsmStateMachine = analysis.Analysis(textAsset.text, _iconditionCheck);
 
@@ -122,8 +124,8 @@ public class AbilityHSM : IAbilityEnvironment
     private void Clear()
     {
         ConditionCheck.SetParameter(Skill_State, 4);
-        ConditionCheck.SetParameter(Hold, false);
-        ConditionCheck.SetParameter(Phase_End, false);
+        //ConditionCheck.SetParameter(Hold, false);
+        //ConditionCheck.SetParameter(Phase_End, false);
         ConditionCheck.SetParameter(FocoFull, false);
     }
 

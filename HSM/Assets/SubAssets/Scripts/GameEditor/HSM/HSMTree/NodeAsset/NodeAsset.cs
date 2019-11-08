@@ -31,6 +31,7 @@ namespace HSMTree
         public int transitionId;
         public int toStateId;
         public List<HSMParameter> parameterList = new List<HSMParameter>();
+        public List<int> combinLogicList = new List<int>();
     }
 
     public enum HSMParameterType
@@ -98,6 +99,7 @@ namespace HSMTree
         public float floatValue = 0;
         public bool boolValue = true;
         public int compare;
+        public int index;
 
         public HSMParameter Clone()
         {
@@ -114,6 +116,7 @@ namespace HSMTree
             floatValue = parameter.floatValue;
             boolValue = parameter.boolValue;
             compare = parameter.compare;
+            index = parameter.index;
         }
 
         private HSMCompare Compare(int value)

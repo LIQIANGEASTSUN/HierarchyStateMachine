@@ -105,11 +105,26 @@ namespace HSMTree
                 transition.transitionId = int.Parse(item["transitionId"].ToString());
                 transition.toStateId = int.Parse(item["toStateId"].ToString());
                 transition.parameterList = GetParameterList(item["parameterList"]);
+                transition.combinLogicList = GetIntList(item["combinLogicList"]);
 
                 transitionList.Add(transition);
             }
 
             return transitionList;
+        }
+
+
+        private List<int> GetIntList(JsonData jsonData)
+        {
+            List<int> valueList = new List<int>();
+
+            for (int i = 0; i < jsonData.Count; ++i)
+            {
+                int value = int.Parse(jsonData[i].ToString());
+                valueList.Add(value);
+            }
+
+            return valueList;
         }
 
         private RectT GetPosition(JsonData data)
@@ -135,6 +150,7 @@ namespace HSMTree
                 parameter.floatValue = float.Parse(item["floatValue"].ToString());
                 parameter.boolValue = bool.Parse(item["boolValue"].ToString());
                 parameter.compare = int.Parse(item["compare"].ToString());
+                parameter.index = int.Parse(item["index"].ToString());
 
                 dataList.Add(parameter);
             }

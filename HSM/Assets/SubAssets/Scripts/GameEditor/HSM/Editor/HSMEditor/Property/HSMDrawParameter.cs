@@ -23,6 +23,11 @@ namespace HSMTree
                 return HSMParameter;
             }
 
+            if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER)
+            {
+                EditorGUILayout.LabelField(string.Format("index:{0}", HSMParameter.index));
+            }
+
             {
                 string[] parameterNameArr = EnumNames.GetEnumNames<HSMParameterType>();
                 int index = EnumNames.GetEnumIndex<HSMParameterType>((HSMParameterType)(HSMParameter.parameterType));
@@ -31,9 +36,14 @@ namespace HSMTree
                 bool enableChangeType = (drawParameterType == HSMDrawParameterType.HSM_PARAMETER_ADD);
                 GUI.enabled = enableChangeType;
                 {
-                    index = EditorGUILayout.Popup(index, parameterNameArr);
-                    HSMParameter.parameterType = (int)EnumNames.GetEnum<HSMParameterType>(index);
-                    GUILayout.Space(5);
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        index = EditorGUILayout.Popup(index, parameterNameArr, GUILayout.ExpandWidth(true));
+                        HSMParameter.parameterType = (int)EnumNames.GetEnum<HSMParameterType>(index);
+                        GUILayout.Space(5);
+                        EditorGUILayout.LabelField(string.Format("index:{0}", HSMParameter.index));
+                    }
+                    EditorGUILayout.EndVertical();
                 }
                 GUI.enabled = true;
             }

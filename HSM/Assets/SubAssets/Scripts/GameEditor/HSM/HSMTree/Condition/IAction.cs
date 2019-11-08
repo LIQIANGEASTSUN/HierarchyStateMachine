@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAction
+namespace HSMTree
 {
-    void DoAction(int toStateId);
+    public interface IAction
+    {
+        void DoAction(int toStateId);
+    }
 
 }
+

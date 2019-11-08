@@ -123,6 +123,8 @@ namespace HSMTree
             for (int i = 0; i < parameterList.Count; ++i)
             {
                 HSMParameter parameter = parameterList[i];
+
+                Debug.LogError("UseOr");
                 bool value = Condition(parameter);
                 if (!value)
                 {

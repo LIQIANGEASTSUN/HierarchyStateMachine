@@ -85,7 +85,7 @@ namespace HSMTree
                         HSMParameter HSMParameter = parameterList[i];
                         EditorGUILayout.BeginVertical("box");
                         {
-                            HSMParameter = DrawParameter.Draw(HSMParameter, DrawParameterType.RUNTIME_PARAMETER, null);
+                            HSMParameter = HSMDrawParameter.Draw(HSMParameter, HSMDrawParameterType.RUNTIME_PARAMETER, null);
                         }
                         EditorGUILayout.EndVertical();
                     }

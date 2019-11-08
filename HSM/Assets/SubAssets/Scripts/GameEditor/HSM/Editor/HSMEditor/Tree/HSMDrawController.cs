@@ -28,8 +28,8 @@ public class HSMDrawController
         _treeNodeWindow = window;
         _HSMDrawView.Init(_treeNodeWindow, this);
 
-        NodeValue currentNode = _HSMDrawModel.GetCurrentSelectNode();
-        List<NodeValue> nodeList = _HSMDrawModel.GetNodeList();
+        NodeData currentNode = _HSMDrawModel.GetCurrentSelectNode();
+        List<NodeData> nodeList = _HSMDrawModel.GetNodeList();
 
         _HSMDrawView.Draw(_treeNodeWindow.position, currentNode, nodeList);
     }
@@ -107,12 +107,12 @@ public class HSMDrawModel
         SetInfoList();
     }
 
-    public NodeValue GetCurrentSelectNode()
+    public NodeData GetCurrentSelectNode()
     {
         return HSMManager.Instance.CurrentNode;
     }
 
-    public List<NodeValue> GetNodeList()
+    public List<NodeData> GetNodeList()
     {
         return HSMManager.Instance.NodeList;
     }
@@ -169,7 +169,7 @@ public class HSMDrawView
     private Rect scrollRect = new Rect(0, 0, 1500, 1000);
     private Rect contentRect = new Rect(0, 0, 3000, 2000);
 
-    private List<NodeValue> _nodeList = new List<NodeValue>();
+    private List<NodeData> _nodeList = new List<NodeData>();
 
     public void Init(TreeNodeWindow window, HSMDrawController drawController)
     {
@@ -177,7 +177,7 @@ public class HSMDrawView
         _drawController = drawController;
     }
 
-    public void Draw( Rect windowsPosition, NodeValue currentNode, List<NodeValue> nodeList)
+    public void Draw( Rect windowsPosition, NodeData currentNode, List<NodeData> nodeList)
     {
         _nodeList = nodeList;
 
@@ -198,7 +198,7 @@ public class HSMDrawView
         GUI.EndScrollView();  //结束 ScrollView 窗口  
     }
 
-    private void NodeMakeTransition(NodeValue currentNode, List<NodeValue> nodeList)
+    private void NodeMakeTransition(NodeData currentNode, List<NodeData> nodeList)
     {
         Event _event = Event.current;
         mousePosition = _event.mousePosition;
@@ -209,7 +209,7 @@ public class HSMDrawView
             {
                 if (makeTransitionMode)
                 {
-                    NodeValue nodeValue = GetMouseInNode(nodeList);
+                    NodeData nodeValue = GetMouseInNode(nodeList);
                     // 如果按下鼠标时，选中了一个节点，则将 新选中根节点 添加为 selectNode 的子节点
                     if (null != nodeValue && currentNode.id != nodeValue.id)
                     {
@@ -224,7 +224,7 @@ public class HSMDrawView
                 }
                 else
                 {
-                    NodeValue nodeValue = GetMouseInNode(nodeList);
+                    NodeData nodeValue = GetMouseInNode(nodeList);
                     if ((null != nodeValue) && HSMManager.hSMChangeSelectId != null)
                     {
                         int nodeId = (null != nodeValue) ? nodeValue.id : -1;
@@ -237,7 +237,7 @@ public class HSMDrawView
             {
                 if ((!makeTransitionMode))
                 {
-                    NodeValue nodeValue = GetMouseInNode(nodeList);
+                    NodeData nodeValue = GetMouseInNode(nodeList);
                     ShowMenu(currentNode, nodeValue);
                 }
             }
@@ -251,13 +251,13 @@ public class HSMDrawView
     }
 
     // 绘制节点
-    private void DrawNodeWindows(List<NodeValue> nodeList)
+    private void DrawNodeWindows(List<NodeData> nodeList)
     {
         Action CallBack = () =>
         {
             for (int i = 0; i < nodeList.Count; i++)
             {
-                NodeValue nodeValue = nodeList[i];
+                NodeData nodeValue = nodeList[i];
                 string name = string.Format("{0}_{1}", nodeValue.nodeName, nodeValue.id);
                 Rect rect = GUI.Window(i, RectTool.RectTToRect(nodeValue.position), DrawNodeWindow, name);
                 nodeValue.position = RectTool.RectToRectT(rect);
@@ -268,7 +268,7 @@ public class HSMDrawView
         _treeNodeWindow.DrawWindow(CallBack);
     }
 
-    private void SelectTransition(List<NodeValue> nodeList)
+    private void SelectTransition(List<NodeData> nodeList)
     {
         Event _event = Event.current;
         Vector3 mousePos = _event.mousePosition;
@@ -280,13 +280,13 @@ public class HSMDrawView
 
         for (int i = 0; i < nodeList.Count; i++)
         {
-            NodeValue nodeValue = nodeList[i];
+            NodeData nodeValue = nodeList[i];
 
             for (int j = 0; j < nodeValue.transitionList.Count; ++j)
             {
                 Transition transition = nodeValue.transitionList[j];
                 int toId = transition.toStateId;
-                NodeValue toNode = HSMManager.Instance.GetNode(toId);
+                NodeData toNode = HSMManager.Instance.GetNode(toId);
                 if (null == toNode)
                 {
                     continue;
@@ -323,18 +323,18 @@ public class HSMDrawView
 
     void DrawNodeWindow(int id)
     {
-        NodeValue nodeValue = _nodeList[id];
+        NodeData nodeValue = _nodeList[id];
         NodeEditor.Draw(nodeValue, HSMManager.Instance.CurrentSelectId, HSMManager.Instance.DefaultStateId);
         GUI.DragWindow();
     }
 
     // 获取鼠标所在位置的节点
-    private NodeValue GetMouseInNode(List<NodeValue> nodeList)
+    private NodeData GetMouseInNode(List<NodeData> nodeList)
     {
-        NodeValue selectNode = null;
+        NodeData selectNode = null;
         for (int i = 0; i < nodeList.Count; i++)
         {
-            NodeValue nodeValue = nodeList[i];
+            NodeData nodeValue = nodeList[i];
             // 如果鼠标位置 包含在 节点的 Rect 范围，则视为可以选择的节点
             if (RectTool.RectTToRect(nodeValue.position).Contains(mousePosition))
             {
@@ -346,7 +346,7 @@ public class HSMDrawView
         return selectNode;
     }
 
-    private void ShowMenu(NodeValue currentNode, NodeValue nodeValue)
+    private void ShowMenu(NodeData currentNode, NodeData nodeValue)
     {
         int menuType = (nodeValue != null) ? 1 : 0;
 
@@ -405,7 +405,7 @@ public class HSMDrawView
     // 删除节点
     private void DeleteNode()
     {
-        NodeValue nodeValue = GetMouseInNode(_nodeList);
+        NodeData nodeValue = GetMouseInNode(_nodeList);
 
         if (!EditorUtility.DisplayDialog("提示", "确定要删除节点吗", "Yes", "No"))
         {
@@ -420,7 +420,7 @@ public class HSMDrawView
 
     private void SetDefaultState()
     {
-        NodeValue nodeValue = GetMouseInNode(_nodeList);
+        NodeData nodeValue = GetMouseInNode(_nodeList);
         if (null == nodeValue)
         {
             return;
@@ -433,12 +433,12 @@ public class HSMDrawView
     }
 
     /// 每帧绘制从 节点到所有子节点的连线
-    private void DrawToChildCurve(NodeValue nodeValue)
+    private void DrawToChildCurve(NodeData nodeValue)
     {
         for (int i = nodeValue.transitionList.Count - 1; i >= 0; --i)
         {
             int toId = nodeValue.transitionList[i].toStateId;
-            NodeValue toNode = HSMManager.Instance.GetNode(toId);
+            NodeData toNode = HSMManager.Instance.GetNode(toId);
 
             int transitionId = nodeValue.id * 1000 + nodeValue.transitionList[i].transitionId;
             Color color = (transitionId == HSMManager.Instance.CurrentTransitionId) ? (Color)(new Color32(90, 210, 111, 255)) : Color.black;
@@ -492,18 +492,18 @@ public class HSMDrawView
         Handles.EndGUI();
     }
 
-    private void ResetScrollPos(List<NodeValue> nodeList)
+    private void ResetScrollPos(List<NodeData> nodeList)
     {
         if (nodeList.Count <= 0)
         {
             return;
         }
 
-        NodeValue rightmostNode = null;
-        NodeValue bottomNode = null;
+        NodeData rightmostNode = null;
+        NodeData bottomNode = null;
         for (int i = 0; i < nodeList.Count; ++i)
         {
-            NodeValue nodeValue = nodeList[i];
+            NodeData nodeValue = nodeList[i];
             if (rightmostNode == null || (nodeValue.position.x > rightmostNode.position.x))
             {
                 rightmostNode = nodeValue;

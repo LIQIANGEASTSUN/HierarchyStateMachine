@@ -4,7 +4,7 @@ using UnityEngine;
 using HSMTree;
 //using GenPB;
 
-public class AbilityHSM : IAbilityEnvironment
+public class AbilityHSM : IAbilityEnvironment, IAction
 {
     //private Skill _skill;
 
@@ -12,14 +12,11 @@ public class AbilityHSM : IAbilityEnvironment
     private IConditionCheck _iconditionCheck = null;
     //private AbilityInputExtend _abilityInputExtend = null;
 
-    protected const string Skill_State       = "Skill_State";
     protected const string SkillRequestState = "Skill_Change_State";
     protected const string EnableFire        = "EnableFire";
     protected const string EnergyEnougth     = "EnergyEnougth";
     protected const string EnableActive      = "EnableActive";
     protected const string PhaseOrHold       = "PhaseOrHold";
-    //protected const string Hold              = "Hold";
-    //protected const string Phase_End         = "PhaseEnd";
     protected const string FocoFull          = "FocoFull";
 
     protected Dictionary<int, string> _btnNameDic = new Dictionary<int, string>() {
@@ -31,7 +28,7 @@ public class AbilityHSM : IAbilityEnvironment
     };
 
     protected Dictionary<int, string> _skillConfigDic = new Dictionary<int, string>() {
-        //{ (int)SkillHandleType.CONTINUOUS_FIRE,     "AbilityGenericHSM"},
+        { (int)SkillHandleType.CONTINUOUS_FIRE,     "AbilityGenericHSM"},
         //{ (int)SkillHandleType.DEPUTY_SKILL_FOCO,   "AbliityFocoFull"},
         //{ (int)SkillHandleType.DEPUTY_SKILL_THROW,  "AbilityThrow" },
     };
@@ -39,7 +36,6 @@ public class AbilityHSM : IAbilityEnvironment
     public AbilityHSM(/*Skill skill*/)
     {
         //_skill = skill;
-
         Init();
     }
 
@@ -61,7 +57,8 @@ public class AbilityHSM : IAbilityEnvironment
         //_abilityInputExtend = new AbilityInputExtend();
 
         HSMAnalysis analysis = new HSMAnalysis();
-        _hsmStateMachine = analysis.Analysis(textAsset.text, _iconditionCheck);
+        _hsmStateMachine = analysis.Analysis(textAsset.text, _iconditionCheck, this);
+        _hsmStateMachine.SetAutoTransitionState(false);
 
         Clear();
     }
@@ -99,22 +96,22 @@ public class AbilityHSM : IAbilityEnvironment
     //    ConditionCheck.SetParameter(btnName, (int)handleType);
     //}
 
-    //public void ChangeState(SkillConfigSkillPhaseType phaseType)
-    //{
-    //    if (phaseType >= SkillConfigSkillPhaseType.INITIAL_PHASE && phaseType <= SkillConfigSkillPhaseType.NONE)
-    //    {
-    //        ConditionCheck.SetParameter(Skill_State, (int)phaseType);
-    //    }
-    //}
+    public void ChangeState(SkillConfigSkillPhaseType phaseType)
+    {
+        bool value = (phaseType == SkillConfigSkillPhaseType.STANDBY_PHASE) ? true : false;
+        ConditionCheck.SetParameter(PhaseOrHold, value);
 
+        for (int i = 0; i < _hsmStateMachine.StateList.Count; ++i)
+        {
+            StateSkill state = (StateSkill)_hsmStateMachine.StateList[i];
+            if (state.PhaseType == phaseType)
+            {
+                _hsmStateMachine.ChangeState(state.StateId);
+                break;
+            }
+        }
+    }
     #endregion
-
-    //public void ChangeState(SkillPhaseType type)
-    //{
-    //    Debug.LogError("ChangeState:" + type);
-    //    ConditionCheck.SetParameter(Hold, false);
-    //    ConditionCheck.SetParameter(Phase_End, false);
-    //}
 
     public void SkillEnd()
     {
@@ -123,9 +120,7 @@ public class AbilityHSM : IAbilityEnvironment
 
     private void Clear()
     {
-        ConditionCheck.SetParameter(Skill_State, 4);
-        //ConditionCheck.SetParameter(Hold, false);
-        //ConditionCheck.SetParameter(Phase_End, false);
+        ConditionCheck.SetParameter(PhaseOrHold, false);
         ConditionCheck.SetParameter(FocoFull, false);
     }
 
@@ -141,17 +136,23 @@ public class AbilityHSM : IAbilityEnvironment
     //        return;
     //    }
 
-    //    Debug.LogError("Request: roleId:" + roleId + "    weaponId:" + weaponId + "    type:" + (SkillPhaseType)type);
-    //    _abilityInputExtend.AddRequest((SkillPhaseType)type);
-    //    SkillEventHandler.Instance.SendSkillOper(roleId, _skill.weaponId, (int)type, focoPercentage, 0);
     //    if (type == (int)SkillPhaseType.START)
     //    {
     //        _skill.ResetCoolDown();
     //    }
-    //    else if (type == (int)SkillPhaseType.FIRE_PHASE)
+
+    //    if (type == (int)SkillPhaseType.FIRE_PHASE)
     //    {
     //        _skill.ResetNextShotTime();
+    //        if (null != _skill.FocoEnergia)
+    //        {
+    //            _skill.FocoEnergia.End();
+    //        }
     //    }
+
+    //    //Debug.LogError("Request: roleId:" + roleId + "    weaponId:" + weaponId + "    type:" + (SkillPhaseType)type);
+    //    _abilityInputExtend.AddRequest((SkillPhaseType)type);
+    //    SkillEventHandler.Instance.SendSkillOper(roleId, _skill.weaponId, (int)type, focoPercentage, 0);
     //}
 
     //public void SkillEvent(SkillConfigSkillPhaseType phaseType, SkillConfigSkillCustomEvent customEvent)
@@ -161,41 +162,52 @@ public class AbilityHSM : IAbilityEnvironment
     //        return;
     //    }
     //    //Debug.LogError("Hold:" + phaseType + "    " + (SkillEventType)(customEvent.EventBase.EventType));
-    //    ConditionCheck.SetParameter(Hold, true);
+    //    ConditionCheck.SetParameter(PhaseOrHold, true);
     //}
 
-    //public void PhaseEnd(SkillConfigSkillPhaseType phaseType)
-    //{
-    //    //Debug.LogError("PhaseEnd:" + phaseType);
-    //    ConditionCheck.SetParameter(Phase_End, true);
-    //}
-
-    #region IAction
-    public bool DoAction(int nodeId, List<HSMParameter> parameterList)
+    public void PhaseEnd(SkillConfigSkillPhaseType phaseType)
     {
-        bool result = true;
-        for (int i = 0; i < parameterList.Count; ++i)
-        {
-            bool value = DoAction(nodeId, parameterList[i]);
-            if (!value)
-            {
-                result = false;
-            }
-        }
-
-        return result;
+        ConditionCheck.SetParameter(PhaseOrHold, true);
     }
 
-    public bool DoAction(int nodeId, HSMParameter parameter)
+    #region IAction
+    public void DoAction(int toStateId)
     {
-        if (parameter.parameterName.CompareTo(SkillRequestState) == 0)
+        StateSkill state = (StateSkill)(_hsmStateMachine.GetState(toStateId));
+        if (null == state)
         {
-            Debug.LogError("nodeId:" + nodeId);
-            //float percentage = (null != _skill.FocoEnergia) ? _skill.FocoEnergia.GetPercentage() : 0;
-            //Request(_skill.RoleId, _skill.weaponId, parameter.intValue, percentage);
+            return;
         }
 
-        return true;
+        SkillConfigSkillPhaseType type = state.PhaseType;
+
+        if (type != SkillConfigSkillPhaseType.NONE)
+        {
+            //if (!_skill.IsActive)
+            //{
+            //    Request(_skill.RoleId, _skill.weaponId, (int)SkillPhaseType.START, 0);
+            //}
+        }
+
+        if (type == SkillConfigSkillPhaseType.FIRE_PHASE)
+        {
+            //if (null != _skill.FocoEnergia)
+            //{
+            //    _skill.FocoEnergia.End();
+            //}
+        }
+
+        //float percentage = (null != _skill.FocoEnergia) ? _skill.FocoEnergia.GetPercentage() : 0;
+        //if (type == SkillConfigSkillPhaseType.NONE)
+        //{
+        //    Request(_skill.RoleId, _skill.weaponId, (int)SkillPhaseType.SKILL_END, percentage);
+        //}
+        //else
+        //{
+        //    Request(_skill.RoleId, _skill.weaponId, (int)type, percentage);
+        //}
+
+        //Debug.LogError("Execute:" + "    toPhase:" + state.PhaseType);
     }
     #endregion
 
@@ -208,14 +220,9 @@ public class AbilityHSM : IAbilityEnvironment
         }
         int result = 0;
 
-        //Debug.LogError("EnableFire:" + _skill.EnableFire(ref result));
         //ConditionCheck.SetParameter(EnableFire, _skill.EnableFire(ref result));
-
-        ////Debug.LogError("EnergyEnougth:" + _skill.SkillEnergyEnough());
         //ConditionCheck.SetParameter(EnergyEnougth, _skill.SkillEnergyEnough());
-
         //ConditionCheck.SetParameter(EnableActive, _skill.EnableActive(ref result));
-        //ConditionCheck.SetParameter(Skill_State, (int)_skill.skillStateMachine.currentState.phaseType);
 
         FocoEnergia();
     }

@@ -58,18 +58,25 @@ namespace HSMTree
             return HSMData;
         }
 
-        private List<NodeValue> GetNodeList(JsonData data)
+        private List<NodeData> GetNodeList(JsonData data)
         {
-            List<NodeValue> nodeList = new List<NodeValue>();
+            List<NodeData> nodeList = new List<NodeData>();
 
             foreach (JsonData item in data)
             {
-                NodeValue nodeValue = new NodeValue();
+                NodeData nodeValue = new NodeData();
                 nodeValue.id = int.Parse(item["id"].ToString());
                 nodeValue.NodeType = int.Parse(item["NodeType"].ToString());
                 nodeValue.nodeName = item["nodeName"].ToString();
                 nodeValue.identification = int.Parse(item["identification"].ToString());
                 nodeValue.descript = item["descript"].ToString();
+
+
+                if (((IDictionary)item).Contains("parameterList"))
+                {
+                    JsonData parameterList = item["parameterList"];
+                    nodeValue.parameterList = GetParameterList(parameterList);
+                }
 
                 if (((IDictionary)item).Contains("transitionList"))
                 {

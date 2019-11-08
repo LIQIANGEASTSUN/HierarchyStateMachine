@@ -6,7 +6,7 @@ using System;
 
 namespace HSMTree
 {
-    public enum DrawParameterType
+    public enum HSMDrawParameterType
     {
         NODE_PARAMETER = 0,
         HSM_PARAMETER,
@@ -14,9 +14,9 @@ namespace HSMTree
         RUNTIME_PARAMETER,
     }
 
-    public class DrawParameter
+    public class HSMDrawParameter
     {
-        public static HSMParameter Draw(HSMParameter HSMParameter, DrawParameterType drawParameterType, Action DelCallBack)
+        public static HSMParameter Draw(HSMParameter HSMParameter, HSMDrawParameterType drawParameterType, Action DelCallBack)
         {
             if (null == HSMParameter)
             {
@@ -28,7 +28,7 @@ namespace HSMTree
                 int index = EnumNames.GetEnumIndex<HSMParameterType>((HSMParameterType)(HSMParameter.parameterType));
                 HSMParameterType HSMParameterType = EnumNames.GetEnum<HSMParameterType>(index);
 
-                bool enableChangeType = (drawParameterType == DrawParameterType.HSM_PARAMETER_ADD);
+                bool enableChangeType = (drawParameterType == HSMDrawParameterType.HSM_PARAMETER_ADD);
                 GUI.enabled = enableChangeType;
                 {
                     index = EditorGUILayout.Popup(index, parameterNameArr);
@@ -40,7 +40,7 @@ namespace HSMTree
 
             EditorGUILayout.BeginHorizontal();
             {
-                if (drawParameterType == DrawParameterType.NODE_PARAMETER)
+                if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER)
                 {
                     List<HSMParameter> parameterList = HSMManager.Instance.HSMTreeData.parameterList;
                     string[] parameterArr = new string[parameterList.Count];
@@ -61,11 +61,11 @@ namespace HSMTree
                         HSMParameter.parameterName = parameterArr[result];
                     }
                 }
-                else if (drawParameterType == DrawParameterType.HSM_PARAMETER
-                    || (drawParameterType == DrawParameterType.HSM_PARAMETER_ADD)
-                    || drawParameterType == DrawParameterType.RUNTIME_PARAMETER)
+                else if (drawParameterType == HSMDrawParameterType.HSM_PARAMETER
+                    || (drawParameterType == HSMDrawParameterType.HSM_PARAMETER_ADD)
+                    || drawParameterType == HSMDrawParameterType.RUNTIME_PARAMETER)
                 {
-                    GUI.enabled = (drawParameterType == DrawParameterType.HSM_PARAMETER_ADD);
+                    GUI.enabled = (drawParameterType == HSMDrawParameterType.HSM_PARAMETER_ADD);
                     HSMParameter.parameterName = EditorGUILayout.TextField(HSMParameter.parameterName);
                     GUI.enabled = true;
                 }
@@ -102,7 +102,7 @@ namespace HSMTree
                     compare = 0;
                 }
 
-                GUI.enabled = (drawParameterType != DrawParameterType.HSM_PARAMETER) && (drawParameterType != DrawParameterType.RUNTIME_PARAMETER);
+                GUI.enabled = (drawParameterType != HSMDrawParameterType.HSM_PARAMETER) && (drawParameterType != HSMDrawParameterType.RUNTIME_PARAMETER);
                 {
                     compare = EditorGUILayout.Popup(compare, compareArr, GUILayout.Width(65));
                     HSMParameter.compare = (int)(compareEnumArr[compare]);
@@ -133,7 +133,7 @@ namespace HSMTree
                 }
                 GUI.enabled = true;
 
-                if (drawParameterType == DrawParameterType.NODE_PARAMETER || drawParameterType == DrawParameterType.HSM_PARAMETER)
+                if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER || drawParameterType == HSMDrawParameterType.HSM_PARAMETER)
                 {
                     if (GUILayout.Button("Del"))
                     {

@@ -8,15 +8,16 @@ namespace HSMTree
     public class HSMTreeData
     {
         public int defaultStateId = -1;
-        public List<NodeValue> nodeList = new List<NodeValue>();
+        public List<NodeData> nodeList = new List<NodeData>();
         public List<HSMParameter> parameterList = new List<HSMParameter>();
         public string descript = string.Empty;
     }
 
-    public class NodeValue
+    public class NodeData
     {
         public int id = 0;
         public int NodeType = (int)(NODE_TYPE.STATE);     // 节点类型 // NODE_TYPE NodeType = NODE_TYPE.SELECT;
+        public List<HSMParameter> parameterList = new List<HSMParameter>();
         public List<Transition> transitionList = new List<Transition>();
         public string nodeName = string.Empty;
         public int identification = -1;

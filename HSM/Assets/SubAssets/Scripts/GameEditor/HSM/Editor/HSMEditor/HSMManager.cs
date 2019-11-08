@@ -18,9 +18,9 @@ public class HSMManager
     public delegate void HSMSaveFile(string fileName);
     public delegate void HSMDeleteFile(string fileName);
     public delegate void HSMNodeChangeTransition(int parentId, int childId, bool isAdd);
-    public delegate void HSMNodeParameter(int stateId, int transitionId, HSMParameter parameter, bool isAdd);
+    public delegate void HSMNodeChangeParameter(int stateId, int transitionId, string newParameter);
+    public delegate void HSMNodeAddDelParameter(int stateId, int transitionId, HSMParameter parameter, bool isAdd);
     public delegate void HSMParameterChange(HSMParameter parameter, bool isAdd);
-    public delegate void HSMNodeChangeParameter(int stateId, int transitionId, string oldParameter, string newParameter);
     public delegate void HSMRuntimePlay(HSMPlayType state);
     public delegate void HSMChangeSelectTransitionId(int id);
 
@@ -42,9 +42,9 @@ public class HSMManager
     public static HSMSaveFile hSMSaveFile;
     public static HSMDeleteFile hSMDeleteFile;
     public static HSMNodeChangeTransition hSMNodeChangeTransition;
-    public static HSMNodeParameter hSMNodeParameter;
-    public static HSMParameterChange parameterChange;
     public static HSMNodeChangeParameter hSMNodeChangeParameter;
+    public static HSMNodeAddDelParameter hSMNodeAddDelParameter;
+    public static HSMParameterChange parameterChange;
     public static HSMRuntimePlay hSMRuntimePlay;
     public static HSMChangeSelectTransitionId hSMChangeSelectTransitionId;
 
@@ -62,7 +62,7 @@ public class HSMManager
         hSMSaveFile += SaveFile;
         hSMDeleteFile += DeleteFile;
         hSMNodeChangeTransition += NodeChangeTransition;
-        hSMNodeParameter += NodeParameterChange;
+        hSMNodeAddDelParameter += NodeAddDelParameter;
         parameterChange += ParameterChange;
         hSMNodeChangeParameter += NodeChangeParameter;
         hSMRuntimePlay += RuntimePlay;
@@ -81,7 +81,7 @@ public class HSMManager
         hSMSaveFile -= SaveFile;
         hSMDeleteFile -= DeleteFile;
         hSMNodeChangeTransition -= NodeChangeTransition;
-        hSMNodeParameter -= NodeParameterChange;
+        hSMNodeAddDelParameter -= NodeAddDelParameter;
         parameterChange -= ParameterChange;
         hSMNodeChangeParameter -= NodeChangeParameter;
         hSMRuntimePlay -= RuntimePlay;
@@ -135,7 +135,7 @@ public class HSMManager
         get { return _playState; }
     }
 
-    public NodeValue CurrentNode
+    public NodeData CurrentNode
     {
         get
         {
@@ -148,7 +148,7 @@ public class HSMManager
         get { return _HSMTreeData.defaultStateId; }
     }
 
-    public List<NodeValue> NodeList
+    public List<NodeData> NodeList
     {
         get
         {
@@ -226,8 +226,8 @@ public class HSMManager
 
     private void NodeChangeTransition(int fromId, int toId, bool isAdd)
     {
-        NodeValue fromNode = GetNode(fromId);
-        NodeValue toNode = GetNode(toId);
+        NodeData fromNode = GetNode(fromId);
+        NodeData toNode = GetNode(toId);
 
         if (null == fromNode || null == toNode)
         {
@@ -245,7 +245,7 @@ public class HSMManager
         }
     }
 
-    private void NodeAddTransition(NodeValue fromNode, NodeValue toNode)
+    private void NodeAddTransition(NodeData fromNode, NodeData toNode)
     {
         for (int i = 0; i < fromNode.transitionList.Count; ++i)
         {
@@ -289,7 +289,7 @@ public class HSMManager
         fromNode.transitionList.Add(transition);
     }
 
-    private void NodeDeleteTransition(NodeValue fromNode, NodeValue toNode)
+    private void NodeDeleteTransition(NodeData fromNode, NodeData toNode)
     {
         for (int i = 0; i < fromNode.transitionList.Count; ++i)
         {
@@ -302,42 +302,52 @@ public class HSMManager
         }
     }
 
-    private void NodeParameterChange(int stateId, int transitionId, HSMParameter parameter, bool isAdd)
+    private void NodeAddDelParameter(int stateId, int transitionId, HSMParameter parameter, bool isAdd)
     {
-        NodeValue nodeValue = GetNode(stateId);
+        NodeData nodeValue = GetNode(stateId);
         if (null == nodeValue)
         {
             return;
         }
 
-        Transition transition = null;
-        for (int i = 0; i < nodeValue.transitionList.Count; ++i)
+        List<HSMParameter> parameterList = new List<HSMParameter>();
+        if (transitionId >= 0)
         {
-            if (nodeValue.transitionList[i].transitionId == transitionId)
+            Transition transition = null;
+            for (int i = 0; i < nodeValue.transitionList.Count; ++i)
             {
-                transition = nodeValue.transitionList[i];
-                break;
+                if (nodeValue.transitionList[i].transitionId == transitionId)
+                {
+                    transition = nodeValue.transitionList[i];
+                    break;
+                }
             }
-        }
 
-        if (null == transition)
+            if (null == transition)
+            {
+                return;
+            }
+
+            parameterList = transition.parameterList;
+        }
+        else
         {
-            return;
+            parameterList = nodeValue.parameterList;
         }
 
         if (isAdd)
         {
-            AddParameter(transition.parameterList, parameter, true);
+            AddParameter(parameterList, parameter, true);
         }
         else
         {
-            DelParameter(transition.parameterList, parameter);
+            DelParameter(parameterList, parameter);
         }
     }
 
-    private void NodeChangeParameter(int stateId, int transitionId, string oldParameter, string newParameter)
+    private void NodeChangeParameter(int stateId, int transitionId, string newParameter)
     {
-        NodeValue nodeValue = GetNode(stateId);
+        NodeData nodeValue = GetNode(stateId);
         if (null == nodeValue)
         {
             return;
@@ -358,27 +368,37 @@ public class HSMManager
             return;
         }
 
-        Transition transition = null;
-        for (int i = 0; i < nodeValue.transitionList.Count; ++i)
+        List<HSMParameter> parameterList = new List<HSMParameter>();
+        if (transitionId >= 0)
         {
-            if (nodeValue.transitionList[i].transitionId == transitionId)
+            Transition transition = null;
+            for (int i = 0; i < nodeValue.transitionList.Count; ++i)
             {
-                transition = nodeValue.transitionList[i];
-                break;
+                if (nodeValue.transitionList[i].transitionId == transitionId)
+                {
+                    transition = nodeValue.transitionList[i];
+                    break;
+                }
             }
+
+            if (null == transition)
+            {
+                return;
+            }
+
+            parameterList = transition.parameterList;
+        }
+        else
+        {
+            parameterList = nodeValue.parameterList;
         }
 
-        if (null == transition)
+        for (int i = 0; i < parameterList.Count; ++i)
         {
-            return;
-        }
-
-        for (int i = 0; i < transition.parameterList.Count; ++i)
-        {
-            HSMParameter temp = transition.parameterList[i];
+            HSMParameter temp = parameterList[i];
             if (temp.parameterName.CompareTo(parameter.parameterName) == 0)
             {
-                transition.parameterList[i] = parameter.Clone();
+                parameterList[i] = parameter.Clone();
                 break;
             }
         }
@@ -458,11 +478,11 @@ public class HSMManager
         _currentSelectId = stateId;
     }
 
-    public NodeValue GetNode(int stateId)
+    public NodeData GetNode(int stateId)
     {
         for (int i = 0; i < NodeList.Count; ++i)
         {
-            NodeValue nodeValue = NodeList[i];
+            NodeData nodeValue = NodeList[i];
             if (nodeValue.id == stateId)
             {
                 return nodeValue;
@@ -475,7 +495,7 @@ public class HSMManager
     // 添加节点
     private void AddNode(Node_Draw_Info_Item info, Vector3 mousePosition)
     {
-        NodeValue newNodeValue = new NodeValue();
+        NodeData newNodeValue = new NodeData();
         newNodeValue.id = GetNewstateId();
         if (_HSMTreeData.defaultStateId < 0)
         {
@@ -515,10 +535,10 @@ public class HSMManager
     // 删除节点
     private void DeleteNode(int stateId)
     {
-        NodeValue delNode = null;
+        NodeData delNode = null;
         for (int i = 0; i < NodeList.Count; ++i)
         {
-            NodeValue nodeValue = NodeList[i];
+            NodeData nodeValue = NodeList[i];
             if (nodeValue.id != stateId)
             {
                 continue;
@@ -536,7 +556,7 @@ public class HSMManager
 
         for (int i = 0; i < NodeList.Count; ++i)
         {
-            NodeValue nodeValue = NodeList[i];
+            NodeData nodeValue = NodeList[i];
             for (int j = 0; j < nodeValue.transitionList.Count; ++j)
             {
                 Transition transition = nodeValue.transitionList[j];
@@ -555,7 +575,7 @@ public class HSMManager
         _HSMTreeData.defaultStateId = stateId;
     }
 
-    private static void CheckNode(List<NodeValue> nodeValueList)
+    private static void CheckNode(List<NodeData> nodeValueList)
     {
         string meg = string.Empty;
         if (TreeNodeWindow.window != null && !string.IsNullOrEmpty(meg))

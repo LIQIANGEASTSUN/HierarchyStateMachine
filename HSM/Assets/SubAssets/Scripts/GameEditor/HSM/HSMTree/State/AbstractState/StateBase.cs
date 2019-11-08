@@ -8,6 +8,9 @@ namespace HSMTree
     /// </summary>
     public abstract class StateBase
     {
+        protected HSMStateMachine _stateMachine;
+        protected IAction _iAction;
+
         /// <summary>
         /// 节点类型
         /// </summary>
@@ -17,6 +20,7 @@ namespace HSMTree
         /// 节点Id
         /// </summary>
         private int _stateId;
+        protected List<HSMParameter> _parameterList = new List<HSMParameter>();
         protected List<Transition> _transitionList = new List<Transition>();
         protected IConditionCheck _iconditionCheck = null;
 
@@ -24,6 +28,8 @@ namespace HSMTree
         {
             this._nodeType = nodeType;
         }
+
+        public abstract void Init();
 
         public virtual void Enter()
         {
@@ -62,6 +68,26 @@ namespace HSMTree
         {
             get { return _stateId; }
             set { _stateId = value; }
+        }
+
+        public void SetStateMachine(HSMStateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
+        }
+
+        public void SetIAction(IAction iaction)
+        {
+            _iAction = iaction;
+        }
+
+        public void AddParameter(List<HSMParameter> parameterList)
+        {
+            _parameterList.AddRange(parameterList);
+        }
+
+        public void AddParameter(HSMParameter parameter)
+        {
+            _parameterList.Add(parameter);
         }
 
         public void AddTransition(List<Transition> transitionList)

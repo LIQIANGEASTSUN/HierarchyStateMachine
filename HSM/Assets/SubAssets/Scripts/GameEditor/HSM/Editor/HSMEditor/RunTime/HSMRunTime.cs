@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HSMTree
 {
 
-    public class HSMRunTime
+    public class HSMRunTime :IAction
     {
         public static readonly HSMRunTime Instance = new HSMRunTime();
 
@@ -33,7 +33,7 @@ namespace HSMTree
         {
             HSMAnalysis analysis = new HSMAnalysis();
             _iconditionCheck = new ConditionCheck();
-            _hsmStateMachine = analysis.Analysis(HSMTreeData, _iconditionCheck);
+            _hsmStateMachine = analysis.Analysis(HSMTreeData, _iconditionCheck, this);
         }
 
         public ConditionCheck ConditionCheck
@@ -71,6 +71,12 @@ namespace HSMTree
                 }
             }
         }
+
+        public void DoAction(int toStateId)
+        {
+
+        }
+
     }
 
 }

@@ -71,7 +71,7 @@ namespace HSMTree
 
                         Action DelCallBack = () =>
                         {
-                            if (null != HSMManager.hSMNodeParameter)
+                            if (null != HSMManager.hSMNodeAddDelParameter)
                             {
                                 HSMManager.parameterChange(HSMParameter, false);
                             }
@@ -79,7 +79,7 @@ namespace HSMTree
 
                         EditorGUILayout.BeginVertical("box");
                         {
-                            HSMParameter = DrawParameter.Draw(HSMParameter, DrawParameterType.HSM_PARAMETER, DelCallBack);
+                            HSMParameter = HSMDrawParameter.Draw(HSMParameter, HSMDrawParameterType.HSM_PARAMETER, DelCallBack);
                         }
                         EditorGUILayout.EndVertical();
                     }
@@ -107,14 +107,14 @@ namespace HSMTree
 
             EditorGUILayout.BeginVertical("box");
             {
-                newAddParameter = DrawParameter.Draw(newAddParameter, DrawParameterType.HSM_PARAMETER_ADD, null);
+                newAddParameter = HSMDrawParameter.Draw(newAddParameter, HSMDrawParameterType.HSM_PARAMETER_ADD, null);
             }
             EditorGUILayout.EndVertical();
             GUILayout.Space(5);
 
             if (GUILayout.Button("添加条件"))
             {
-                if (null != HSMManager.hSMNodeParameter)
+                if (null != HSMManager.hSMNodeAddDelParameter)
                 {
                     HSMManager.parameterChange(newAddParameter, true);
                 }

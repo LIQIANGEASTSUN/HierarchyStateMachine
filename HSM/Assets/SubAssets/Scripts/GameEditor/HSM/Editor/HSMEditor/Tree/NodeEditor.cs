@@ -6,7 +6,6 @@ using HSMTree;
 public class NodeEditor {
 
     private static int height = 75;
-    private static float value = 0.5f;
 
     private static Color GetColor(int nodeId, int selectNodeId, int defaultStateId)
     {
@@ -24,7 +23,7 @@ public class NodeEditor {
         return color;
     }
 
-    public static void Draw(NodeValue nodeValue, int selectNodeId, int defaultStateId, float value = 0f)
+    public static void Draw(NodeData nodeValue, int selectNodeId, int defaultStateId, float value = 0f)
     {
         EditorGUILayout.BeginVertical("box", GUILayout.Height(height));
         {
@@ -58,7 +57,7 @@ public class NodeEditor {
         SetHight(nodeValue);
     }
 
-    private static void SetHight(NodeValue nodeValue)
+    private static void SetHight(NodeData nodeValue)
     {
         RectT rect = nodeValue.position;
         rect.height = 95;

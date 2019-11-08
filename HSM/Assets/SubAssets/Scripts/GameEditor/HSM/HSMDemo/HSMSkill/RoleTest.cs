@@ -41,7 +41,7 @@ public class RoleTest : MonoBehaviour
 }
 
 
-public class RolePlayer
+public class RolePlayer : IAction
 {
     private HSMStateMachine hsmStateMachine = null;
     private IConditionCheck _iconditionCheck = null;
@@ -70,14 +70,19 @@ public class RolePlayer
     {
         HSMAnalysis analysis = new HSMAnalysis();
         _iconditionCheck = new ConditionCheck();
-        hsmStateMachine = analysis.Analysis(HSMTreeData, _iconditionCheck);
+        hsmStateMachine = analysis.Analysis(HSMTreeData, _iconditionCheck, this);
     }
 
     public void SetData(string content)
     {
         HSMAnalysis analysis = new HSMAnalysis();
         _iconditionCheck = new ConditionCheck();
-        hsmStateMachine = analysis.Analysis(content, _iconditionCheck);
+        hsmStateMachine = analysis.Analysis(content, _iconditionCheck, this);
+    }
+    
+    public void DoAction(int toStateId)
+    {
+
     }
 
     public bool DoAction(int nodeId, List<HSMParameter> parameterList)

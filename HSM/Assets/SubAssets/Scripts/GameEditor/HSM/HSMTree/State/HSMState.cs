@@ -4,12 +4,13 @@ using UnityEngine;
 
 namespace HSMTree
 {
-    public class HSMState : StateBase
+    public abstract class HSMState : StateBase
     {
         public HSMState():base(NODE_TYPE.STATE)
         {
 
         }
+
     }
 
 }

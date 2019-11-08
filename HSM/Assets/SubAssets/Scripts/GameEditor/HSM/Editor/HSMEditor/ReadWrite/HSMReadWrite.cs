@@ -105,7 +105,6 @@ namespace HSMTree
                 transition.transitionId = int.Parse(item["transitionId"].ToString());
                 transition.toStateId = int.Parse(item["toStateId"].ToString());
                 transition.parameterList = GetParameterList(item["parameterList"]);
-                transition.combinLogicList = GetIntList(item["combinLogicList"]);
 
                 transitionList.Add(transition);
             }
@@ -150,7 +149,8 @@ namespace HSMTree
                 parameter.floatValue = float.Parse(item["floatValue"].ToString());
                 parameter.boolValue = bool.Parse(item["boolValue"].ToString());
                 parameter.compare = int.Parse(item["compare"].ToString());
-                parameter.index = int.Parse(item["index"].ToString());
+                parameter.useGroup = bool.Parse(item["useGroup"].ToString());
+                parameter.orGroup = int.Parse(item["orGroup"].ToString());
 
                 dataList.Add(parameter);
             }

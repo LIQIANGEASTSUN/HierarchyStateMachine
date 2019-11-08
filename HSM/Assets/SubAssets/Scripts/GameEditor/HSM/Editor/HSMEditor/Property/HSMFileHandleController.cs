@@ -68,6 +68,7 @@ namespace HSMTree
                         DeleteFile(HSMManager.Instance.FileName);
                         AssetDatabase.Refresh();
                     }
+
                     if (GUILayout.Button("批量更新"))
                     {
                         UpdateAllFile(HSMManager.Instance.FilePath);

@@ -16,34 +16,29 @@ namespace HSMTree
 
     public class HSMDrawParameter
     {
-        public static HSMParameter Draw(HSMParameter HSMParameter, HSMDrawParameterType drawParameterType, Action DelCallBack)
+        public static HSMParameter Draw(HSMParameter hSMParameter, HSMDrawParameterType drawParameterType, Action DelCallBack)
         {
-            if (null == HSMParameter)
+            if (null == hSMParameter)
             {
-                return HSMParameter;
+                return hSMParameter;
             }
 
-            if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER)
+            if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER && hSMParameter.useGroup)
             {
-                EditorGUILayout.LabelField(string.Format("index:{0}", HSMParameter.index));
+                    hSMParameter.orGroup = EditorGUILayout.IntField("OrGroup", hSMParameter.orGroup);
             }
 
             {
                 string[] parameterNameArr = EnumNames.GetEnumNames<HSMParameterType>();
-                int index = EnumNames.GetEnumIndex<HSMParameterType>((HSMParameterType)(HSMParameter.parameterType));
+                int index = EnumNames.GetEnumIndex<HSMParameterType>((HSMParameterType)(hSMParameter.parameterType));
                 HSMParameterType HSMParameterType = EnumNames.GetEnum<HSMParameterType>(index);
 
                 bool enableChangeType = (drawParameterType == HSMDrawParameterType.HSM_PARAMETER_ADD);
                 GUI.enabled = enableChangeType;
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    {
-                        index = EditorGUILayout.Popup(index, parameterNameArr, GUILayout.ExpandWidth(true));
-                        HSMParameter.parameterType = (int)EnumNames.GetEnum<HSMParameterType>(index);
-                        GUILayout.Space(5);
-                        EditorGUILayout.LabelField(string.Format("index:{0}", HSMParameter.index));
-                    }
-                    EditorGUILayout.EndVertical();
+                    index = EditorGUILayout.Popup(index, parameterNameArr, GUILayout.ExpandWidth(true));
+                    hSMParameter.parameterType = (int)EnumNames.GetEnum<HSMParameterType>(index);
+                    GUILayout.Space(5);
                 }
                 GUI.enabled = true;
             }
@@ -59,7 +54,7 @@ namespace HSMTree
                     {
                         HSMParameter p = parameterList[i];
                         parameterArr[i] = p.parameterName;
-                        if (HSMParameter.parameterName.CompareTo(p.parameterName) == 0)
+                        if (hSMParameter.parameterName.CompareTo(p.parameterName) == 0)
                         {
                             index = i;
                         }
@@ -68,7 +63,7 @@ namespace HSMTree
                     int result = EditorGUILayout.Popup(index, parameterArr, GUILayout.ExpandWidth(true));
                     if (result != index)
                     {
-                        HSMParameter.parameterName = parameterArr[result];
+                        hSMParameter.parameterName = parameterArr[result];
                     }
                 }
                 else if (drawParameterType == HSMDrawParameterType.HSM_PARAMETER
@@ -76,31 +71,31 @@ namespace HSMTree
                     || drawParameterType == HSMDrawParameterType.RUNTIME_PARAMETER)
                 {
                     GUI.enabled = (drawParameterType == HSMDrawParameterType.HSM_PARAMETER_ADD);
-                    HSMParameter.parameterName = EditorGUILayout.TextField(HSMParameter.parameterName);
+                    hSMParameter.parameterName = EditorGUILayout.TextField(hSMParameter.parameterName);
                     GUI.enabled = true;
                 }
 
                 HSMCompare[] compareEnumArr = new HSMCompare[] { };
-                if (HSMParameter.parameterType == (int)HSMParameterType.Int)
+                if (hSMParameter.parameterType == (int)HSMParameterType.Int)
                 {
                     compareEnumArr = new HSMCompare[] { HSMCompare.GREATER, HSMCompare.GREATER_EQUALS, HSMCompare.LESS_EQUAL, HSMCompare.LESS, HSMCompare.EQUALS, HSMCompare.NOT_EQUAL };
                 }
-                if (HSMParameter.parameterType == (int)HSMParameterType.Float)
+                if (hSMParameter.parameterType == (int)HSMParameterType.Float)
                 {
                     compareEnumArr = new HSMCompare[] { HSMCompare.GREATER, HSMCompare.LESS };
                 }
-                if (HSMParameter.parameterType == (int)HSMParameterType.Bool)
+                if (hSMParameter.parameterType == (int)HSMParameterType.Bool)
                 {
                     compareEnumArr = new HSMCompare[] { HSMCompare.EQUALS, HSMCompare.NOT_EQUAL };
                 }
                 string[] compareArr = new string[compareEnumArr.Length];
-                int compare = HSMParameter.compare;
+                int compare = hSMParameter.compare;
                 bool found = false;
                 for (int i = 0; i < compareEnumArr.Length; ++i)
                 {
                     string name = System.Enum.GetName(typeof(HSMCompare), compareEnumArr[i]);
                     compareArr[i] = name;
-                    if ((HSMCompare)HSMParameter.compare == compareEnumArr[i])
+                    if ((HSMCompare)hSMParameter.compare == compareEnumArr[i])
                     {
                         compare = i;
                         found = true;
@@ -115,7 +110,7 @@ namespace HSMTree
                 GUI.enabled = (drawParameterType != HSMDrawParameterType.HSM_PARAMETER) && (drawParameterType != HSMDrawParameterType.RUNTIME_PARAMETER);
                 {
                     compare = EditorGUILayout.Popup(compare, compareArr, GUILayout.Width(65));
-                    HSMParameter.compare = (int)(compareEnumArr[compare]);
+                    hSMParameter.compare = (int)(compareEnumArr[compare]);
                 }
                 GUI.enabled = true;
             }
@@ -126,19 +121,19 @@ namespace HSMTree
             {
                 GUI.enabled = true;// (drawParameterType != DrawParameterType.HSM_PARAMETER);
                 {
-                    if (HSMParameter.parameterType == (int)HSMParameterType.Int)
+                    if (hSMParameter.parameterType == (int)HSMParameterType.Int)
                     {
-                        HSMParameter.intValue = EditorGUILayout.IntField("IntValue", HSMParameter.intValue);
+                        hSMParameter.intValue = EditorGUILayout.IntField("IntValue", hSMParameter.intValue);
                     }
 
-                    if (HSMParameter.parameterType == (int)HSMParameterType.Float)
+                    if (hSMParameter.parameterType == (int)HSMParameterType.Float)
                     {
-                        HSMParameter.floatValue = EditorGUILayout.FloatField("FloatValue", HSMParameter.floatValue);
+                        hSMParameter.floatValue = EditorGUILayout.FloatField("FloatValue", hSMParameter.floatValue);
                     }
 
-                    if (HSMParameter.parameterType == (int)HSMParameterType.Bool)
+                    if (hSMParameter.parameterType == (int)HSMParameterType.Bool)
                     {
-                        HSMParameter.boolValue = EditorGUILayout.Toggle("BoolValue", HSMParameter.boolValue);
+                        hSMParameter.boolValue = EditorGUILayout.Toggle("BoolValue", hSMParameter.boolValue);
                     }
                 }
                 GUI.enabled = true;
@@ -153,10 +148,22 @@ namespace HSMTree
                         }
                     }
                 }
+
+                if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER)
+                {
+                    if (GUILayout.Button("UseOr"))
+                    {
+                        hSMParameter.useGroup = !hSMParameter.useGroup;
+                        if (!hSMParameter.useGroup)
+                        {
+                            hSMParameter.orGroup = -1;
+                        }
+                    }
+                }
             }
             EditorGUILayout.EndHorizontal();
 
-            return HSMParameter;
+            return hSMParameter;
         }
 
     }

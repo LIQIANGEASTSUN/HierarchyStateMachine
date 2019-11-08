@@ -65,7 +65,7 @@ namespace HSMTree
 
             EditorGUILayout.BeginHorizontal();
             {
-                EditorGUILayout.BeginVertical("box", GUILayout.Width(300), GUILayout.ExpandHeight(true));
+                EditorGUILayout.BeginVertical("box", GUILayout.Width(350), GUILayout.ExpandHeight(true));
                 {
                     _HSMDrawPropertyController.OnGUI();
                 }

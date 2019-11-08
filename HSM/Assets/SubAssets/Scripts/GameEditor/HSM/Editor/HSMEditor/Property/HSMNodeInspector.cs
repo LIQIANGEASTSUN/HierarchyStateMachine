@@ -248,7 +248,13 @@ namespace HSMTree
         {
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandWidth(true));
             {
-                int height = (parametersList.Count * 70) + 20;
+                int height = 0;
+                for (int i = 0; i < parametersList.Count; ++i)
+                {
+                    HSMParameter parameter = parametersList[i];
+                    height += (parameter.useGroup ? 95 : 70);
+                }
+
                 height = height <= 300 ? height : 300;
                 scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(height));
                 {
@@ -277,7 +283,6 @@ namespace HSMTree
                                 {
                                     ChangeParameter(hSMParameter.parameterName);
                                 }
-                               
                             }
                             else
                             {

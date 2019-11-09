@@ -254,7 +254,7 @@ namespace HSMTree
                 for (int i = 0; i < parametersList.Count; ++i)
                 {
                     HSMParameter parameter = parametersList[i];
-                    height += (parameter.useGroup ? 95 : 70);
+                    height += (parameter.useGroup ? 85 : 50);
                 }
 
                 height = height <= 300 ? height : 300;
@@ -307,6 +307,7 @@ namespace HSMTree
                             }
                         }
                         EditorGUILayout.EndVertical();
+                        GUILayout.Space(5);
                         GUI.backgroundColor = Color.white;
                     }
                 }

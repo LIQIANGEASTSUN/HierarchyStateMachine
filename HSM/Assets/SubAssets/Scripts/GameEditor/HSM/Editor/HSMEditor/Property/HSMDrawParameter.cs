@@ -28,6 +28,7 @@ namespace HSMTree
                     hSMParameter.orGroup = EditorGUILayout.IntField("OrGroup", hSMParameter.orGroup);
             }
 
+            EditorGUILayout.BeginHorizontal();
             {
                 string[] parameterNameArr = EnumNames.GetEnumNames<HSMParameterType>();
                 int index = EnumNames.GetEnumIndex<HSMParameterType>((HSMParameterType)(hSMParameter.parameterType));
@@ -41,7 +42,31 @@ namespace HSMTree
                     GUILayout.Space(5);
                 }
                 GUI.enabled = true;
+
+                if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER || drawParameterType == HSMDrawParameterType.HSM_PARAMETER)
+                {
+                    if (GUILayout.Button("Del", GUILayout.Width(40)))
+                    {
+                        if (null != DelCallBack)
+                        {
+                            DelCallBack();
+                        }
+                    }
+                }
+
+                if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER)
+                {
+                    if (GUILayout.Button("UseOr", GUILayout.Width(50)))
+                    {
+                        hSMParameter.useGroup = !hSMParameter.useGroup;
+                        if (!hSMParameter.useGroup)
+                        {
+                            hSMParameter.orGroup = -1;
+                        }
+                    }
+                }
             }
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
             {
@@ -107,57 +132,27 @@ namespace HSMTree
                     compare = 0;
                 }
 
-                GUI.enabled = (drawParameterType != HSMDrawParameterType.HSM_PARAMETER) && (drawParameterType != HSMDrawParameterType.RUNTIME_PARAMETER);
+                bool value = (drawParameterType != HSMDrawParameterType.HSM_PARAMETER) && (drawParameterType != HSMDrawParameterType.RUNTIME_PARAMETER) && (drawParameterType != HSMDrawParameterType.HSM_PARAMETER_ADD);
+                if (value)
                 {
                     compare = EditorGUILayout.Popup(compare, compareArr, GUILayout.Width(65));
                     hSMParameter.compare = (int)(compareEnumArr[compare]);
                 }
-                GUI.enabled = true;
-            }
-            EditorGUILayout.EndHorizontal();
-            GUILayout.Space(5);
 
-            EditorGUILayout.BeginHorizontal();
-            {
-                GUI.enabled = true;// (drawParameterType != DrawParameterType.HSM_PARAMETER);
                 {
                     if (hSMParameter.parameterType == (int)HSMParameterType.Int)
                     {
-                        hSMParameter.intValue = EditorGUILayout.IntField("IntValue", hSMParameter.intValue);
+                        hSMParameter.intValue = EditorGUILayout.IntField(hSMParameter.intValue, GUILayout.Width(50));
                     }
 
                     if (hSMParameter.parameterType == (int)HSMParameterType.Float)
                     {
-                        hSMParameter.floatValue = EditorGUILayout.FloatField("FloatValue", hSMParameter.floatValue);
+                        hSMParameter.floatValue = EditorGUILayout.FloatField( hSMParameter.floatValue, GUILayout.Width(50));
                     }
 
                     if (hSMParameter.parameterType == (int)HSMParameterType.Bool)
                     {
-                        hSMParameter.boolValue = EditorGUILayout.Toggle("BoolValue", hSMParameter.boolValue);
-                    }
-                }
-                GUI.enabled = true;
-
-                if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER || drawParameterType == HSMDrawParameterType.HSM_PARAMETER)
-                {
-                    if (GUILayout.Button("Del"))
-                    {
-                        if (null != DelCallBack)
-                        {
-                            DelCallBack();
-                        }
-                    }
-                }
-
-                if (drawParameterType == HSMDrawParameterType.NODE_PARAMETER)
-                {
-                    if (GUILayout.Button("UseOr"))
-                    {
-                        hSMParameter.useGroup = !hSMParameter.useGroup;
-                        if (!hSMParameter.useGroup)
-                        {
-                            hSMParameter.orGroup = -1;
-                        }
+                        hSMParameter.boolValue = EditorGUILayout.Toggle(hSMParameter.boolValue, GUILayout.Width(50));
                     }
                 }
             }

@@ -93,7 +93,7 @@ namespace HSMTree
     public class HSMParameter
     {
         public int parameterType = 0;
-        public string parameterName = string.Empty;
+        public string parameterName = "输入参数名";// string.Empty;
         public int intValue = 0;
         public float floatValue = 0;
         public bool boolValue = true;

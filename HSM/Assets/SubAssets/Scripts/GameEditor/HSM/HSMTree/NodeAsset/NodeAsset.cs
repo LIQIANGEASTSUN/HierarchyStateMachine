@@ -132,30 +132,46 @@ namespace HSMTree
             return HSMCompare;
         }
 
-        private HSMCompare Compare(float a, float b)
+        private HSMCompare Compare(int selfIntValue, int b)
         {
-            HSMCompare HSMCompare = HSMCompare.INVALID;
-            if (a > b)
-            {
-                HSMCompare |= HSMCompare.GREATER;
-            }
+            HSMCompare HSMCompare = Compare((float)selfIntValue, (float)b);
 
-            if (a >= b)
-            {
-                HSMCompare |= HSMCompare.GREATER_EQUALS;
-            }
-
-            if (a == b)
+            if (selfIntValue == b)
             {
                 HSMCompare |= HSMCompare.EQUALS;
             }
 
-            if (a <= b)
+            if (selfIntValue != b)
+            {
+                HSMCompare |= HSMCompare.NOT_EQUAL;
+            }
+            return HSMCompare;
+        }
+
+        private HSMCompare Compare(float selfFloatValue, float b)
+        {
+            HSMCompare HSMCompare = HSMCompare.INVALID;
+            if (selfFloatValue > b)
+            {
+                HSMCompare |= HSMCompare.GREATER;
+            }
+
+            if (selfFloatValue >= b)
+            {
+                HSMCompare |= HSMCompare.GREATER_EQUALS;
+            }
+
+            if (selfFloatValue == b)
+            {
+                HSMCompare |= HSMCompare.EQUALS;
+            }
+
+            if (selfFloatValue <= b)
             {
                 HSMCompare |= HSMCompare.LESS_EQUAL;
             }
 
-            if (a < b)
+            if (selfFloatValue < b)
             {
                 HSMCompare |= HSMCompare.LESS;
             }

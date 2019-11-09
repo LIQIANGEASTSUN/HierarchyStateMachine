@@ -122,15 +122,43 @@ namespace HSMTree
             bool result = true;
             for (int i = 0; i < parameterList.Count; ++i)
             {
-                HSMParameter parameter = parameterList[i];
-
-                Debug.LogError("UseOr");
-                bool value = Condition(parameter);
-                if (!value)
+                HSMParameter temp1 = parameterList[i];
+                bool value = Condition(temp1);
+                if (!temp1.useGroup)
                 {
-                    result = value;
-                    break;
+                    if (!value)
+                    {
+                        result = value;
+                        break;
+                    }
+                    continue;
                 }
+
+                #region UseGroup
+                if (value)
+                {
+                    continue;
+                }
+
+                result = false;
+                // 下面至少有一个为 true, result 才为 true
+                for (int j = 0; j < parameterList.Count; ++j)
+                {
+                    HSMParameter temp2 = parameterList[j];
+                    if (  !temp2.useGroup 
+                        || temp2.orGroup != temp1.orGroup)
+                    {
+                        continue;
+                    }
+
+                    value = Condition(temp2);
+                    if (value)
+                    {
+                        result = value;
+                        break;
+                    }
+                }
+                #endregion
             }
 
             return result;

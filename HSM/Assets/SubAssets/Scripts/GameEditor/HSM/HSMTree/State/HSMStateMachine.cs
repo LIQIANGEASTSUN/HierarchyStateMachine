@@ -6,6 +6,7 @@ namespace HSMTree
 {
     public class HSMStateMachine
     {
+        private HSMTreeData _data;
         private int defaultStateId;
         private int currentStateId;
         private HSMState currentState;
@@ -31,6 +32,10 @@ namespace HSMTree
 
             bool result = false;
             int toStateId = currentState.Execute(ref result);
+            if (currentState.StateId == 0)
+            {
+
+            }
             if (_autoTransitionState && result)
             {
                 ChangeState(toStateId);
@@ -51,6 +56,11 @@ namespace HSMTree
         {
             get { return currentStateId; }
             set { currentStateId = value; }
+        }
+
+        public void SetData(HSMTreeData data)
+        {
+            _data = data;
         }
 
         public void SetDefaultStateId(int id)
@@ -86,7 +96,7 @@ namespace HSMTree
                 currentState.Exit();
             }
 
-            Debug.LogWarning("ChangeState:" + state.StateId);
+            //Debug.LogWarning("ChangeState:" + state.StateId);
 
             currentState = state;
             if (null != currentState)

@@ -92,6 +92,13 @@ namespace HSMTree
 
         public void AddTransition(List<Transition> transitionList)
         {
+            for (int i = 0; i < transitionList.Count; ++i)
+            {
+                if (StateId == 2 && transitionList[i].toStateId == 3)
+                {
+                    int a = 0;
+                }
+            }
             _transitionList.AddRange(transitionList);
         }
 

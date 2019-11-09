@@ -16,15 +16,15 @@ namespace HSMTree
 
         public HSMStateMachine Analysis(string content, IConditionCheck iConditionCheck, IAction iAction)
         {
-            HSMTreeData HSMTreeData = JsonMapper.ToObject<HSMTreeData>(content);
-            if (null == HSMTreeData)
+            HSMTreeData hSMTreeData = JsonMapper.ToObject<HSMTreeData>(content);
+            if (null == hSMTreeData)
             {
                 Debug.LogError("HSMTreeData is null");
                 return null;
             }
 
-            iConditionCheck.AddParameter(HSMTreeData.parameterList);
-            return Analysis(HSMTreeData, iConditionCheck, iAction);
+            iConditionCheck.AddParameter(hSMTreeData.parameterList);
+            return Analysis(hSMTreeData, iConditionCheck, iAction);
         }
 
         public HSMStateMachine Analysis(HSMTreeData data, IConditionCheck iConditionCheck, IAction iAction)
@@ -43,6 +43,7 @@ namespace HSMTree
                 return hsmStateMachine;
             }
 
+            hsmStateMachine.SetData(data);
             hsmStateMachine.SetDefaultStateId(data.defaultStateId);
 
             iConditionCheck.AddParameter(data.parameterList);
@@ -55,6 +56,9 @@ namespace HSMTree
                 {
                     Debug.LogError("AllNODE:" + nodeValue.id + "     " + (null != stateBase));
                 }
+                stateBase.StateId = nodeValue.id;
+                stateBase.AddParameter(nodeValue.parameterList);
+                stateBase.AddTransition(nodeValue.transitionList);
                 stateBase.SetStateMachine(hsmStateMachine);
                 stateBase.SetIAction(iAction);
                 stateBase.SetConditionCheck(iConditionCheck);
@@ -68,9 +72,7 @@ namespace HSMTree
         private HSMState AnalysisNode(NodeData nodeValue, IConditionCheck iConditionCheck)
         {
             HSMState state = (HSMState)CustomNode.Instance.GetState((IDENTIFICATION)nodeValue.identification);
-            state.StateId = nodeValue.id;
-            state.AddParameter(nodeValue.parameterList);
-            state.AddTransition(nodeValue.transitionList);
+            
             return state;
         }
 

@@ -91,6 +91,8 @@ namespace HSMTree
             DrawNode(nodeValue);
         }
 
+        private Dictionary<int, int> _groupColorDic = new Dictionary<int, int>(); // 
+        private Color32[] colorArr = new Color32[] { new Color32(178, 226, 221, 255), new Color32(220, 226, 178, 255), new Color32(209, 178, 226, 255),  new Color32(178, 185, 226, 255) };
         private bool selectNodeParameter = false;
         private Vector2 scrollPos = Vector2.zero;
         private void DrawNode(NodeData nodeData)
@@ -258,7 +260,6 @@ namespace HSMTree
                 height = height <= 300 ? height : 300;
                 scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(height));
                 {
-                    GUI.backgroundColor = new Color(0.85f, 0.85f, 0.85f, 1f);
                     for (int i = 0; i < parametersList.Count; ++i)
                     {
                         HSMParameter hSMParameter = parametersList[i];
@@ -271,6 +272,22 @@ namespace HSMTree
                             }
                         };
 
+                        Color color = Color.white;
+                        if (hSMParameter.useGroup)
+                        {
+                            int value = -1;
+                            if (!_groupColorDic.TryGetValue(hSMParameter.orGroup, out value))
+                            {
+                                value = hSMParameter.orGroup % colorArr.Length;
+                                _groupColorDic[hSMParameter.orGroup] = value;
+                            }
+                            if (value >= 0)
+                            {
+                                color = colorArr[value];
+                            }
+                        }
+
+                        GUI.backgroundColor = color; // new Color(0.85f, 0.85f, 0.85f, 1f);
                         EditorGUILayout.BeginVertical("box");
                         {
                             string parameterName = hSMParameter.parameterName;
@@ -290,8 +307,8 @@ namespace HSMTree
                             }
                         }
                         EditorGUILayout.EndVertical();
+                        GUI.backgroundColor = Color.white;
                     }
-                    GUI.backgroundColor = Color.white;
                 }
                 EditorGUILayout.EndScrollView();
             }

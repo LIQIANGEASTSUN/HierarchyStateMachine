@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HSMTree;
+
+public enum SkillConfigSkillPhaseType
+{
+    A,
+    B,
+    NONE
+}
+
+#if AAA
 using GenPB;
 
 public class AbilityHSM : IAbilityEnvironment, IAction
@@ -87,7 +96,7 @@ public class AbilityHSM : IAbilityEnvironment, IAction
         }
     }
 
-    #region ConditionCheck
+#region ConditionCheck
     public ConditionCheck ConditionCheck
     {
         get { return (ConditionCheck)_iconditionCheck; }
@@ -137,7 +146,7 @@ public class AbilityHSM : IAbilityEnvironment, IAction
 
         return state;
     }
-    #endregion
+#endregion
 
     public void SkillEnd()
     {
@@ -182,7 +191,7 @@ public class AbilityHSM : IAbilityEnvironment, IAction
         ConditionCheck.SetParameter(PhaseOrHold, true);
     }
 
-    #region IAction
+#region IAction
     public void DoAction(int toStateId)
     {
         StateSkill state = (StateSkill)(_hsmStateMachine.GetState(toStateId));
@@ -195,9 +204,9 @@ public class AbilityHSM : IAbilityEnvironment, IAction
         SkillStateBase skillStateBase = _skill.skillStateMachine.GetState(type);
         skillStateBase.WillToThisState();
     }
-    #endregion
+#endregion
 
-    #region IAbilityEnvironment
+#region IAbilityEnvironment
     public void UpdateEnvironment()
     {
         if (null == ConditionCheck)
@@ -224,6 +233,10 @@ public class AbilityHSM : IAbilityEnvironment, IAction
         bool focoFull = (_skill.FocoEnergia.GetPercentage() >= 1);
         ConditionCheck.SetParameter(FocoFull, focoFull);
     }
-    #endregion
+#endregion
 
 }
+
+#endif
+
+

@@ -133,7 +133,8 @@ namespace HSMTree
                 }
 
                 bool value = (drawParameterType != HSMDrawParameterType.HSM_PARAMETER) && (drawParameterType != HSMDrawParameterType.RUNTIME_PARAMETER) && (drawParameterType != HSMDrawParameterType.HSM_PARAMETER_ADD);
-                if (value)
+                bool boolType = (hSMParameter.parameterType == (int)HSMParameterType.Bool);
+                if (value && !boolType)
                 {
                     compare = EditorGUILayout.Popup(compare, compareArr, GUILayout.Width(65));
                     hSMParameter.compare = (int)(compareEnumArr[compare]);

@@ -120,70 +120,6 @@ namespace HSMTree
             orGroup = parameter.orGroup;
         }
 
-        private HSMCompare Compare(int value)
-        {
-            HSMCompare HSMCompare = Compare(intValue, value);
-            return HSMCompare;
-        }
-
-        private HSMCompare Compare(float value)
-        {
-            HSMCompare HSMCompare = Compare(floatValue, value);
-            return HSMCompare;
-        }
-
-        private HSMCompare Compare(int selfIntValue, int b)
-        {
-            HSMCompare HSMCompare = Compare((float)selfIntValue, (float)b);
-
-            if (selfIntValue == b)
-            {
-                HSMCompare |= HSMCompare.EQUALS;
-            }
-
-            if (selfIntValue != b)
-            {
-                HSMCompare |= HSMCompare.NOT_EQUAL;
-            }
-            return HSMCompare;
-        }
-
-        private HSMCompare Compare(float selfFloatValue, float b)
-        {
-            HSMCompare HSMCompare = HSMCompare.INVALID;
-            if (selfFloatValue > b)
-            {
-                HSMCompare |= HSMCompare.GREATER;
-            }
-
-            if (selfFloatValue >= b)
-            {
-                HSMCompare |= HSMCompare.GREATER_EQUALS;
-            }
-
-            if (selfFloatValue == b)
-            {
-                HSMCompare |= HSMCompare.EQUALS;
-            }
-
-            if (selfFloatValue <= b)
-            {
-                HSMCompare |= HSMCompare.LESS_EQUAL;
-            }
-
-            if (selfFloatValue < b)
-            {
-                HSMCompare |= HSMCompare.LESS;
-            }
-
-            return HSMCompare;
-        }
-
-        private HSMCompare Compare(bool value)
-        {
-            return (boolValue == value) ? HSMCompare.EQUALS : HSMCompare.NOT_EQUAL;
-        }
-
         public bool Compare(HSMParameter parameter)
         {
             if (parameterType != parameter.parameterType)
@@ -195,18 +131,77 @@ namespace HSMTree
             HSMCompare HSMCompare = HSMCompare.NOT_EQUAL;
             if (parameterType == (int)HSMParameterType.Float)
             {
-                HSMCompare = (Compare(parameter.floatValue));
+                HSMCompare = CompareFloat(parameter);
+                return (compare & (int)HSMCompare) > 0;
             }
             else if (parameterType == (int)HSMParameterType.Int)
             {
-                HSMCompare = (Compare(parameter.intValue));
+                HSMCompare = CompareInt(parameter);
+                return (compare & (int)HSMCompare) > 0;
             }
             else
             {
-                HSMCompare = (Compare(parameter.boolValue));
+                return  CompareBool(parameter);
+            }
+        }
+
+        public HSMCompare CompareFloat(HSMParameter parameter)
+        {
+            HSMCompare HSMCompare = HSMCompare.INVALID;
+            if (this.floatValue > parameter.floatValue)
+            {
+                HSMCompare |= HSMCompare.GREATER;
             }
 
-            return (compare & (int)HSMCompare) > 0;
+            if (this.floatValue < parameter.floatValue)
+            {
+                HSMCompare |= HSMCompare.LESS;
+            }
+
+            return HSMCompare;
+        }
+
+        public HSMCompare CompareInt(HSMParameter parameter)
+        {
+            HSMCompare HSMCompare = HSMCompare.INVALID;
+            HSMCompare = CompareFloat(parameter);
+
+            if (this.intValue > parameter.intValue)
+            {
+                HSMCompare |= HSMCompare.GREATER;
+            }
+
+            if (this.intValue < parameter.intValue)
+            {
+                HSMCompare |= HSMCompare.LESS;
+            }
+
+            if (this.intValue == parameter.intValue)
+            {
+                HSMCompare |= HSMCompare.EQUALS;
+            }
+
+            if (this.intValue != parameter.intValue)
+            {
+                HSMCompare |= HSMCompare.NOT_EQUAL;
+            }
+
+            if (this.intValue >= parameter.intValue)
+            {
+                HSMCompare |= HSMCompare.GREATER_EQUALS;
+            }
+
+            if (this.intValue <= parameter.intValue)
+            {
+                HSMCompare |= HSMCompare.LESS_EQUAL;
+            }
+
+            return HSMCompare;
+        }
+
+        public bool CompareBool(HSMParameter parameter)
+        {
+            return this.boolValue == parameter.boolValue;
         }
     }
     

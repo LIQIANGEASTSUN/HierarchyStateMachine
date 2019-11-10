@@ -120,88 +120,90 @@ namespace HSMTree
             orGroup = parameter.orGroup;
         }
 
-        public bool Compare(HSMParameter parameter)
+        public HSMCompare Compare(HSMParameter parameter)
         {
+            HSMCompare hSMCompare = HSMCompare.NOT_EQUAL;
             if (parameterType != parameter.parameterType)
             {
                 Debug.LogError("parameter Type not Equal:" + parameter.parameterName + "    " + parameter.parameterType + "    " + parameterType);
-                return false;
+                return hSMCompare;
             }
 
-            HSMCompare HSMCompare = HSMCompare.NOT_EQUAL;
             if (parameterType == (int)HSMParameterType.Float)
             {
-                HSMCompare = CompareFloat(parameter);
-                return (compare & (int)HSMCompare) > 0;
+                hSMCompare = CompareFloat(parameter);
+                return hSMCompare; //  (compare & (int)HSMCompare) > 0;
             }
             else if (parameterType == (int)HSMParameterType.Int)
             {
-                HSMCompare = CompareInt(parameter);
-                return (compare & (int)HSMCompare) > 0;
+                hSMCompare = CompareInt(parameter);
             }
             else
             {
-                return  CompareBool(parameter);
+                hSMCompare = CompareBool(parameter);
             }
+
+            return hSMCompare;
         }
 
         public HSMCompare CompareFloat(HSMParameter parameter)
         {
-            HSMCompare HSMCompare = HSMCompare.INVALID;
+            HSMCompare hSMCompare = HSMCompare.INVALID;
             if (this.floatValue > parameter.floatValue)
             {
-                HSMCompare |= HSMCompare.GREATER;
+                hSMCompare |= HSMCompare.GREATER;
             }
 
             if (this.floatValue < parameter.floatValue)
             {
-                HSMCompare |= HSMCompare.LESS;
+                hSMCompare |= HSMCompare.LESS;
             }
 
-            return HSMCompare;
+            return hSMCompare;
         }
 
         public HSMCompare CompareInt(HSMParameter parameter)
         {
-            HSMCompare HSMCompare = HSMCompare.INVALID;
-            HSMCompare = CompareFloat(parameter);
+            HSMCompare hSMCompare = HSMCompare.INVALID;
+            hSMCompare = CompareFloat(parameter);
 
             if (this.intValue > parameter.intValue)
             {
-                HSMCompare |= HSMCompare.GREATER;
+                hSMCompare |= HSMCompare.GREATER;
             }
 
             if (this.intValue < parameter.intValue)
             {
-                HSMCompare |= HSMCompare.LESS;
+                hSMCompare |= HSMCompare.LESS;
             }
 
             if (this.intValue == parameter.intValue)
             {
-                HSMCompare |= HSMCompare.EQUALS;
+                hSMCompare |= HSMCompare.EQUALS;
             }
 
             if (this.intValue != parameter.intValue)
             {
-                HSMCompare |= HSMCompare.NOT_EQUAL;
+                hSMCompare |= HSMCompare.NOT_EQUAL;
             }
 
             if (this.intValue >= parameter.intValue)
             {
-                HSMCompare |= HSMCompare.GREATER_EQUALS;
+                hSMCompare |= HSMCompare.GREATER_EQUALS;
             }
 
             if (this.intValue <= parameter.intValue)
             {
-                HSMCompare |= HSMCompare.LESS_EQUAL;
+                hSMCompare |= HSMCompare.LESS_EQUAL;
             }
 
-            return HSMCompare;
+            return hSMCompare;
         }
 
-        public bool CompareBool(HSMParameter parameter)
+        public HSMCompare CompareBool(HSMParameter parameter)
         {
-            return this.boolValue == parameter.boolValue;
+            HSMCompare hSMCompare = (this.boolValue == parameter.boolValue) ? HSMCompare.EQUALS : HSMCompare.NOT_EQUAL;
+            return hSMCompare;
         }
     }
     

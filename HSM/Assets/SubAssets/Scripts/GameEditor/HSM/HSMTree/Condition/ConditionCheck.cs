@@ -109,7 +109,8 @@ namespace HSMTree
                 return false;
             }
 
-            return environmentParameter.Compare(parameter);
+            HSMCompare hsmCompare = environmentParameter.Compare(parameter);
+            return (parameter.compare & (int)hsmCompare) > 0;
         }
 
         public bool Condition(List<HSMParameter> parameterList)

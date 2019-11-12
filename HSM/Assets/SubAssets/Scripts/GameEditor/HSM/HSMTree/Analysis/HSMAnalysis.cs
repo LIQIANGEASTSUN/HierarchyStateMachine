@@ -51,19 +51,33 @@ namespace HSMTree
             for (int i = 0; i < data.nodeList.Count; ++i)
             {
                 NodeData nodeValue = data.nodeList[i];
-                HSMState stateBase = AnalysisNode(nodeValue, iConditionCheck);
-                if (null == stateBase)
+                if (nodeValue.NodeType == (int)(NODE_TYPE.STATE))
                 {
-                    Debug.LogError("AllNODE:" + nodeValue.id + "     " + (null != stateBase));
+                    HSMState stateBase = AnalysisNode(nodeValue, iConditionCheck);
+                    if (null == stateBase)
+                    {
+                        Debug.LogError("AllNODE:" + nodeValue.id + "     " + (null != stateBase));
+                    }
+                    stateBase.StateId = nodeValue.id;
+                    stateBase.AddParameter(nodeValue.parameterList);
+                    stateBase.AddTransition(nodeValue.transitionList);
+                    stateBase.SetStateMachine(hsmStateMachine);
+                    stateBase.SetIAction(iAction);
+                    stateBase.SetConditionCheck(iConditionCheck);
+                    stateBase.Init();
+                    hsmStateMachine.AddState(stateBase);
                 }
-                stateBase.StateId = nodeValue.id;
-                stateBase.AddParameter(nodeValue.parameterList);
-                stateBase.AddTransition(nodeValue.transitionList);
-                stateBase.SetStateMachine(hsmStateMachine);
-                stateBase.SetIAction(iAction);
-                stateBase.SetConditionCheck(iConditionCheck);
-                stateBase.Init();
-                hsmStateMachine.AddState(stateBase);
+                else if (nodeValue.NodeType == (int)NODE_TYPE.SUB_STATE_MACHINE)
+                {
+                    HSMSubStateMachine subStateMachine = new HSMSubStateMachine();
+                    for (int j = 0; j < nodeValue.transitionList.Count; ++i)
+                    {
+                        Transition transition = nodeValue.transitionList[i];
+                        subStateMachine.AddChildState(transition.toStateId);
+                    }
+
+                    hsmStateMachine.AddSubMachine(subStateMachine);
+                }
             }
 
             return hsmStateMachine;

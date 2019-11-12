@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using HSMTree;
 
-public enum SkillConfigSkillPhaseType
-{
-    A,
-    B,
-    NONE
-}
-
-#if AAA
+#if A
 using GenPB;
+
+
+
+public interface ISkill
+{
+    void SetSkill(Skill skill);
+}
 
 public class AbilityHSM : IAbilityEnvironment, IAction
 {
@@ -21,37 +21,40 @@ public class AbilityHSM : IAbilityEnvironment, IAction
     private IConditionCheck _iconditionCheck = null;
     private AbilityInputExtend _abilityInputExtend = null;
 
-    protected const string SkillRequestState = "Skill_Change_State";
-    protected const string EnableFire        = "EnableFire";
-    protected const string EnergyEnougth     = "EnergyEnougth";
-    protected const string EnableActive      = "EnableActive";
-    protected const string PhaseOrHold       = "PhaseOrHold";
-    protected const string FocoFull          = "FocoFull";
-    protected const string ShotTimeEnd       = "ShotTimeEnd";
+    public readonly static string SkillRequestState  = "Skill_Change_State";
+    public readonly static string EnableFire         = "EnableFire";
+    public readonly static string EnergyEnougth      = "EnergyEnougth";
+    public readonly static string EnableActive       = "EnableActive";
+    public readonly static string Phase_End          = "PhaseEnd";
+    public readonly static string Hold               = "Hold";
+    public readonly static string FocoFull           = "FocoFull";
+    public readonly static string ShotTimeEnd        = "ShotTimeEnd";
+    public readonly static string RemainingFireTimes = "RemainingFireTimes";
+    public readonly static string SkillTimeEnd       = "SkillTimeEnd";
+    public readonly static string Skill_State        = "Skill_State";
 
     protected Dictionary<int, string> _btnNameDic = new Dictionary<int, string>() {
         {(int)AbilityButtonType.GENERAL,      "GenericBtn" }, // 普通技能按钮
         {(int)AbilityButtonType.SKILL_DEPUTY, "DeputyBtn" },  // 副技能按钮
         {(int)AbilityButtonType.SKILL_UNIQUE, "UniqueBtn" },  // 大招按钮
         {(int)AbilityButtonType.FIRE,         "FireBtn" },    // 释放按钮
-        {(int)AbilityButtonType.TRANSFER,     "TransferBtn" },// 传送按钮
     };
 
-    
     protected Dictionary<int, string> _skillConfigDic = new Dictionary<int, string>() {
         { (int)SkillHandleType.CONTINUOUS_FIRE,        "AbilityGenericHSM"},     // 普攻-连射     //已测试
-        { (int)SkillHandleType.ROLL_BRUSH,             ""},                      // 普攻-滚动
-        { (int)SkillHandleType.FOCO_SINGLE_FIRE,       "AbilityFocoSingleHSM"},  // 普攻-蓄力单发
-        { (int)SkillHandleType.FOCO_CONTINUOUS_FIRE,   "AbilityFocoContinueHSM"},// 普攻-蓄力连射
-        { (int)SkillHandleType.SWING_BRUSH,            ""},                      // 刷子-甩
-        { (int)SkillHandleType.SINGLE_SHOT,            ""},                      // 普攻-单发
+        { (int)SkillHandleType.ROLL_BRUSH,             "AbilityRoleBrushHSM"},   // 普攻-滚动
+        { (int)SkillHandleType.FOCO_SINGLE_FIRE,       "AbilityFocoSingleHSM"},  // 普攻-蓄力单发 //已测试
+        { (int)SkillHandleType.FOCO_CONTINUOUS_FIRE,   "AbilityFocoContinueHSM"},// 普攻-蓄力连射 //已测试 
+        { (int)SkillHandleType.SWING_BRUSH,            "AbilitySwingBruseHSM"},  // 刷子-甩
+        { (int)SkillHandleType.SINGLE_SHOT,            "AbilitySingleShotHSM"},  // 普攻-单发
         { (int)SkillHandleType.DEPUTY_SKILL_THROW,     "AbilityThrowHSM"},       // 副技能-投掷   //已测试
         { (int)SkillHandleType.DEPUTY_SKILL_FOCO,      "AbilityFocoFullHSM"},    // 副技能-蓄力   //已测试
         { (int)SkillHandleType.UNIQUE_INSTANT_SKILL,   "AbilityUniqueHSM"},      // 大招-瞬发     //已测试
-        { (int)SkillHandleType.UNIQUE_FIRE_CONTINUOUS, "AbilityUniqueRayHSM"},   // 大招-激光
-        { (int)SkillHandleType.UNIQUE_FIRE_SKILL,      "" },                     // 大招-射击
+        { (int)SkillHandleType.UNIQUE_FIRE_CONTINUOUS, "AbilityUniqueRayHSM"},   // 大招-激光     //已测试
+        { (int)SkillHandleType.UNIQUE_FIRE_SKILL,      "AbilityUniqueFireHSM" }, // 大招-射击     //已测试
         { (int)SkillHandleType.UNIQUE_DEPUTY_SKILL,    "" },                     // 大招-副技能
-        { (int)SkillHandleType.TRANSFER,               "" },                     // 传送技能
+        { (int)SkillHandleType.TRANSFER,               "AbilityTransferHSM" },   // 传送技能      //已测试
+        { (int)SkillHandleType.NONE,                   ""}
     };
 
     public AbilityHSM(Skill skill)
@@ -74,25 +77,43 @@ public class AbilityHSM : IAbilityEnvironment, IAction
             return;
         }
 
-        Debug.LogError(configName);
-
         _iconditionCheck = new ConditionCheck();
         _abilityInputExtend = new AbilityInputExtend();
 
         HSMAnalysis analysis = new HSMAnalysis();
         _hsmStateMachine = analysis.Analysis(textAsset.text, _iconditionCheck, this);
         _hsmStateMachine.SetAutoTransitionState(false);
+        SetSkill();
 
         Clear();
     }
+
 
     public void Update()
     {
         UpdateEnvironment();
 
+        if (_skill.weaponId == 112103)
+        {
+            int a = 0;
+        }
+
         if (null != _hsmStateMachine)
         {
             _hsmStateMachine.Execute();
+        }
+    }
+
+    private void SetSkill()
+    {
+        for (int i = 0; i < _hsmStateMachine.StateList.Count; ++i)
+        {
+            HSMState hsmState = _hsmStateMachine.StateList[i];
+            if (typeof(ISkill).IsAssignableFrom(hsmState.GetType()))
+            {
+                ISkill state = (ISkill)hsmState;
+                state.SetSkill(_skill);
+            }
         }
     }
 
@@ -102,49 +123,55 @@ public class AbilityHSM : IAbilityEnvironment, IAction
         get { return (ConditionCheck)_iconditionCheck; }
     }
 
-    public void Input(AbilityButtonType buttonType, AbilityHandleType handleType)
+    public bool Input(AbilityButtonType buttonType, AbilityHandleType handleType)
     {
         if (handleType == AbilityHandleType.PRESS)  // 只处理 Down、Up
         {
-            return;
+            return false;
         }
 
         string btnName = string.Empty;
         if (!_btnNameDic.TryGetValue((int)buttonType, out btnName))
         {
-            return;
+            return false;
         }
 
-        Debug.LogError("Input:" + btnName + "   " + (int)handleType);
+        //Debug.LogError("Input:" + btnName + "   " + (int)handleType);
         ConditionCheck.SetParameter(btnName, (int)handleType);
+
+        if (null != _hsmStateMachine)
+        {
+            bool value = _hsmStateMachine.Execute();
+            //Debug.LogError("value:" + value);
+            return value;
+        }
+        return false;
     }
 
     public void ChangeState(SkillConfigSkillPhaseType phaseType)
     {
         bool value = (phaseType == SkillConfigSkillPhaseType.STANDBY_PHASE) ? true : false;
-        ConditionCheck.SetParameter(PhaseOrHold, value);
-
-        StateSkill stateSkill = GetState(phaseType);
-        if (null != stateSkill)
+        if (null == ConditionCheck)
         {
-            _hsmStateMachine.ChangeState(stateSkill.StateId);
+            return;
         }
-    }
 
-    private StateSkill GetState(SkillConfigSkillPhaseType phaseType)
-    {
-        StateSkill state = null;
+        ConditionCheck.SetParameter(Phase_End, value);
+        ConditionCheck.SetParameter(Hold, value);
+
         for (int i = 0; i < _hsmStateMachine.StateList.Count; ++i)
         {
-            StateSkill temp = (StateSkill)_hsmStateMachine.StateList[i];
-            if (temp.PhaseType == phaseType)
+            HSMState hsmState = _hsmStateMachine.StateList[i];
+            if (typeof(HSMState).IsAssignableFrom(hsmState.GetType()))
             {
-                state = temp;
-                break;
+                StateSkill stateSkill = (StateSkill)hsmState;
+                if (stateSkill.PhaseType == phaseType)
+                {
+                    _hsmStateMachine.ChangeState(stateSkill.StateId);
+                    break;
+                }
             }
         }
-
-        return state;
     }
 #endregion
 
@@ -155,7 +182,8 @@ public class AbilityHSM : IAbilityEnvironment, IAction
 
     private void Clear()
     {
-        ConditionCheck.SetParameter(PhaseOrHold, false);
+        ConditionCheck.SetParameter(Phase_End, false);
+        ConditionCheck.SetParameter(Hold, false);
         ConditionCheck.SetParameter(FocoFull, false);
     }
 
@@ -171,7 +199,7 @@ public class AbilityHSM : IAbilityEnvironment, IAction
             return;
         }
         
-        Debug.LogError("Request: roleId:" + roleId + "    weaponId:" + weaponId + "    type:" + (SkillPhaseType)type);
+        //Debug.LogError("Request: roleId:" + roleId + "    weaponId:" + weaponId + "    type:" + (SkillPhaseType)type + "    " + Extend.GameUtils.GetMillisecond());
         _abilityInputExtend.AddRequest((SkillPhaseType)type);
         SkillEventHandler.Instance.SendSkillOper(roleId, _skill.weaponId, (int)type, focoPercentage, 0);
     }
@@ -183,26 +211,23 @@ public class AbilityHSM : IAbilityEnvironment, IAction
             return;
         }
         //Debug.LogError("Hold:" + phaseType + "    " + (SkillEventType)(customEvent.EventBase.EventType));
-        ConditionCheck.SetParameter(PhaseOrHold, true);
+        ConditionCheck.SetParameter(Hold, true);
     }
 
     public void PhaseEnd(SkillConfigSkillPhaseType phaseType)
     {
-        ConditionCheck.SetParameter(PhaseOrHold, true);
+        //Debug.LogError("PhaseEnd");
+        ConditionCheck.SetParameter(Phase_End, true);
     }
 
 #region IAction
-    public void DoAction(int toStateId)
+    public void DoAction(HSMState state, int toStateId)
     {
-        StateSkill state = (StateSkill)(_hsmStateMachine.GetState(toStateId));
-        if (null == state)
+        HSMState toState = (_hsmStateMachine.GetState(toStateId));
+        if (null != state && null != toState)
         {
-            return;
+            state.DoAction(toState);
         }
-
-        SkillConfigSkillPhaseType type = state.PhaseType;
-        SkillStateBase skillStateBase = _skill.skillStateMachine.GetState(type);
-        skillStateBase.WillToThisState();
     }
 #endregion
 
@@ -219,8 +244,10 @@ public class AbilityHSM : IAbilityEnvironment, IAction
         ConditionCheck.SetParameter(EnergyEnougth, _skill.SkillEnergyEnough());
         ConditionCheck.SetParameter(EnableActive, _skill.EnableActive(ref result));
         ConditionCheck.SetParameter(ShotTimeEnd, _skill.ShotEndTime());
-        //Debug.LogError(_skill.weaponId + "    energyEnougth:" + _skill.SkillEnergyEnough() + "    enableFire:" + _skill.EnableFire(ref result));
+        ConditionCheck.SetParameter(RemainingFireTimes, _skill.RemainingFireTimes());
+        ConditionCheck.SetParameter(SkillTimeEnd, _skill.TimeEnd);
 
+        //Debug.LogError(_skill.weaponId + "    energyEnougth:" + _skill.SkillEnergyEnough() + "    enableFire:" + _skill.EnableFire(ref result));
         FocoEnergia();
     }
 
@@ -238,5 +265,3 @@ public class AbilityHSM : IAbilityEnvironment, IAction
 }
 
 #endif
-
-

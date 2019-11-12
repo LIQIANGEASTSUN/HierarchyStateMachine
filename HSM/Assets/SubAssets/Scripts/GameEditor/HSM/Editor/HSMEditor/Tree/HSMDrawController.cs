@@ -9,7 +9,7 @@ namespace HSMTree
 {
     public class HSMDrawController
     {
-        private TreeNodeWindow _treeNodeWindow = null;
+        private HSMNodeWindow _treeNodeWindow = null;
 
         public HSMDrawModel _HSMDrawModel = null;
         private HSMDrawView _HSMDrawView = null;
@@ -25,7 +25,7 @@ namespace HSMTree
 
         }
 
-        public void OnGUI(TreeNodeWindow window)
+        public void OnGUI(HSMNodeWindow window)
         {
             _treeNodeWindow = window;
             _HSMDrawView.Init(_treeNodeWindow, this);
@@ -160,7 +160,7 @@ namespace HSMTree
 
     public class HSMDrawView
     {
-        private TreeNodeWindow _treeNodeWindow = null;
+        private HSMNodeWindow _treeNodeWindow = null;
         private HSMDrawController _drawController = null;
 
         // 鼠标的位置
@@ -174,7 +174,7 @@ namespace HSMTree
 
         private List<NodeData> _nodeList = new List<NodeData>();
 
-        public void Init(TreeNodeWindow window, HSMDrawController drawController)
+        public void Init(HSMNodeWindow window, HSMDrawController drawController)
         {
             _treeNodeWindow = window;
             _drawController = drawController;

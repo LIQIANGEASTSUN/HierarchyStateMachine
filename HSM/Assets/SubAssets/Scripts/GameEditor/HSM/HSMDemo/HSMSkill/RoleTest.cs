@@ -79,11 +79,6 @@ public class RolePlayer : IAction
         _iconditionCheck = new ConditionCheck();
         hsmStateMachine = analysis.Analysis(content, _iconditionCheck, this);
     }
-    
-    public void DoAction(int toStateId)
-    {
-
-    }
 
     public bool DoAction(int nodeId, List<HSMParameter> parameterList)
     {
@@ -111,6 +106,10 @@ public class RolePlayer : IAction
 
         RoleTest.Instance.UpdateCondition();
         return true;
+    }
+
+    public void DoAction(HSMState state, int toStateId)
+    {
     }
 
     public ConditionCheck ConditionCheck

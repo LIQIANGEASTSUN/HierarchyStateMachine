@@ -435,7 +435,7 @@ public class HSMManager
         if (string.IsNullOrEmpty(parameter.parameterName))
         {
             string meg = string.Format("条件参数不能为空", parameter.parameterName);
-            TreeNodeWindow.window.ShowNotification(meg);
+            HSMNodeWindow.window.ShowNotification(meg);
             result = false;
         }
 
@@ -445,7 +445,7 @@ public class HSMManager
             if (!repeatAdd && tempParameter.parameterName.CompareTo(parameter.parameterName) == 0)
             {
                 string meg = string.Format("条件参数:{0} 已存在", parameter.parameterName);
-                TreeNodeWindow.window.ShowNotification(meg);
+                HSMNodeWindow.window.ShowNotification(meg);
                 result = false;
                 break;
             }
@@ -578,9 +578,9 @@ public class HSMManager
     private static void CheckNode(List<NodeData> nodeValueList)
     {
         string meg = string.Empty;
-        if (TreeNodeWindow.window != null && !string.IsNullOrEmpty(meg))
+        if (HSMNodeWindow.window != null && !string.IsNullOrEmpty(meg))
         {
-            TreeNodeWindow.window.ShowNotification(meg);
+            HSMNodeWindow.window.ShowNotification(meg);
         }
     }
 }

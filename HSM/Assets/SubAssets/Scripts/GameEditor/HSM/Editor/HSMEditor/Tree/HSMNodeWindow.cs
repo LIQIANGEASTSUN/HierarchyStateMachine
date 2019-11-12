@@ -7,18 +7,18 @@ namespace HSMTree
 {
 
 
-    public class TreeNodeWindow : EditorWindow
+    public class HSMNodeWindow : EditorWindow
     {
         private HSMDrawProperty _HSMDrawPropertyController;
         private HSMDrawController _HSMDrawController;
 
-        public static TreeNodeWindow window;
+        public static HSMNodeWindow window;
         private static Rect windowsPosition = new Rect(10, 30, 1236, 864);
 
         [MenuItem("Window/CreateHSM")]
         public static void ShowWindow()
         {
-            window = EditorWindow.GetWindow<TreeNodeWindow>();
+            window = EditorWindow.GetWindow<HSMNodeWindow>();
             window.position = windowsPosition;
             window.autoRepaintOnSceneChange = true;
             window.Show();

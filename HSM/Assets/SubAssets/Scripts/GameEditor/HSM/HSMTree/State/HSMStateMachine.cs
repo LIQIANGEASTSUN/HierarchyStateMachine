@@ -11,6 +11,9 @@ namespace HSMTree
         private int currentStateId;
         private HSMState currentState;
         private List<HSMState> _stateList = new List<HSMState>();
+
+        private List<HSMSubStateMachine> _subMachineList = new List<HSMSubStateMachine>();
+
         private bool _autoTransitionState = true;
         
         public HSMStateMachine()
@@ -18,7 +21,7 @@ namespace HSMTree
 
         }
 
-        public void Execute()
+        public bool Execute()
         {
             if (null == currentState)
             {
@@ -27,24 +30,35 @@ namespace HSMTree
 
             if (null == currentState)
             {
-                return;
+                return false;
             }
 
             bool result = false;
             int toStateId = currentState.Execute(ref result);
-            if (currentState.StateId == 0)
+            if (result)
             {
+                HSMState toState = GetState(toStateId);
+                if (_autoTransitionState || toState.AutoTranision)
+                {
+                    ChangeState(toStateId);
+                }
+                else
+                {
+                    currentState.IAction.DoAction(currentState, toStateId);
+                }
+            }
 
-            }
-            if (_autoTransitionState && result)
-            {
-                ChangeState(toStateId);
-            }
+            return result;
         }
 
         public void AddState(HSMState state)
         {
             _stateList.Add(state);
+        }
+
+        public void AddSubMachine(HSMSubStateMachine subStateMachine)
+        {
+            _subMachineList.Add(subStateMachine);
         }
 
         public void SetAutoTransitionState(bool value)

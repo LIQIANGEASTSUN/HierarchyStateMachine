@@ -326,9 +326,9 @@ namespace HSMTree
                 {
                     string msg = "没有参数可添加，请先添加参数";
 
-                    if (TreeNodeWindow.window != null)
+                    if (HSMNodeWindow.window != null)
                     {
-                        TreeNodeWindow.window.ShowNotification(msg);
+                        HSMNodeWindow.window.ShowNotification(msg);
                     }
                 }
                 else
@@ -352,9 +352,9 @@ namespace HSMTree
                 {
                     string msg = "没有参数可添加，请先添加参数";
 
-                    if (TreeNodeWindow.window != null)
+                    if (HSMNodeWindow.window != null)
                     {
-                        TreeNodeWindow.window.ShowNotification(msg);
+                        HSMNodeWindow.window.ShowNotification(msg);
                     }
                 }
                 else

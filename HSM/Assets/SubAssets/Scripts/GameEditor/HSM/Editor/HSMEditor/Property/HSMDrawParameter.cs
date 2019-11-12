@@ -140,6 +140,11 @@ namespace HSMTree
                     hSMParameter.compare = (int)(compareEnumArr[compare]);
                 }
 
+                if (boolType)
+                {
+                    hSMParameter.compare = (int)HSMCompare.EQUALS;
+                }
+
                 {
                     if (hSMParameter.parameterType == (int)HSMParameterType.Int)
                     {

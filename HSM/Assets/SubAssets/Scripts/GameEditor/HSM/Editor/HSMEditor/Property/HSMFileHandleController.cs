@@ -149,6 +149,22 @@ namespace HSMTree
 
         private static HSMTreeData UpdateData(HSMTreeData treeData)
         {
+            for (int i = 0; i < treeData.nodeList.Count; ++i)
+            {
+                NodeData nodeData = treeData.nodeList[i];
+                for (int j = 0; j < nodeData.transitionList.Count; ++j)
+                {
+                    Transition transition = nodeData.transitionList[j];
+                    for (int k = 0; k < transition.parameterList.Count; ++k)
+                    {
+                        HSMParameter hsmParameter = transition.parameterList[k];
+                        if (hsmParameter.parameterType == (int)HSMParameterType.Bool)
+                        {
+                            hsmParameter.compare = (int)HSMCompare.EQUALS;
+                        }
+                    }
+                }
+            }
             return treeData;
         }
 

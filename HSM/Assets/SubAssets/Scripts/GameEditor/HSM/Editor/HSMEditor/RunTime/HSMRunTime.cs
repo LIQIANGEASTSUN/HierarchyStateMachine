@@ -72,11 +72,10 @@ namespace HSMTree
             }
         }
 
-        public void DoAction(int toStateId)
+        public void DoAction(HSMState state, int toStateId)
         {
-
+            
         }
-
     }
 
 }

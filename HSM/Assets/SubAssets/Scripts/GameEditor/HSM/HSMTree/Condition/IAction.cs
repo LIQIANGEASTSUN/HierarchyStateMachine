@@ -6,7 +6,7 @@ namespace HSMTree
 {
     public interface IAction
     {
-        void DoAction(int toStateId);
+        void DoAction(HSMState state, int toStateId);
     }
 
 }

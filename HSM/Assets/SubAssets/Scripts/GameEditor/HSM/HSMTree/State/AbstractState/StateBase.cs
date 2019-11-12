@@ -80,6 +80,8 @@ namespace HSMTree
             _iAction = iaction;
         }
 
+        public IAction IAction { get { return _iAction; } }
+
         public void AddParameter(List<HSMParameter> parameterList)
         {
             _parameterList.AddRange(parameterList);

@@ -36,7 +36,7 @@ namespace HSMTree
 
         private void RuntimePlay(HSMPlayType state)
         {
-            if (state == HSMPlayType.PLAY)
+            if (state == HSMPlayType.PLAY && null != HSMRunTime.Instance.ConditionCheck)
             {
                 List<HSMParameter> parameterList = HSMRunTime.Instance.ConditionCheck.GetAllParameter();
                 _runtimeParameterModel.AddParameter(parameterList);

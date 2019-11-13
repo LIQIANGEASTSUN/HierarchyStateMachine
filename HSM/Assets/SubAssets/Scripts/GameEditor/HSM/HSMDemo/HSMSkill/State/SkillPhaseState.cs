@@ -3,19 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using HSMTree;
 
-public class StateSkill : HSMState/*, ISkill*/
+public class Skill
 {
-    private static CustomIdentification _customIdentification = new CustomIdentification("技能/技能状态节点", IDENTIFICATION.SKILL_STATE, typeof(StateSkill), NODE_TYPE.STATE);
+    public int weaponId;
+}
 
-    //private Skill _skill;
-    //private SkillConfigSkillPhaseType _phaseType = SkillConfigSkillPhaseType.NONE;
+public enum SkillConfigSkillPhaseType
+{
+    NONE,
+}
+
+public interface ISkill
+{
+    void SetSkill(Skill skill);
+}
+
+public class SkillPhaseState : HSMState, ISkill
+{
+    private static CustomIdentification _customIdentification = new CustomIdentification("技能/技能状态节点", IDENTIFICATION.SKILL_PHASE_STATE, typeof(SkillPhaseState), NODE_TYPE.STATE);
+
+    private Skill _skill;
+    private SkillConfigSkillPhaseType _phaseType = SkillConfigSkillPhaseType.NONE;
 
     private int _uiCount = 6;
     private int _enterShowUi = -1;
     private int _startShowUi = -1;
     private string endShowUI = "EndShowUI";
     private string startShowUI = "StartShowUI";
-    public StateSkill() : base()
+    public SkillPhaseState() : base()
     {
 
     }
@@ -34,15 +49,6 @@ public class StateSkill : HSMState/*, ISkill*/
     public override int Execute(ref bool result)
     {
         return base.Execute(ref result);
-
-        //result = false;
-        //int toStateId = base.Execute(ref result);
-        //if (result)
-        //{
-        //    _iAction.DoAction( this, toStateId);
-        //}
-
-        //return toStateId;
     }
 
     public override void Exit()
@@ -56,7 +62,7 @@ public class StateSkill : HSMState/*, ISkill*/
         for (int i = 0; i < _parameterList.Count; ++i)
         {
             HSMParameter parameter = _parameterList[i];
-            //if (parameter.parameterName.CompareTo(AbilityHSM.Skill_State) == 0)
+            //if (parameter.parameterName.CompareTo(StateTool.Skill_State) == 0)
             //{
             //    int value = parameter.intValue;
             //    _phaseType = (SkillConfigSkillPhaseType)parameter.intValue;
@@ -75,10 +81,10 @@ public class StateSkill : HSMState/*, ISkill*/
         }
     }
 
-    //public SkillConfigSkillPhaseType PhaseType
-    //{
-    //    get { return _phaseType; }
-    //}
+    public SkillConfigSkillPhaseType PhaseType
+    {
+        get { return _phaseType; }
+    }
 
     public static CustomIdentification CustomIdentification()
     {
@@ -101,23 +107,23 @@ public class StateSkill : HSMState/*, ISkill*/
         {
             return;
         }
-        //if (_phaseType != SkillConfigSkillPhaseType.NONE)
-        //{
-        //    return;
-        //}
+        if (_phaseType != SkillConfigSkillPhaseType.NONE)
+        {
+            return;
+        }
 
-        //for (int i = 1; i <= _uiCount; ++i)
-        //{
-        //    int index = i;
-        //    bool value = ((1 << i) & type) > 0;
-        //    SkillEventHandler.Instance.SkillOperationShowUI( index, value);
-        //}
+        for (int i = 1; i <= _uiCount; ++i)
+        {
+            int index = i;
+            bool value = ((1 << i) & type) > 0;
+            //SkillEventHandler.Instance.SkillOperationShowUI( index, value);
+        }
     }
 
-    //public void SetSkill(Skill skill)
-    //{
-    //    _skill = skill;
-    //}
+    public void SetSkill(Skill skill)
+    {
+        _skill = skill;
+    }
 
     public override void DoAction(HSMState toState)
     {

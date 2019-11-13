@@ -13,7 +13,7 @@ namespace HSMTree
         /// 技能状态节点
         /// </summary>
         [EnumAttirbute("技能状态节点")]
-        SKILL_STATE = 10000,
+        SKILL_PHASE_STATE = 10000,
 
         /// <summary>
         /// 技能刷子甩
@@ -21,6 +21,17 @@ namespace HSMTree
         [EnumAttirbute("技能刷子甩")]
         SKILL_SWING_BRUSH = 10001,
 
+        /// <summary>
+        /// 技能节点
+        /// </summary>
+        [EnumAttirbute("技能节点")]
+        SKILL_ABILITY = 10002,
+
+        /// <summary>
+        /// 技能空状态
+        /// </summary>
+        [EnumAttirbute("技能空状态")]
+        SKILL_EMPTY = 11000,
         #endregion
     }
 
@@ -125,12 +136,17 @@ namespace HSMTree
             }
 
             #region Skill
-            CustomIdentification stateSkill = StateSkill.CustomIdentification();
-            nodeList.Add(stateSkill);
+            CustomIdentification skillPhaseState = SkillPhaseState.CustomIdentification();
+            nodeList.Add(skillPhaseState);
 
-            CustomIdentification skillBrush = SkillBrush.CustomIdentification();
-            nodeList.Add(skillBrush);
+            //CustomIdentification skillBrushState = SkillBrushState.CustomIdentification();
+            //nodeList.Add(skillBrushState);
 
+            CustomIdentification skillEmptyState = SkillEmptyState.CustomIdentification();
+            nodeList.Add(skillEmptyState);
+
+            //CustomIdentification skillAbilityState = SkillAbilityState.CustomIdentification();
+            //nodeList.Add(skillAbilityState);
             #endregion
 
             HashSet<IDENTIFICATION> hash = new HashSet<IDENTIFICATION>();

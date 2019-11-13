@@ -303,8 +303,9 @@ namespace HSMTree
                     Vector3 AB = endPos - startPos;
                     Vector3 AP = mousePos - startPos;
                     float distance = Vector3.Cross(AB, AP).magnitude / AB.magnitude;
+                    float dot = Vector3.Dot(AP, AB.normalized);
 
-                    bool value = (distance < 10);
+                    bool value = (distance < 10) && (Mathf.Abs(dot) < AB.magnitude);
                     if (value)
                     {
                         if (null != HSMManager.hSMChangeSelectTransitionId)

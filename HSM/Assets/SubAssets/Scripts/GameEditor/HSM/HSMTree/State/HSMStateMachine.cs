@@ -110,6 +110,7 @@ namespace HSMTree
                 currentState.Exit();
             }
 
+            //Debug.LogError("ChangeState:" + state.StateId);
             currentState = state;
             if (null != currentState)
             {

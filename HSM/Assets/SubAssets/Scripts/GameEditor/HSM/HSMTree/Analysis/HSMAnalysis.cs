@@ -70,9 +70,9 @@ namespace HSMTree
                 else if (nodeValue.NodeType == (int)NODE_TYPE.SUB_STATE_MACHINE)
                 {
                     HSMSubStateMachine subStateMachine = new HSMSubStateMachine();
-                    for (int j = 0; j < nodeValue.transitionList.Count; ++i)
+                    for (int j = 0; j < nodeValue.transitionList.Count; ++j)
                     {
-                        Transition transition = nodeValue.transitionList[i];
+                        Transition transition = nodeValue.transitionList[j];
                         subStateMachine.AddChildState(transition.toStateId);
                     }
 

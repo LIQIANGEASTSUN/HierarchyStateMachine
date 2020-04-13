@@ -3,7 +3,7 @@ namespace HSMTree
 {
     public class HSMStateEntry : HSMState
     {
-        public static CustomIdentification _customIdentification = new CustomIdentification("Node/Entry", IDENTIFICATION.STATE_ENTRY, typeof(HSMStateEntry), NODE_TYPE.ENTRY);
+        //public static CustomIdentification _customIdentification = new CustomIdentification("Node/Entry", IDENTIFICATION.STATE_ENTRY, typeof(HSMStateEntry), NODE_TYPE.ENTRY);
 
         public HSMStateEntry() :base()
         {

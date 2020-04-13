@@ -102,7 +102,7 @@ namespace HSMTree
 
         private AbstractNode AnalysisNode(SkillHsmConfigNodeData nodeValue)
         {
-            AbstractNode node = (AbstractNode)CustomNode.Instance.GetState((IDENTIFICATION)nodeValue.Identification);
+            AbstractNode node = (AbstractNode)CustomNode.Instance.GetState(nodeValue.Identification);
             return node;
         }
 

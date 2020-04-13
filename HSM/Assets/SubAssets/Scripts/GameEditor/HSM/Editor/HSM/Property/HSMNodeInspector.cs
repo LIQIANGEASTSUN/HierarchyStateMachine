@@ -70,11 +70,11 @@ namespace HSMTree
 
                 if (nodeValue.Identification > 0)
                 {
-                    CustomIdentification customIdentification = CustomNode.Instance.GetIdentification((IDENTIFICATION)nodeValue.Identification);
+                    CustomIdentification customIdentification = CustomNode.Instance.GetIdentification(nodeValue.Identification);
                     string typeName = string.Format("类     型:{0}", customIdentification.Name);
                     EditorGUILayout.LabelField(typeName);
 
-                    string className = string.Format("类     名:{0}", customIdentification.Type.Name);
+                    string className = string.Format("类     名:{0}", customIdentification.ClassType.Name);
                     EditorGUILayout.LabelField(className);
 
                     //string identificationName = string.Format("类标识  :{0}", nodeValue.Identification);

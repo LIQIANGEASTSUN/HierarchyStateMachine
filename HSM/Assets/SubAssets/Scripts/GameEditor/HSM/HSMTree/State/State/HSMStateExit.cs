@@ -7,7 +7,7 @@ namespace HSMTree
 {
     public class HSMStateExit : HSMState
     {
-        public static CustomIdentification _customIdentification = new CustomIdentification("Node/Exit", IDENTIFICATION.STATE_EXIT, typeof(HSMStateExit), NODE_TYPE.EXIT);
+        //public static CustomIdentification _customIdentification = new CustomIdentification("Node/Exit", IDENTIFICATION.STATE_EXIT, typeof(HSMStateExit), NODE_TYPE.EXIT);
 
         public Action<AbstractNode> _enterCallBack = null;
         public HSMStateExit() : base()

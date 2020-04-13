@@ -655,10 +655,10 @@ public class HSMManager
     // 添加节点
     private void AddNode(Node_Draw_Info_Item info, Vector3 mousePosition, int subMachineId)
     {
-        AddNode(info._nodeName, (IDENTIFICATION)info._identification, info._nodeType, mousePosition, subMachineId);
+        AddNode(info._nodeName, info._identification, info._nodeType, mousePosition, subMachineId);
     }
 
-    private void AddNode(string nodeName, IDENTIFICATION identification, NODE_TYPE nodeType, Vector3 position, int subMachineId)
+    private void AddNode(string nodeName, int identification, NODE_TYPE nodeType, Vector3 position, int subMachineId)
     {
         SkillHsmConfigNodeData newNodeValue = new SkillHsmConfigNodeData();
         newNodeValue.Id = GetNewstateId();

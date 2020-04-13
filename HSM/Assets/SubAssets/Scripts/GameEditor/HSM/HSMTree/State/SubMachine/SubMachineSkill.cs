@@ -6,7 +6,7 @@ using GenPB;
 
 public class SubMachineSkill : HSMSubStateMachine
 {
-    public static CustomIdentification _customIdentification = new CustomIdentification("技能节点", IDENTIFICATION.SKILL_SUB_MACHINE, typeof(SubMachineSkill), NODE_TYPE.SUB_STATE_MACHINE);
+    //public static CustomIdentification _customIdentification = new CustomIdentification("技能节点", IDENTIFICATION.SKILL_SUB_MACHINE, typeof(SubMachineSkill), NODE_TYPE.SUB_STATE_MACHINE);
     private int _skillConfigIndex = -1;
     //private Skill _skill;
 

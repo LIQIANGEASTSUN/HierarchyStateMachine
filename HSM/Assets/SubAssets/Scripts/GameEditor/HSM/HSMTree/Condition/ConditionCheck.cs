@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GenPB;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,8 +8,10 @@ namespace HSMTree
 
     public class ConditionCheck : IConditionCheck
     {
-        // 缓存当前行为树使用到的所有参数类型,保存当前世界状态中所有参数动态变化的值
-        private Dictionary<string, HSMParameter> _environmentParameterDic = new Dictionary<string, HSMParameter>();
+        //存储所有能用到的参数，数据来源于配置，在Init时候存到_environmentParameterDic中去，如果除了初始化时没别的地方用到，可以省略
+        private List<SkillHsmConfigHSMParameter> _parameterList = new List<SkillHsmConfigHSMParameter>();
+        //缓存当前行为树使用到的所有参数类型,保存当前世界状态中所有参数动态变化的值
+        private Dictionary<string, SkillHsmConfigHSMParameter> _environmentParameterDic = new Dictionary<string, SkillHsmConfigHSMParameter>();
 
         public ConditionCheck()
         {
@@ -17,152 +20,160 @@ namespace HSMTree
 
         public void SetParameter(string parameterName, bool boolValue)
         {
-            HSMParameter parameter = null;
+            SkillHsmConfigHSMParameter parameter = null;
             if (!_environmentParameterDic.TryGetValue(parameterName, out parameter)) // 当前行为树不需要的参数值就不保存了
             {
                 return;
             }
 
-            if (parameter.parameterType == (int)HSMParameterType.Bool)
+            if (parameter.ParameterType == (int)HSMParameterType.Bool)
             {
-                parameter.boolValue = boolValue;
+                parameter.BoolValue = boolValue;
                 _environmentParameterDic[parameterName] = parameter;
             }
         }
 
         public void SetParameter(string parameterName, float floatValue)
         {
-            HSMParameter parameter = null;
+            SkillHsmConfigHSMParameter parameter = null;
             if (!_environmentParameterDic.TryGetValue(parameterName, out parameter)) // 当前行为树不需要的参数值就不保存了
             {
                 return;
             }
 
-            if (parameter.parameterType == (int)HSMParameterType.Float)
+            if (parameter.ParameterType == (int)HSMParameterType.Float)
             {
-                parameter.floatValue = floatValue;
+                parameter.FloatValue = floatValue;
                 _environmentParameterDic[parameterName] = parameter;
             }
         }
 
         public void SetParameter(string parameterName, int intValue)
         {
-            HSMParameter parameter = null;
+            SkillHsmConfigHSMParameter parameter = null;
             if (!_environmentParameterDic.TryGetValue(parameterName, out parameter)) // 当前行为树不需要的参数值就不保存了
             {
                 return;
             }
 
-            if (parameter.parameterType == (int)HSMParameterType.Int)
+            if (parameter.ParameterType == (int)HSMParameterType.Int)
             {
-                parameter.intValue = intValue;
+                parameter.IntValue = intValue;
                 _environmentParameterDic[parameterName] = parameter;
             }
         }
 
-        public void SetParameter(HSMParameter parameter)
+        public void SetParameter(SkillHsmConfigHSMParameter parameter)
         {
-            HSMParameter cacheParameter = null;
-            if (!_environmentParameterDic.TryGetValue(parameter.parameterName, out cacheParameter)) // 当前行为树不需要的参数值就不保存了
+            SkillHsmConfigHSMParameter cacheParameter = null;
+            if (!_environmentParameterDic.TryGetValue(parameter.ParameterName, out cacheParameter)) // 当前行为树不需要的参数值就不保存了
             {
                 return;
             }
 
-            if (parameter.parameterType != cacheParameter.parameterType)
+            if (parameter.ParameterType != cacheParameter.ParameterType)
             {
-                Debug.LogError("parameter type invalid:" + parameter.parameterName);
+                Debug.LogError("parameter type invalid:" + parameter.ParameterName);
                 return;
             }
 
             cacheParameter.CloneFrom(parameter);
-            _environmentParameterDic[parameter.parameterName] = cacheParameter;
+            _environmentParameterDic[parameter.ParameterName] = cacheParameter;
         }
 
-        public void AddParameter(List<HSMParameter> parameterList)
+        //将配置好的Parameter存到环境dic中
+        public void InitParmeter()
         {
-            for (int i = 0; i < parameterList.Count; ++i)
+            for (int i = 0; i < _parameterList.Count; ++i)
             {
-                HSMParameter parameter = parameterList[i];
-                if (_environmentParameterDic.ContainsKey(parameter.parameterName))
+                SkillHsmConfigHSMParameter parameter = _parameterList[i];
+
+                SkillHsmConfigHSMParameter cacheParaemter = null;
+                if (!_environmentParameterDic.TryGetValue(parameter.ParameterName, out cacheParaemter))
                 {
-                    continue;
+                    cacheParaemter = parameter.Clone();
+                    _environmentParameterDic[parameter.ParameterName] = cacheParaemter;
                 }
 
-                _environmentParameterDic[parameter.parameterName] = parameter.Clone();
-                _environmentParameterDic[parameter.parameterName].intValue = parameter.intValue;
-                _environmentParameterDic[parameter.parameterName].floatValue = parameter.floatValue;
-                _environmentParameterDic[parameter.parameterName].boolValue = parameter.boolValue;
+                cacheParaemter.IntValue = parameter.IntValue;
+                cacheParaemter.FloatValue = parameter.FloatValue;
+                cacheParaemter.BoolValue = parameter.BoolValue;
             }
         }
 
-        public bool Condition(HSMParameter parameter)
+        public void AddParameter(List<SkillHsmConfigHSMParameter> parameterList)
         {
-            HSMParameter environmentParameter = null;
-            if (!_environmentParameterDic.TryGetValue(parameter.parameterName, out environmentParameter))
+            _parameterList.AddRange(parameterList);
+            InitParmeter();
+        }
+
+
+        public bool Condition(SkillHsmConfigHSMParameter parameter)
+        {
+            SkillHsmConfigHSMParameter environmentParameter = null;
+            if (!_environmentParameterDic.TryGetValue(parameter.ParameterName, out environmentParameter))
             {
                 return false;
             }
 
-            if (environmentParameter.parameterType != parameter.parameterType)
+            if (environmentParameter.ParameterType != parameter.ParameterType)
             {
-                Debug.LogError("parameter Type not Equal:" + environmentParameter.parameterName + "    " + environmentParameter.parameterType + "    " + parameter.parameterType);
+                Debug.LogError("parameter Type not Equal:" + environmentParameter.ParameterName + "    " + environmentParameter.ParameterType + "    " + parameter.ParameterType);
                 return false;
             }
 
             HSMCompare hsmCompare = environmentParameter.Compare(parameter);
-            return (parameter.compare & (int)hsmCompare) > 0;
+            return (parameter.Compare & (int)hsmCompare) > 0;
         }
 
-        public bool Condition(List<HSMParameter> parameterList)
+        public bool ConditionAllAnd(List<SkillHsmConfigHSMParameter> parameterList)
         {
             bool result = true;
             for (int i = 0; i < parameterList.Count; ++i)
             {
-                HSMParameter temp1 = parameterList[i];
-                bool value = Condition(temp1);
-                if (!temp1.useGroup)
+                SkillHsmConfigHSMParameter temp = parameterList[i];
+                bool value = Condition(temp);
+                if (!value)
                 {
-                    if (!value)
-                    {
-                        result = value;
-                        break;
-                    }
-                    continue;
+                    result = false;
+                    break;
                 }
-
-                #region UseGroup
-                if (value)
-                {
-                    continue;
-                }
-
-                result = false;
-                // 下面至少有一个为 true, result 才为 true
-                for (int j = 0; j < parameterList.Count; ++j)
-                {
-                    HSMParameter temp2 = parameterList[j];
-                    if (  !temp2.useGroup 
-                        || temp2.orGroup != temp1.orGroup)
-                    {
-                        continue;
-                    }
-
-                    value = Condition(temp2);
-                    if (value)
-                    {
-                        result = value;
-                        break;
-                    }
-                }
-                #endregion
             }
 
             return result;
         }
 
-        public List<HSMParameter> GetAllParameter()
+        public bool Condition(ConditionParameter conditionParameter)
         {
-            List<HSMParameter> parameterList = new List<HSMParameter>();
+            bool result = true;
+            for (int i = 0; i < conditionParameter.groupList.Count; ++i)
+            {
+                TransitionGroupParameter groupParameter = conditionParameter.groupList[i];
+                result = true;
+
+                for (int j = 0; j < groupParameter.parameterList.Count; ++j)
+                {
+                    SkillHsmConfigHSMParameter parameter = groupParameter.parameterList[j];
+                    bool value = Condition(parameter);
+                    if (!value)
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+
+                if (result)
+                {
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        public List<SkillHsmConfigHSMParameter> GetAllParameter()
+        {
+            List<SkillHsmConfigHSMParameter> parameterList = new List<SkillHsmConfigHSMParameter>();
             foreach (var kv in _environmentParameterDic)
             {
                 parameterList.Add(kv.Value);

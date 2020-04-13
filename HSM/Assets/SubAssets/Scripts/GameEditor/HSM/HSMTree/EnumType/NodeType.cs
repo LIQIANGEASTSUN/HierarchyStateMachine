@@ -1,20 +1,32 @@
 ﻿namespace HSMTree
 {
     /// <summary>
-    /// 行为树节点类型
+    /// 节点类型
     /// </summary>
     public enum NODE_TYPE
     {
         /// <summary>
-        /// 状态节点
+        /// State
         /// </summary>
-        [EnumAttirbute("状态节点")]
+        [EnumAttirbute("State")]
         STATE = 0,
 
         /// <summary>
-        /// 子状态机
+        /// Sub-Machine
         /// </summary>
-        [EnumAttirbute("子状态机")]
+        [EnumAttirbute("Sub-Machine")]
         SUB_STATE_MACHINE = 1,
+
+        /// <summary>
+        /// Entry
+        /// </summary>
+        [EnumAttirbute("Entry")]
+        ENTRY = 2,
+
+        /// <summary>
+        /// EXIT
+        /// </summary>
+        [EnumAttirbute("Exit")]
+        EXIT = 3,
     }
 }

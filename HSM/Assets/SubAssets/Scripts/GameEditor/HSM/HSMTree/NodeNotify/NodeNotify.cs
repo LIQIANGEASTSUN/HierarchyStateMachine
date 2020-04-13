@@ -28,7 +28,7 @@ namespace HSMTree
                 return 0;
             }
 
-            if (_playState == 1)
+            if (_playState == 1)  // PAUSE
             {
                 if (!_nodeDrawDic.ContainsKey(nodeId))
                 {
@@ -41,6 +41,7 @@ namespace HSMTree
                 if (offset > (0.5f / Time.timeScale))
                 {
                     _nodeDrawDic[nodeId] = 0;
+                    _nodeRunTimeDic.Remove(nodeId);
                     return 0;
                 }
 
@@ -56,11 +57,10 @@ namespace HSMTree
             return _nodeDrawDic[nodeId] * 0.01f;
         }
 
-        //public static void NotifyExecute(int nodeId, ResultType resultType, float time)
-        //{
-        //    Debug.LogError("NotifyExecute:" + nodeId + "    " + time);
-        //}
-
+        public static void Clear()
+        {
+            _nodeRunTimeDic.Clear();
+        }
     }
 }
 

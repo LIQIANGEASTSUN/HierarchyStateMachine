@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GenPB;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,9 @@ namespace HSMTree
 
     public interface IConditionCheck
     {
-        void AddParameter(List<HSMParameter> parameterList);
+        void InitParmeter();
+
+        void AddParameter(List<SkillHsmConfigHSMParameter> parameterList);
 
         void SetParameter(string parameterName, bool boolValue);
 
@@ -15,13 +18,15 @@ namespace HSMTree
 
         void SetParameter(string parameterName, int intValue);
 
-        void SetParameter(HSMParameter parameter);
+        void SetParameter(SkillHsmConfigHSMParameter parameter);
 
-        bool Condition(HSMParameter parameter);
+        bool Condition(SkillHsmConfigHSMParameter parameter);
 
-        bool Condition(List<HSMParameter> parameterList);
+        bool ConditionAllAnd(List<SkillHsmConfigHSMParameter> parameterList);
 
-        List<HSMParameter> GetAllParameter();
+        bool Condition(ConditionParameter conditionParameter);
+
+        List<SkillHsmConfigHSMParameter> GetAllParameter();
     }
 
 }

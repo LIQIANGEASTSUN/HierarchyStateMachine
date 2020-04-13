@@ -12,26 +12,56 @@ namespace HSMTree
         /// <summary>
         /// 技能状态节点
         /// </summary>
-        [EnumAttirbute("技能状态节点")]
+        [EnumAttirbute("技能状态")]
         SKILL_PHASE_STATE = 10000,
 
         /// <summary>
-        /// 技能刷子甩
+        /// 技能挂起
         /// </summary>
-        [EnumAttirbute("技能刷子甩")]
-        SKILL_SWING_BRUSH = 10001,
+        [EnumAttirbute("技能挂起")]
+        SKILL_HOLD = 10005,
 
         /// <summary>
-        /// 技能节点
+        /// 鱼挂起
         /// </summary>
-        [EnumAttirbute("技能节点")]
-        SKILL_ABILITY = 10002,
+        [EnumAttirbute("鱼挂起")]
+        FISH_HOLD = 10006,
 
         /// <summary>
-        /// 技能空状态
+        /// 通知
         /// </summary>
-        [EnumAttirbute("技能空状态")]
-        SKILL_EMPTY = 11000,
+        [EnumAttirbute("通知")]
+        SKILL_NOTIFY = 10010,
+
+        /// <summary>
+        /// 技能下一阶段
+        /// </summary>
+        [EnumAttirbute("技能下一阶段")]
+        SKILL_NEXT_STAGE = 10020,
+
+        /// <summary>
+        /// 技能结束
+        /// </summary>
+        [EnumAttirbute("技能结束")]
+        SKILL_EXIT_STATE = 10030,
+
+        /// <summary>
+        /// Sub-MachineSkill
+        /// </summary>
+        [EnumAttirbute("Sub-MachineSkill")]
+        SKILL_SUB_MACHINE = 20000,
+
+        /// <summary>
+        /// STATE_ENTRY
+        /// </summary>
+        [EnumAttirbute("STATE_ENTRY")]
+        STATE_ENTRY = 30000,
+
+        /// <summary>
+        /// STATE_EXIT
+        /// </summary>
+        [EnumAttirbute("STATE_EXIT")]
+        STATE_EXIT = 31000,
         #endregion
     }
 
@@ -43,7 +73,7 @@ namespace HSMTree
         private NODE_TYPE nodeType;
         
         /// <summary>
-        /// 条件节点从 20000 开始， 行为节点从 10000 开始
+        /// 
         /// </summary>
         /// <param name="name"></param>
         /// <param name="identification"></param>
@@ -136,17 +166,38 @@ namespace HSMTree
             }
 
             #region Skill
-            CustomIdentification skillPhaseState = SkillPhaseState.CustomIdentification();
+            CustomIdentification skillPhaseState = SkillPhaseState._customIdentification;
             nodeList.Add(skillPhaseState);
 
-            //CustomIdentification skillBrushState = SkillBrushState.CustomIdentification();
-            //nodeList.Add(skillBrushState);
+            CustomIdentification skillHold = SkillHoldSkillState._customIdentification;
+            nodeList.Add(skillHold);
 
-            CustomIdentification skillEmptyState = SkillEmptyState.CustomIdentification();
-            nodeList.Add(skillEmptyState);
+            CustomIdentification fishHold = SkillHoldFishState._customIdentification;
+            nodeList.Add(fishHold);
 
-            //CustomIdentification skillAbilityState = SkillAbilityState.CustomIdentification();
-            //nodeList.Add(skillAbilityState);
+            CustomIdentification skillNotify = SkillNotifyState._customIdentification;
+            nodeList.Add(skillNotify);
+
+            CustomIdentification nextStage = SkillNextStage._customIdentification;
+            nodeList.Add(nextStage);
+
+            CustomIdentification exitSkill = SkillExitState._customIdentification;
+            nodeList.Add(exitSkill);
+            #endregion
+
+            #region Sub-Machine
+            CustomIdentification subMachineSkill = SubMachineSkill._customIdentification;
+            nodeList.Add(subMachineSkill);
+            #endregion
+
+            #region Entry
+            CustomIdentification entry = HSMStateEntry._customIdentification;
+            nodeList.Add(entry);
+            #endregion
+
+            #region Exit
+            CustomIdentification exit = HSMStateExit._customIdentification;
+            nodeList.Add(exit);
             #endregion
 
             HashSet<IDENTIFICATION> hash = new HashSet<IDENTIFICATION>();

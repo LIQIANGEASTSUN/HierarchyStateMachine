@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
-
+using GenPB;
 
 namespace HSMTree
 {
@@ -14,80 +14,96 @@ namespace HSMTree
 
         }
 
-        public HSMStateMachine Analysis(string content, IConditionCheck iConditionCheck, IAction iAction)
+        public void Analysis(string content, IConditionCheck iConditionCheck, IRegisterNode iRegisterNode, ref HSMStateMachine hsmStateMachine)
         {
-            HSMTreeData hSMTreeData = JsonMapper.ToObject<HSMTreeData>(content);
+            SkillHsmConfigHSMTreeData hSMTreeData = JsonMapper.ToObject<SkillHsmConfigHSMTreeData>(content);
             if (null == hSMTreeData)
             {
                 Debug.LogError("HSMTreeData is null");
-                return null;
+                return;
             }
 
-            iConditionCheck.AddParameter(hSMTreeData.parameterList);
-            return Analysis(hSMTreeData, iConditionCheck, iAction);
+            iConditionCheck.AddParameter(hSMTreeData.ParameterList);
+            Analysis(hSMTreeData, iConditionCheck, iRegisterNode, ref hsmStateMachine);
         }
 
-        public HSMStateMachine Analysis(HSMTreeData data, IConditionCheck iConditionCheck, IAction iAction)
+        public void Analysis(SkillHsmConfigHSMTreeData data, IConditionCheck iConditionCheck, IRegisterNode iRegisterNode, ref HSMStateMachine hsmStateMachine)
         {
-            HSMStateMachine hsmStateMachine = new HSMStateMachine();
+            hsmStateMachine = new HSMStateMachine();
 
             if (null == data)
             {
                 Debug.LogError("数据无效");
-                return hsmStateMachine;
+                return;
             }
 
-            if (data.defaultStateId < 0)
+            hsmStateMachine.SetDefaultStateId(data.DefaultStateId);
+            iConditionCheck.AddParameter(data.ParameterList);
+
+            Dictionary<int, AbstractNode> abstractNodeDic = AnalysisAllNode(data.NodeList, iConditionCheck);
+            hsmStateMachine.AddAllNode(abstractNodeDic);
+            foreach(var kv in abstractNodeDic)
             {
-                Debug.LogError("没有默认节点");
-                return hsmStateMachine;
-            }
-
-            hsmStateMachine.SetData(data);
-            hsmStateMachine.SetDefaultStateId(data.defaultStateId);
-
-            iConditionCheck.AddParameter(data.parameterList);
-
-            for (int i = 0; i < data.nodeList.Count; ++i)
-            {
-                NodeData nodeValue = data.nodeList[i];
-                if (nodeValue.NodeType == (int)(NODE_TYPE.STATE))
+                AbstractNode parentNode = kv.Value;
+                if (parentNode.ParentId < 0)
                 {
-                    HSMState stateBase = AnalysisNode(nodeValue, iConditionCheck);
-                    if (null == stateBase)
-                    {
-                        Debug.LogError("AllNODE:" + nodeValue.id + "     " + (null != stateBase));
-                    }
-                    stateBase.StateId = nodeValue.id;
-                    stateBase.AddParameter(nodeValue.parameterList);
-                    stateBase.AddTransition(nodeValue.transitionList);
-                    stateBase.SetStateMachine(hsmStateMachine);
-                    stateBase.SetIAction(iAction);
-                    stateBase.SetConditionCheck(iConditionCheck);
-                    stateBase.Init();
-                    hsmStateMachine.AddState(stateBase);
+                    hsmStateMachine.AddChildNode(parentNode);
+                    iRegisterNode.RegisterNode(parentNode);
                 }
-                else if (nodeValue.NodeType == (int)NODE_TYPE.SUB_STATE_MACHINE)
+
+                if (parentNode.ChildIdList.Count <= 0)
                 {
-                    HSMSubStateMachine subStateMachine = new HSMSubStateMachine();
-                    for (int j = 0; j < nodeValue.transitionList.Count; ++j)
+                    continue;
+                }
+
+                for (int j = 0; j < parentNode.ChildIdList.Count; ++j)
+                {
+                    int childId = parentNode.ChildIdList[j];
+
+                    AbstractNode childNode = null;
+                    if (!abstractNodeDic.TryGetValue(childId, out childNode))
                     {
-                        Transition transition = nodeValue.transitionList[j];
-                        subStateMachine.AddChildState(transition.toStateId);
+                        continue;
                     }
 
-                    hsmStateMachine.AddSubMachine(subStateMachine);
+                    childNode.SetParentSubMachine(parentNode);
+                    parentNode.AddChildNode(childNode);
+                    iRegisterNode.RegisterNode(childNode);
                 }
             }
-
-            return hsmStateMachine;
         }
 
-        private HSMState AnalysisNode(NodeData nodeValue, IConditionCheck iConditionCheck)
+        private Dictionary<int, AbstractNode> AnalysisAllNode(List<SkillHsmConfigNodeData> nodeList , IConditionCheck iConditionCheck)
         {
-            HSMState state = (HSMState)CustomNode.Instance.GetState((IDENTIFICATION)nodeValue.identification);
-            
-            return state;
+            Dictionary<int, AbstractNode> abstractNodeDic = new Dictionary<int, AbstractNode>();
+
+            nodeList.Sort((a, b) => {
+                return b.ChildIdList.Count - a.ChildIdList.Count;
+            });
+
+            for (int i = 0; i < nodeList.Count; ++i)
+            {
+                SkillHsmConfigNodeData nodeValue = nodeList[i];
+                AbstractNode abstractNode = AnalysisNode(nodeValue);
+                abstractNode.NodeId = nodeValue.Id;
+                abstractNode.ParentId = nodeValue.ParentId;
+                abstractNode.ChildIdList.AddRange(nodeValue.ChildIdList);
+                abstractNode.NodeType = (NODE_TYPE)nodeValue.NodeType;
+                abstractNode.AddParameter(nodeValue.ParameterList);
+                abstractNode.AddTransition(nodeValue.TransitionList);
+                abstractNode.SetConditionCheck(iConditionCheck);
+                abstractNode.Init();
+
+                abstractNodeDic[nodeValue.Id] = abstractNode;
+            }
+
+            return abstractNodeDic;
+        }
+
+        private AbstractNode AnalysisNode(SkillHsmConfigNodeData nodeValue)
+        {
+            AbstractNode node = (AbstractNode)CustomNode.Instance.GetState((IDENTIFICATION)nodeValue.Identification);
+            return node;
         }
 
     }

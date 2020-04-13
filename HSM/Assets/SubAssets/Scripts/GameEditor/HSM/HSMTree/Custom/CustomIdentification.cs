@@ -9,7 +9,21 @@ namespace HSMTree
     public static class IDENTIFICATION
     {
         #region
+
+
+        /// <summary>
+        /// 子状态机
+        /// </summary>
+        public const int SUB_MACHINE = 20000;
+
+        /// <summary>
+        /// 状态入口
+        /// </summary>
         public const int STATE_ENTRY = 30000;
+
+        /// <summary>
+        /// 状态出口
+        /// </summary>
         public const int STATE_EXIT = 31000;
         #endregion
     }

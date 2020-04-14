@@ -52,5 +52,9 @@ namespace HSMTree
             _enterCallBack = callBack;
         }
 
+        public override void DoAction(AbstractNode node)
+        {
+            //UnityEngine.Debug.LogError("Exit DoAction:" + node.NodeId + "    " + NodeId);
+        }
     }
 }

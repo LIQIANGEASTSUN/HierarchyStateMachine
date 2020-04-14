@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HSMTree
 {
-    public abstract class HSMState : AbstractNode
+    public abstract class HSMState : AbstractNode, IAction
     {
         private bool _autoTransition = false;
         public HSMState():base()
@@ -25,6 +25,7 @@ namespace HSMTree
         {
             int toStateId = -1;
             toStateId = base.Execute(ref result);
+            DoAction(this);
             return toStateId;
         }
 
@@ -32,6 +33,8 @@ namespace HSMTree
         {
 
         }
+
+        public abstract void DoAction(AbstractNode node);
 
         public bool AutoTransition
         {

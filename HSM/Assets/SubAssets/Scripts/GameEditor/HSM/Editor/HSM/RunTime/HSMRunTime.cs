@@ -78,9 +78,9 @@ namespace HSMTree
         }
 
         #region IAction
-        public void DoAction(int skillConfigIndex, HSMState toState)
+        public void DoAction(AbstractNode node)
         {
-            Debug.Log("DoAction: skillConfigIndex:" + skillConfigIndex + "      nodeId:" + toState.NodeId);
+            Debug.Log("DoAction: skillConfigIndex:" + "      nodeId:" + node);
         }
         #endregion
 

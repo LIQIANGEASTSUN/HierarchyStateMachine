@@ -37,5 +37,9 @@ namespace HSMTree
             //UnityEngine.Debug.LogError("HSMStateEntry Exit:" + NodeId);
         }
 
+        public override void DoAction(AbstractNode node)
+        {
+            //UnityEngine.Debug.LogError("Entry DoAction:" + node.NodeId + "    " + NodeId);
+        }
     }
 }

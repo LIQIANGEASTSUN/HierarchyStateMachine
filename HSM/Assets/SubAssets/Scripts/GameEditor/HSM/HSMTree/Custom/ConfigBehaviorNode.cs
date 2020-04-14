@@ -18,7 +18,8 @@ namespace HSMTree
         //休息
         public const int TAKE_RESET = 1002;
 
-
+        // 移动到某处
+        public const int MOVE_TO = 1003;
 
         /// <summary>
         /// 子状态机
@@ -46,8 +47,9 @@ namespace HSMTree
 
             #region Human
             Config<StatePlayBasketBall>("Human/打篮球", IDENTIFICATION.PLAY_BASKETBALL, NODE_TYPE.STATE);
-            Config<StatePlayBasketBall>("Human/逛公园", IDENTIFICATION.STROOL_PARK, NODE_TYPE.STATE);
-            Config<StatePlayBasketBall>("Human/休息", IDENTIFICATION.TAKE_RESET, NODE_TYPE.STATE);
+            Config<StateStroolPark>("Human/逛公园", IDENTIFICATION.STROOL_PARK, NODE_TYPE.STATE);
+            Config<StateTakeReset>("Human/休息", IDENTIFICATION.TAKE_RESET, NODE_TYPE.STATE);
+            Config<StateMoveTo>("Human/移动到某处", IDENTIFICATION.MOVE_TO, NODE_TYPE.STATE);
             #endregion
 
             Config<HSMSubStateMachine>("SubMachine", IDENTIFICATION.SUB_MACHINE, NODE_TYPE.SUB_STATE_MACHINE);

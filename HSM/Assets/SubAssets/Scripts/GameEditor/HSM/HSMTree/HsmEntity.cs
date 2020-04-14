@@ -27,7 +27,7 @@ namespace HSMTree
             get { return (ConditionCheck)_iconditionCheck; }
         }
 
-        public List<AbstractNode> ActionNodeList
+        public List<AbstractNode> NodeList
         {
             get
             {
@@ -37,7 +37,6 @@ namespace HSMTree
 
         public void RegisterNode(AbstractNode node)
         {
-            Debug.LogError("RegistNode:" + node.NodeId);
             _nodeList.Add(node);
         }
 

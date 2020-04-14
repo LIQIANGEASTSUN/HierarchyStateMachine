@@ -5,7 +5,7 @@ using GenPB;
 
 namespace HSMTree
 {
-    public class HSMSubStateMachine : AbstractNode
+    public class HSMSubStateMachine : AbstractNode, IAction
     {
         private HSMStateMachineTransition _iStateMachineTransition;
 
@@ -31,7 +31,7 @@ namespace HSMTree
 
         public override void Exit()
         {
-
+            _iStateMachineTransition.ChangeExit();
         }
 
         public override void AddChildNode(AbstractNode node)
@@ -57,6 +57,11 @@ namespace HSMTree
         public override void SetParentSubMachine(AbstractNode node)
         {
             _parentSubMachine = (HSMSubStateMachine)node;
+        }
+
+        public void DoAction(AbstractNode node)
+        {
+            Debug.LogError("SubMachine doAction:" + node.NodeId + "    " + NodeId);
         }
 
         public HSMStateMachineTransition StateMachineTransition

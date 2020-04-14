@@ -6,7 +6,7 @@ namespace HSMTree
 {
     public interface IAction
     {
-        void DoAction(int skillConfigIndex, HSMState toState);
+        void DoAction(AbstractNode node);
     }
 
     public interface IRegisterNode

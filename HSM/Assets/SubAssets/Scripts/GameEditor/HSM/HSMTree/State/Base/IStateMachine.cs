@@ -202,7 +202,7 @@ namespace HSMTree
             }
         }
 
-        private void ChangeExit()
+        public void ChangeExit()
         {
             ExitState();
             _stateExit.Enter();

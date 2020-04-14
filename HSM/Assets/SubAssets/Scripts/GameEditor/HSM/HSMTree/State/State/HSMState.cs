@@ -1,17 +1,15 @@
-﻿using GenPB;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace HSMTree
 {
-    /// <summary>
-    /// 节点超类
-    /// </summary>
-    public abstract class HSMStateBase : AbstractNode
+    public abstract class HSMState : AbstractNode
     {
-
-        public HSMStateBase() : base()
+        private bool _autoTransition = false;
+        public HSMState():base()
         {
+
         }
 
         public override void Enter()
@@ -30,5 +28,18 @@ namespace HSMTree
             return toStateId;
         }
 
+        public virtual void ChangeToThisState()
+        {
+
+        }
+
+        public bool AutoTransition
+        {
+            get { return _autoTransition; }
+            set { _autoTransition = value; }
+        }
+
     }
+
 }
+

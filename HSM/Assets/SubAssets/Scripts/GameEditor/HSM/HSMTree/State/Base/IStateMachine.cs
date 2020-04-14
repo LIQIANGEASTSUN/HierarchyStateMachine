@@ -67,14 +67,6 @@ namespace HSMTree
                 }
             }
 
-            //if (null != _currentState)
-            //{
-            //    toNodeId = _currentState.Execute(ref result);
-            //    if (result)
-            //    {
-            //        ChangeNode(toNodeId);
-            //    }
-            //}
         }
 
         public bool ChangeDestinationNode(HSMState state)

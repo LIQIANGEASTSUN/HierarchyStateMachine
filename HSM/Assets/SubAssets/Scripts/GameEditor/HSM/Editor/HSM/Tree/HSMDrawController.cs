@@ -57,10 +57,11 @@ namespace HSMTree
             _nodeTypeName = name;
         }
 
-        public void AddNodeType(NODE_TYPE nodeType)
+        public void AddNodeType(NODE_TYPE nodeType, int identification)
         {
             Node_Draw_Info_Item item = new Node_Draw_Info_Item(nodeType);
             item.GetTypeName();
+            item.SetIdentification(identification);
             string name = string.Format("{0}/{1}", _nodeTypeName, item._nodeName);
             KeyValuePair<string, Node_Draw_Info_Item> kv = new KeyValuePair<string, Node_Draw_Info_Item>(name, item);
             _nodeArr.Add(kv);
@@ -138,22 +139,28 @@ namespace HSMTree
             infoList.Add(stateDrawInfo);
 
             // 子状态机节点
-            Node_Draw_Info subMachineDrawInfo = new Node_Draw_Info("Create-Sub State Machine");
-            subMachineDrawInfo.AddNodeType(NODE_TYPE.SUB_STATE_MACHINE);
-            infoList.Add(subMachineDrawInfo);
+            //Node_Draw_Info subMachineDrawInfo = new Node_Draw_Info("Create-Sub State Machine");
+            //subMachineDrawInfo.AddNodeType(NODE_TYPE.SUB_STATE_MACHINE, IDENTIFICATION.SUB_MACHINE);
+            //infoList.Add(subMachineDrawInfo);
 
             List<CustomIdentification> nodeList = CustomNode.Instance.GetNodeList();
             for (int i = 0; i < nodeList.Count; ++i)
             {
                 CustomIdentification customIdentification = nodeList[i];
-                if (customIdentification.NodeType == NODE_TYPE.STATE)
+                if (customIdentification.IsAutoCreate)
                 {
-                    stateDrawInfo.AddNodeType(NODE_TYPE.STATE, customIdentification.Name, (int)customIdentification.Identification);
+                    continue;
                 }
-                else if (customIdentification.NodeType == NODE_TYPE.SUB_STATE_MACHINE)
-                {
-                    subMachineDrawInfo.AddNodeType(NODE_TYPE.SUB_STATE_MACHINE, customIdentification.Name, (int)customIdentification.Identification);
-                }
+                stateDrawInfo.AddNodeType(customIdentification.NodeType, customIdentification.Name, (int)customIdentification.Identification);
+
+                //if (customIdentification.NodeType == NODE_TYPE.STATE)
+                //{
+                //    stateDrawInfo.AddNodeType(NODE_TYPE.STATE, customIdentification.Name, (int)customIdentification.Identification);
+                //}
+                //else if (customIdentification.NodeType == NODE_TYPE.SUB_STATE_MACHINE)
+                //{
+                //    subMachineDrawInfo.AddNodeType(NODE_TYPE.SUB_STATE_MACHINE, customIdentification.Name, (int)customIdentification.Identification);
+                //}
             }
         }
 

@@ -10,9 +10,8 @@ namespace HSMTree
     public abstract class HSMStateBase : AbstractNode
     {
 
-        public HSMStateBase(NODE_TYPE nodeType) : base()
+        public HSMStateBase() : base()
         {
-            this._nodeType = nodeType;
         }
 
         public override void Enter()

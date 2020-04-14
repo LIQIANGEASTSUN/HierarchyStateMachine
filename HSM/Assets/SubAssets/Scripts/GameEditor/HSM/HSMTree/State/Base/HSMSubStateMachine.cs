@@ -9,9 +9,8 @@ namespace HSMTree
     {
         private HSMStateMachineTransition _iStateMachineTransition;
 
-        public HSMSubStateMachine(NODE_TYPE nodeType) : base()
+        public HSMSubStateMachine() : base()
         {
-            this._nodeType = nodeType;
             _iStateMachineTransition = new HSMStateMachineTransition();
         }
 

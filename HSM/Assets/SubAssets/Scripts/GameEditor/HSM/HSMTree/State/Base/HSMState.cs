@@ -7,7 +7,7 @@ namespace HSMTree
     public abstract class HSMState : HSMStateBase
     {
         private bool _autoTransition = false;
-        public HSMState():base(NODE_TYPE.STATE)
+        public HSMState():base()
         {
 
         }

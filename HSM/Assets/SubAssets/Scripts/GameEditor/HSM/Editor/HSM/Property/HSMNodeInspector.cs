@@ -68,6 +68,9 @@ namespace HSMTree
                 name = string.Format("节点类型:{0}", name);
                 EditorGUILayout.LabelField(name);
 
+                string identification = string.Format("Identification:{0}", nodeValue.Identification);
+                EditorGUILayout.LabelField(identification);
+
                 if (nodeValue.Identification > 0)
                 {
                     CustomIdentification customIdentification = CustomNode.Instance.GetIdentification(nodeValue.Identification);

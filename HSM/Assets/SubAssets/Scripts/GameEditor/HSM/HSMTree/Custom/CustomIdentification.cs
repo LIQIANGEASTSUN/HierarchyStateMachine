@@ -13,12 +13,13 @@ namespace HSMTree
         /// </summary>
         /// <param name="name"></param>
         /// <param name="identification"></param>
-        public CustomIdentification(string name, int identification, Type t, NODE_TYPE nodeType)
+        public CustomIdentification(string name, int identification, Type t, NODE_TYPE nodeType, bool isAutoCreate)
         {
             Name = name;
             Identification = identification;
             ClassType = t;
             NodeType = nodeType;
+            IsAutoCreate = isAutoCreate;
         }
 
         public string Name
@@ -40,6 +41,12 @@ namespace HSMTree
         }
 
         public NODE_TYPE NodeType
+        {
+            get;
+            private set;
+        }
+
+        public bool IsAutoCreate
         {
             get;
             private set;

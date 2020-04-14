@@ -18,6 +18,8 @@ namespace HSMTree
         //休息
         public const int TAKE_RESET = 1002;
 
+
+
         /// <summary>
         /// 子状态机
         /// </summary>
@@ -48,15 +50,14 @@ namespace HSMTree
             Config<StatePlayBasketBall>("Human/休息", IDENTIFICATION.TAKE_RESET, NODE_TYPE.STATE);
             #endregion
 
-            Config<HSMStateEntry>("Entry", IDENTIFICATION.STATE_ENTRY, NODE_TYPE.STATE);
-            Config<HSMStateExit>("Exit", IDENTIFICATION.STATE_EXIT, NODE_TYPE.STATE);
-
-            //Config<NodeConditionCustom>("通用条件节点", 20002);
+            Config<HSMSubStateMachine>("SubMachine", IDENTIFICATION.SUB_MACHINE, NODE_TYPE.SUB_STATE_MACHINE);
+            Config<HSMStateEntry>("Entry", IDENTIFICATION.STATE_ENTRY, NODE_TYPE.STATE, true);
+            Config<HSMStateExit>("Exit", IDENTIFICATION.STATE_EXIT, NODE_TYPE.STATE, true);
         }
 
-        private void Config<T>(string name, int identification, NODE_TYPE nodeType)
+        private void Config<T>(string name, int identification, NODE_TYPE nodeType, bool isAutoCreate = false)
         {
-            CustomIdentification customIdentification = new CustomIdentification(name, identification, typeof(T), nodeType);
+            CustomIdentification customIdentification = new CustomIdentification(name, identification, typeof(T), nodeType, isAutoCreate);
 
             if (null != ConfigEvent)
             {

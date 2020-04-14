@@ -10,6 +10,7 @@ using GenPB;
 public class StateMoveTo : HSMState, IHuman
 {
     private Human human;
+    private int moveTo;
     public StateMoveTo() : base()
     {
         AutoTransition = true;
@@ -19,7 +20,15 @@ public class StateMoveTo : HSMState, IHuman
     {
         base.Enter();
 
-        Debug.LogError("移动到某处");
+        for (int i = 0; i < _parameterList.Count; ++i)
+        {
+            SkillHsmConfigHSMParameter parameter = _parameterList[i];
+            if (parameter.ParameterName.CompareTo("MoveTo") == 0)
+            {
+                moveTo = parameter.IntValue;
+            }
+        }
+        Debug.LogError("移动到某处:" + moveTo);
     }
 
     public override void Exit()
@@ -39,6 +48,6 @@ public class StateMoveTo : HSMState, IHuman
     public override void DoAction(AbstractNode node)
     {
         //Debug.LogError("StroolPark DoAction:" + node.NodeId + "    " + NodeId);
-        human.StroolPark();
+        human.MoveTo(moveTo);
     }
 }

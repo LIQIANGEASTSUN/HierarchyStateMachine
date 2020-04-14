@@ -9,15 +9,6 @@ public interface IHuman
     void SetHuman(Human human);
 }
 
-public class HumanConstant
-{
-    public const string StroolPark = "StroolPark";
-    public const string PlayBasketBall = "PlayBasketBall";
-    public const string Reset = "Reset";
-    public const string GoHome = "GoHome";
-    public const string FullEnergy = "FullEnergy";
-}
-
 public class Human : MonoBehaviour
 {
     // 公园
@@ -77,6 +68,34 @@ public class Human : MonoBehaviour
 
     }
 
+    public void MoveTo(int moveTo)
+    {
+        Vector3 desirtPos = Vector3.zero;
+        if (moveTo == 1)
+        {
+            desirtPos = basketballStadium.position;
+        }
+        else if (moveTo == 2)
+        {
+            desirtPos = park.position;
+        }
+        else if (moveTo == 3)
+        {
+            desirtPos = resetArea.position;
+        }
+
+        bool value = (Vector3.Distance(transform.position, desirtPos) <= 0.5f);
+
+        if (!value)
+        {
+            transform.Translate((desirtPos - transform.position).normalized * Time.deltaTime, Space.World);
+        }
+        else
+        {
+            hsmEntity.ConditionCheck.SetParameter(StateTool.MoveTo, moveTo);
+        }
+    }
+
     public void StroolPark()
     {
         Energy -= 0.2f;
@@ -101,15 +120,15 @@ public class Human : MonoBehaviour
             if (energy >= 100)
             {
                 energy = 100;
-                hsmEntity.ConditionCheck.SetParameter(HumanConstant.FullEnergy, true);
+                hsmEntity.ConditionCheck.SetParameter(StateTool.FullEnergy, true);
 
                 int random = Random.Range(1, 100);
-                hsmEntity.ConditionCheck.SetParameter(HumanConstant.PlayBasketBall, (random > 50));
-                hsmEntity.ConditionCheck.SetParameter(HumanConstant.StroolPark, (random <= 50));
+                hsmEntity.ConditionCheck.SetParameter(StateTool.PlayBasketBall, (random > 50));
+                hsmEntity.ConditionCheck.SetParameter(StateTool.StroolPark, (random <= 50));
             }
             else if (energy <= 20)
             {
-                hsmEntity.ConditionCheck.SetParameter(HumanConstant.FullEnergy, false);
+                hsmEntity.ConditionCheck.SetParameter(StateTool.FullEnergy, false);
             }
         }
     }
